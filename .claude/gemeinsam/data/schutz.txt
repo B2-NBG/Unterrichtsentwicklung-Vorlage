@@ -16,30 +16,3 @@
 # hinweg (für die Rulesets nur als ganzer Ordnername, wie in Unterricht/*/Vorschau.html). Ohne Zuordnung ist ein Unterrichtsordner für alle frei (GitHub gibt einen Hinweis). Lernfelder haben keinen
 # Fachbereich und gehören der Abteilung. Neue Klasse oder neues Fach: hier eine Zeile ergänzen.
 # Den Notizschutz (ToDo/) prüft pruefen.py am Inhalt, er steht nicht hier.
-
-# Werkzeug. Beim Handbuch zählt nur das von Hand Geschriebene, die automatischen Teile dürfen sich bei allen ändern.
-Werkzeug | CLAUDE.md
-Werkzeug | .gitignore
-Werkzeug | .claude/
-Werkzeug | .github/
-Werkzeug | #Handbuch.html
-
-# Listen, die bei der normalen Arbeit fortgeschrieben werden (Auswahldialog, Neuigkeiten, Häufige Fragen)
-Frei | .claude/gemeinsam/data/berufe.txt
-Frei | .claude/gemeinsam/data/faecher.txt
-Frei | .claude/handbuch/neuigkeiten.txt
-Frei | .claude/handbuch/fragen.txt
-# Offener Unterricht für alle und die Vorschau der Tests (schreibt GitHub)
-Frei | Unterricht/Offen/
-Frei | Unterricht/*/Vorschau.html
-
-# Abteilungen
-Klasse | MGF10 | grundstufe
-Klasse | BFS10 | berufsfachschule
-Klasse | BFS11 | berufsfachschule
-
-# Fachbereiche
-Fach | PuG | pug
-Fach | Eth | ethik
-Fach | Leitbild | nqs
-Fach | BerHan | bv-module
