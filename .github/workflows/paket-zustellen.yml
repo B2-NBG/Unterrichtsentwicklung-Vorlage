@@ -1,23 +1,15 @@
-# Bauen und zustellen: Nach jedem Push auf main prüft GitHub die Änderungen, erneuert Handbuch und Test-Vorschau (und
-# committet sie), baut Lernpakete und Kurse aus ihren Quellen und schickt alles an den Flow (Power Automate), der es in
-# den Teamordner BYCS-SYNC legt. Ersetzt die früheren Git-Hooks: Kein Rechner kopiert oder erneuert selbst.
-# Ist die Prüfung rot, wird nichts zugestellt. Verglichen wird mit dem letzten grünen Lauf nach einem Push: Was ein
-# roter Lauf nicht zugestellt hat, holt der nächste grüne nach.
-# Von Hand: Actions > "Bauen und zustellen" > Run workflow (Themenordner, Test-Ordner, Kurs, Kurse, Handbuch oder "alle").
+# Optionaler Zustellworkflow. Kein automatischer Start nach einem Push; nur manuell nach ausdrücklichem Wunsch.
+# Von Hand: Actions > "Bauen und zustellen" > Run workflow.
 # Schutz (wer was darf, Freigabe, Zurückhalten, Lauf von Hand): .claude/gemeinsam/regeln/einrichtung.md,
-# "Werkzeugschutz und Abteilungsschutz". Der Workflow liefert dafür BYCS_PUSHES, TEAM_TOKEN und zurueckgehalten.txt.
-# Vor dem Push sperrt GitHub selbst (Rulesets aus schutz.txt, auch diese Datei): Der Schritt "Rulesets passen zu
-# schutz.txt?" (schutz-github.py --pruefen, liest mit dem GITHUB_TOKEN) hält alles an, wenn sie fehlen oder abweichen.
-# Secrets liegen im Environment "zustellung", das nur main nutzen darf (ein Lauf von einem anderen Branch bekommt sie
-# nicht): FLOW_URL, FLOW_SCHLUESSEL (Flow), BYCS_LINKSEITE (Download-Links für den Kursbau), TEAM_APP_ID, TEAM_APP_KEY
-# (GitHub-App der Organisation, liest nur die Mitglieder der Teams: Werkzeugschutz und Abteilungsschutz in pruefen.py).
-# Einstellung: Settings > Actions > General > Workflow permissions: "Read and write" (für den Commit des Handbuchs).
-# Pushes mit dem GITHUB_TOKEN lösen keinen neuen Lauf aus: Der Commit des Handbuchs erzeugt keine Schleife.
+# "Werkzeugschutz und Abteilungsschutz". Vor dem Start den Zielpfad bestätigen lassen; der Workflow nutzt sein
+# konfiguriertes Ziel und ist nicht für beliebige Zielpfade geeignet.
 name: Bauen und zustellen
 
 on:
-  push:
-    branches: [main]
+  # Automatische Zustellung nach Push ist absichtlich ausgeschaltet.
+  # Bei Bedarf kann dieser Trigger nach Abstimmung wieder aktiviert werden:
+  # push:
+  #   branches: [main]
   workflow_dispatch:
     inputs:
       was:

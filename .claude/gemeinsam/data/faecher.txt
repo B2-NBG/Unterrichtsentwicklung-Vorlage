@@ -5,9 +5,3 @@
 # etwas anderes bedeutet, steht dahinter die Klasse (z. B. MGF10); Fächer ohne Klasse gelten für alle.
 # Das zuletzt verwendete steht oben (Reihenfolge im Auswahldialog). Ein neues Fach (unter "Other" eingetippt) wird oben
 # eingefügt, ein gewähltes wandert nach oben. Zeilen mit # werden ignoriert. Liest unterrichtsmaterial.py (.claude/gemeinsam/scripts).
-LF1 | Fertigen von Bauelementen mit handgeführten Werkzeugen | MGF10
-PuG | Politik und Gesellschaft
-LF3 | Herstellen von einfachen Baugruppen | MGF10
-Eth | Ethik
-BerHan | Berufliche Handlungsfähigkeit
-Leitbild | Schulleitbild
