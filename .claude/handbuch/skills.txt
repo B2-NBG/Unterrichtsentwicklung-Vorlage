@@ -3,15 +3,15 @@
 # handbuch.py nimmt dann Beschreibung und Auslöser aus seiner SKILL.md (und erinnert daran, ihn hier einzutragen).
 # Zeilen mit # werden ignoriert.
 
-Baue-E-Learning | Macht aus Aufgaben-PDF und Musterlösung ein E-Learning, baut eine vorhandene HTML-Seite auf die Vorlage um oder arbeitet ein neueres Skript (z. B. NILS) in vorhandene E-Learnings ein, mit Papierfassung für das leere Arbeitsblatt | Mach aus diesem PDF ein E-Learning (PDFs dazulegen)
-Baue-Testvorbereitung | Testvorbereitung zu einem Thema aus deinen Unterlagen: Lernskript, Übungen mit immer neuen Aufgaben, Prüfungssimulation mit Note und Papierversion mit Lösungsblatt | /Baue-Testvorbereitung Toleranzen (Unterlagen in ToDo/Toleranzen)
-Baue-Lernpaket | Packt ein E-Learning als SCORM-Paket (ZIP) für die ByCS, mit Punkten, Version und Berichten | Erstelle ein Lernpaket aus Unterricht/MGF10/LF1/BW2/Mein-Thema
-Baue-Kurs | Baut aus fertigem Unterrichtsmaterial (Lernpakete, Tests, Dateien) eine gestaltete Kurssicherung (.mbz), die du in der ByCS wiederherstellst | Erstelle einen Kurs für die ByCS aus BW1 und BW2
-Baue-Arbeitsblatt | Arbeitsblatt in drei Niveaus mit Lösung für die Lehrkraft | /Baue-Arbeitsblatt Kurbeltrieb, Grundbildung Metall
-ByCS-Fragenersteller | Fragen für einen ByCS-Test (Moodle-XML), mit Vorschau ohne Hochladen; baut danach gleich den Test | /ByCS-Fragenersteller Kurbeltrieb
-ByCS-Test | Fertiger Test als Aktivität: in der ByCS nur noch wiederherstellen, Zeit, Punkte und Notenstufen sind schon eingestellt | /ByCS-Test Praxismodul 3D-Druck
-Uebungs-App | Kleines Lernspiel als eine Seite: Quiz, Lernkarten, Sortieren, Zuordnen | /Uebungs-App Lernkarten zum Kurbeltrieb
-Einheit-planen | Ganze Unterrichtsreihe mit echten Terminen und Kalenderdatei | /Einheit-planen
-Raster-Feedback | Freundliches, konkretes Feedback zu anonymisierten Schülerarbeiten nach deinem Bewertungsraster | /Raster-Feedback (Schülerarbeit einfügen)
-Notizen | Gemeinsamer Notizzettel: Stichwort eintragen, Offenes zeigen, eigene Einträge abhaken, eigenen Themenordner anlegen | Notier: Handbuch mit dem Kollegium testen
-ByCS-Kursbanner | Erstellt ein einheitliches Kursbanner (16:9) für einen ByCS-Kurs mit Fach, Stufe, Bild und B2-Logo | /ByCS-Kursbanner Ethik, 10. Klasse
+Baue-E-Learning | Erstellt ein interaktives Lernangebot aus Aufgaben und Lösung oder überarbeitet eine vorhandene HTML-Seite | Erstelle ein Lernangebot aus diesen Unterlagen
+Baue-Testvorbereitung | Erstellt ein Lernskript, Übungen, eine Prüfungssimulation und eine Papierversion | Erstelle eine Testvorbereitung zu diesem Thema
+Baue-Lernpaket | Bereitet ein Lernangebot als Paket für eine Lernplattform auf | Erstelle ein Lernpaket aus diesem Ordner
+Baue-Kurs | Erstellt eine Kurssicherung aus fertigen Materialien | Erstelle einen Kurs aus diesen Materialien
+Baue-Arbeitsblatt | Erstellt ein Arbeitsblatt in drei Schwierigkeitsstufen mit Lösung | Erstelle ein Arbeitsblatt zu diesem Thema
+ByCS-Fragenersteller | Erstellt Fragen für einen Online-Test und eine Vorschau | Erstelle Testfragen zu diesem Thema
+ByCS-Test | Erstellt eine fertige Test-Aktivität für eine Lernplattform | Erstelle einen Test zu diesem Thema
+Uebungs-App | Erstellt ein kleines Lernspiel als einzelne Seite | Erstelle Lernkarten zu diesem Thema
+Einheit-planen | Plant eine Unterrichtsreihe mit Terminen und Kalenderdatei | Plane eine Unterrichtsreihe zu diesem Thema
+Raster-Feedback | Gibt konkretes Feedback zu anonymisierten Arbeiten anhand eines Bewertungsrasters | Gib Feedback zu dieser anonymisierten Arbeit
+Notizen | Verwaltet den gemeinsamen Notizzettel und Themenordner | Notier: Dieses Thema weiter bearbeiten
+ByCS-Kursbanner | Erstellt ein Kursbanner mit Fach, Stufe und Bild | Erstelle ein Kursbanner für ein Fach

@@ -298,7 +298,7 @@ def main():
         os.remove(os.path.join(repo, 'ToDo', 'Notiz-Test.txt'))
         git('checkout', '--', '.claude/gemeinsam/data/berufe.txt')
         schreibe(NEU, '31.12.2099 | Neuigkeit von Autor/innen.\n', True)
-        schreibe(FRAGEN, 'Frage von Autor/innen? | einbinden\n', True)
+        schreibe(FRAGEN, 'Frage von Autor/innen? | material\n', True)
         code, aus = pruefen('--erneuern', '--intern')
         pruefe(code == 0 and 'Neuigkeit von Autor/innen' in lies(DATEI) and 'Frage von Autor/innen?' in lies(DATEI),
                'Handbuch: Neuigkeiten, Fragen und die automatischen Teile dürfen sich bei allen ändern', aus)
@@ -691,7 +691,7 @@ def main():
         schreibe(FRAGEN, 'Frage ohne Antwort? | gibt-es-nicht\n', True)
         code, aus = pruefen('--erneuern')
         pruefe(code == 1 and 'gibt-es-nicht' in aus, 'Frage ohne Abschnitt: Fehler', aus)
-        schreibe(FRAGEN, lies(FRAGEN).replace('Frage ohne Antwort? | gibt-es-nicht\n', 'Testfrage? | einbinden\n'))
+        schreibe(FRAGEN, lies(FRAGEN).replace('Frage ohne Antwort? | gibt-es-nicht\n', 'Testfrage? | material\n'))
         code, aus = pruefen('--erneuern')
         pruefe(code == 0 and 'Testfrage?' in lies(DATEI), 'neue Frage steht automatisch im Handbuch', aus)
         s = lies(DATEI)

@@ -5,40 +5,9 @@
 # Neue Fragen von Kolleg/innen hier aufnehmen und den Abschnitt so ergänzen, dass er sie beantwortet.
 # Zeilen mit # werden ignoriert.
 
-Wie binde ich ein Lernpaket in meinen ByCS-Kurs ein? | einbinden
-Wo finde ich den Download-Link zu einem Lernpaket (Linkseite)? | einbinden
-Warum soll ich den Link eintragen und nicht die Datei hochladen? | einbinden
-Wie vermeide ich verschiedene Versionen eines Lernpakets in den Kursen? | einbinden
-Welche Lernpakete gibt es? | einbinden
-Warum arbeiten wir so? Was bringt mir das? | warum
-Welches KI-Abo brauche ich (Pro, Plus)? Reicht der kostenlose Zugang? | einrichten
-Welche Einstellungen braucht die SCORM-Aktivität, damit es nur einen Versuch gibt? | einbinden
-Wie bekommt mein Kurs automatisch die neue Fassung eines Pakets? | einbinden
-Was sehen die Schülerinnen und Schüler, und wann gilt eine Aufgabe als bearbeitet? | schueler
-Wie werden die Punkte berechnet (40/40/20, bestanden ab 70 %)? | bepunktung
-Wie zählen Teilpunkte bei Mehrfachauswahl, Zahlen und Freitext? | bepunktung
-Kann eine Aufgabe mehr Punkte geben als eine andere? | bepunktung
-Wo sehe ich die Punkte je Aufgabe und je Niveau? | ergebnisse
-Was bedeutet eine Kennung wie Aufgabe-1.1_Einsteiger_10P? | ergebnisse
-Warum stehen in der Notenübersicht nur die Gesamtpunkte? | ergebnisse
-Eine Schülerin oder ein Schüler hat aus Versehen abgegeben. Was tun? | zuruecknehmen
-Wie lautet das Lehrkraft-Passwort, und darf ich es ändern? | passwort
-Was bedeutet "Nicht gespeichert!" oder "Gespeicherter Stand passt nicht ganz"? | probleme
-Die Seite zeigt einen roten Fehlerkasten. Was tun? | probleme
-Was bedeutet die Versionsnummer oben rechts? | versionen
-Was muss ich einmal einrichten, um selbst zu korrigieren? | einrichten
-Was muss ich beachten, wenn mehrere gleichzeitig ändern? | zusammenarbeit
-Wie korrigiere ich einen Fehler in einem E-Learning? | korrektur
-Wie kommt meine Korrektur zu den Schülerinnen und Schülern? | korrektur
-Wie erstelle ich aus einem PDF ein neues E-Learning? | erstellen
-Wie bekomme ich Sprachhilfen (Wortliste, Satzanfänge, Glossar) oder einfache Sprache für BVJ und BIK? | erstellen
-Wie heißt die Datei eines Lernpakets, und wo liegt sie? | einbinden
-Wie sehe ich einen ByCS-Test an, ohne ihn hochzuladen? | erstellen
-Wie bekomme ich einen fertigen Test in die ByCS? | erstellen
-Wo liegen die Tests im Teamordner? | erstellen
-Welche Skills gibt es, und was sage ich zur KI? | skills
-Darf ich Skills, Vorlagen oder Regeln selbst ändern, und kann ich mir einen eigenen Skill bauen? | eigene-skills
-Wie ergänze ich dieses Handbuch oder melde eine Frage? | melden
-Kann ich ohne eigenen Rechner im Browser arbeiten? | einrichten
-Wann fragt die KI vor dem Pushen, und wann pusht die KI selbst? | zusammenarbeit
-Mein Hochladen (Push) wird von GitHub abgewiesen, was nun? | eigene-skills
+Wie erstelle ich Unterrichtsmaterial? | material
+Welche Werkzeuge gibt es? | skills
+Wie halte ich eine offene Aufgabe fest? | notizen
+Wie frage ich nach einem Thema aus den Notizen? | notizen
+Was ist bei einer gewünschten Zustellung zu beachten? | ablage
+Welche Angaben helfen bei einer Fehlermeldung? | hilfe
