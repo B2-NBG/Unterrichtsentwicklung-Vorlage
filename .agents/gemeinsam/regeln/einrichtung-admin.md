@@ -5,7 +5,8 @@ wird. Rulesets, Zugang zu den Teams und Freigabe: `schutz-admin.md`.
 
 ## GitHub: prüfen, bauen, zustellen ("Bauen und zustellen")
 - Workflow `.github/workflows/paket-zustellen.yml` nach jedem Push auf `main`:
-  1. vergleicht mit dem letzten grünen Lauf (was ein roter Lauf nicht zugestellt hat, holt der nächste grüne nach),
+  1. vergleicht mit dem letzten grünen Lauf (was ein roter Lauf nicht zugestellt hat, holt der nächste grüne nach; in
+     einem ganz neuen Repo mit dem ersten Commit, alles von da an baut ein Lauf von Hand mit `alle`),
   2. prüft mit `pruefen.py --seit … --erneuern` (Ablage, Steckbrief, Version, Kursplan, Test-XML, Handbuch;
      Mitdokumentieren nur als Warnung) und erneuert Handbuch und Test-Vorschau,
   3. committet Erneuertes als `github-actions[bot]` ("Automatisch: Handbuch und Vorschau erneuert [intern]"),
