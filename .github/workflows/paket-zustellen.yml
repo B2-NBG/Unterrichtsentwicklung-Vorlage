@@ -125,7 +125,8 @@ jobs:
           TEAM_TOKEN: ${{ steps.teams.outputs.token }}
           BYCS_PUSHES: ${{ steps.basis.outputs.pushes }}
         run: |
-          vormerken() { git add -A -- '#Handbuch.html' ':(glob)Unterricht/**/Vorschau.html'; }
+          # Auch ohne eine einzige Vorschau.html im Repo (git add bricht bei einem Muster ohne Treffer ab)
+          vormerken() { git add -A -- '#Handbuch.html'; git ls-files -z -m -d -o --exclude-standard -- ':(glob)Unterricht/**/Vorschau.html' | xargs -0 -r git add -A --; }
           vormerken
           if git diff --cached --quiet; then echo "Nichts zu committen."; exit 0; fi
           git config user.name "github-actions[bot]"
