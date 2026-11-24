@@ -199,12 +199,12 @@ def selbsttest():
     try:   # Schulprofil (schule.txt): Pflichtangaben, Auswahlwerte, Zahlen, Klassenmuster, Niveaus
         profil = _modul('profil', os.path.join(HERE, 'profil.py'))
         fehler += profil.pruefen()
-        # Übergang bis zur Vorlagen-Hauptversion: Seite (kern/), scorm-api.js und Manifest rechnen noch fest mit
+        # Bis Vorlagen und SCORM-Auswertung die Werte lesen (eigener Umbau): Seite (kern/), scorm-api.js und Manifest rechnen noch fest mit
         # 40/40/20 und 70 %. Eine andere Bewertung im Profil gälte sonst nur im Kurs, nicht im Lernpaket.
         niveaus = [(n[0], n[2]) for n in profil.liste('Niveau') if len(n) > 2]
         if niveaus != [('Einsteigerniveau', '40'), ('Prüfungsniveau', '40'), ('Profiniveau', '20')] or profil.wert('Bestehensgrenze', '') != '70':
             fehler.append('schule.txt: Niveaus und Bestehensgrenze lassen sich noch nicht ändern (Vorlagen und Lernpakete '
-                          'rechnen fest mit 40/40/20 und 70 %, das kommt mit der Vorlagen-Hauptversion). Bitte zurücksetzen.')
+                          'rechnen derzeit fest mit drei Niveaus 40/40/20 und 70 %). Bitte zurücksetzen.')
     except Exception as e:
         fehler.append('Schulprofil nicht prüfbar: %s' % e)
     namen = {q.rsplit('/', 1)[-1] for q in _rel('.agents/**/*.md')}   # Regeln liegen auch in den Skill-Ordnern

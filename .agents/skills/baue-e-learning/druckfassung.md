@@ -17,7 +17,7 @@ Dafür musst du nichts tun:
 | Checkbox / Radio | leeres Kästchen bzw. leerer Kreis |
 | `<textarea>` | Schreiblinien: `data-zeilen="n"`, sonst `rows` (mindestens 3), ohne Angabe 5 |
 | `<input type="text">` | Linie |
-| `<input readonly data-score>` (Spielergebnis) | fehlt |
+| `<input readonly data-score>` (Ergebnis einer interaktiven Aufgabe) | fehlt |
 | `details.sol`, `section.answers`, `.sol-only` | fehlen |
 
 Die Breite einer Linie richtet sich nach der längsten Option (16–60 mm).
@@ -125,4 +125,4 @@ Liegen die Standbilder schon in einer PDF-Druckfassung der Quelle (Fachregel), k
 - Genug Schreiblinien.
 - Keine Aufgabe zerrissen.
 
-Hinweise „Spielergebnis ohne Papierfassung“ beheben oder im Bericht begründen.
+Hinweise „Ergebnis einer interaktiven Aufgabe ohne Papierfassung“ beheben oder im Bericht begründen.

@@ -49,7 +49,11 @@ def _profil():   # Schulprofil (schule.txt) über den Pfad laden: pruefen.py lad
     return mod
 
 
-TEAM_WERKZEUG = _profil().wert('Team-Werkzeug', 'werkzeug-verantwortliche')   # GitHub-Team: darf das Werkzeug und jeden Unterricht ändern
+TEAM_STANDARD = 'werkzeug-verantwortliche'
+try:   # GitHub-Team: darf das Werkzeug und jeden Unterricht ändern. Auf GitHub gilt die Fassung von seit (team_werkzeug)
+    TEAM_WERKZEUG = _profil().wert('Team-Werkzeug', TEAM_STANDARD) or TEAM_STANDARD
+except Exception:   # unlesbares Profil: kein Absturz beim Import, pruefen.py meldet den Fehler im Profil selbst
+    TEAM_WERKZEUG = TEAM_STANDARD
 PROFIL_DATEI = '.agents/gemeinsam/data/schule.txt'
 # Notizbücher in ToDo/: das gemeinsame für alle (Notizschutz am Inhalt) und je Team eines (schreibt nur das Team)
 ALLE = 'ToDo/Alle-NOTIZEN.md'
@@ -190,6 +194,21 @@ def schutzregeln(commit='HEAD'):
     streichen und wäre selbst frei). Fehlt SCHUTZ dort, gilt nur NOTFALL_WERKZEUG."""
     code, text = git('show', '%s:%s' % (commit, SCHUTZ))
     return Regeln(text if code == 0 else '')
+
+
+def team_werkzeug(commit='HEAD'):
+    """Team der Werkzeug-Verantwortlichen (schule.txt: "Team-Werkzeug") in der Fassung von commit, nicht aus dem
+    Arbeitsstand: Auf GitHub ist commit der letzte grüne Lauf, sonst könnte ein Push das eigene Team eintragen und hätte
+    im selben Lauf alle Rechte (wie bei schutz_an). Fehlt der Eintrag oder ist das Profil unlesbar: TEAM_STANDARD."""
+    code, text = git('show', '%s:%s' % (commit, PROFIL_DATEI))
+    if code == 0:
+        try:
+            werte = [w for k, w, _ in _profil().zerlegen(text) if k == 'Team-Werkzeug']
+            if werte and werte[0] and werte[0][0].strip():
+                return werte[0][0].strip()
+        except Exception:   # absichtlich breit: dann gilt das Standard-Team
+            pass
+    return TEAM_STANDARD
 
 
 def schutz_an(commit='HEAD'):
@@ -599,6 +618,9 @@ def geschuetzt(hb, seit=None, zurueckhalten=False):
     if not schutz_an(seit or 'HEAD'):   # eine Lehrkraft allein: kein Werkzeug-, Abteilungs- und Notizschutz
         return [], [], set()
     regeln = schutzregeln(seit or 'HEAD')
+    if seit:   # auf GitHub: das Team aus dem letzten grünen Lauf, nie aus dem Push selbst
+        global TEAM_WERKZEUG
+        TEAM_WERKZEUG = team_werkzeug(seit)
     d = set(geaenderte_dateien(seit, auch_geloeschte=True) or [])
     werkzeug = sorted(p for p in d if regeln.ist_werkzeug(p)
                       and (p != hb.DATEI or handbuch_von_hand(hb, seit or 'HEAD')))   # Handbuch: nur von Hand

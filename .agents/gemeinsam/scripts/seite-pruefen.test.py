@@ -146,6 +146,17 @@ def main():
             sp._SYNC[:] = [echt]
         pruefe(sp.vorlage_pruefen(seite)[0] in (0, 1, 2), 'echtes sync-vorlage.py läuft im selben Prozess')
 
+        # Bilder ohne alt-Text sind ein Fehler (alt="" für Schmuck nicht), Sprünge in den Überschriften ein Hinweis
+        def meldungen(zusatz):
+            f, h = sp.statisch(seite, text.replace('</footer>', zusatz + '</footer>', 1))
+            return [t for t in f if 'alt-Text' in t], [t for t in h if 'springt' in t]
+        pruefe(meldungen('<img src="bilder/x.png">')[0], 'Bild ohne alt ist ein Fehler')
+        pruefe(not meldungen('<img src="bilder/x.png" alt="">')[0], 'alt="" (Schmuck) ist erlaubt')
+        pruefe(not meldungen('<img alt="Messschieber" src="bilder/x.png">')[0], 'Bild mit alt besteht')
+        pruefe(not meldungen('<script>var i = "<img src=x>";</script>')[0], 'Bild in einem Script zählt nicht')
+        pruefe(meldungen('<h2>A</h2><h4>B</h4>')[1], 'Sprung von h2 auf h4 ist ein Hinweis')
+        pruefe(not meldungen('<h2>A</h2><h3>B</h3><h2>C</h2>')[1], 'Folge h2, h3, h2 ohne Hinweis')
+
         # Ohne .mbz gilt die volle Prüfung (dann fehlt der PDF-Knopf)
         if browser:
             rc, aus = lauf(ohne_mbz, arb, True)

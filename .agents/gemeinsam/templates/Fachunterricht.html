@@ -14,7 +14,7 @@
   Name-Zelle und <span class="ver"></span> bleiben unverändert (Name aus der ByCS, Version trägt build-scorm.py ein).
   Eigenes CSS und JS nur nach seite.md, immer in zusätzlichen Blöcken NACH den Vorlagenblöcken.
   Elemente mit Live-Rückmeldung solcher Zusatzmodule bekommen die Klasse "no-pdf" (kommt nicht ins PDF).
-  Ein Spielergebnis kann in einem readonly-<input type="text"> innerhalb der Aufgabe stehen: Es zählt als "bearbeitet",
+  Das Ergebnis einer interaktiven Aufgabe kann in einem readonly-<input type="text"> innerhalb der Aufgabe stehen: Es zählt als "bearbeitet",
   wird gespeichert und exportiert.
   Bausteine innerhalb von <main>:
     <section class="ch"><span class="chnum">Kapitel 1</span><h2>...</h2><p class="goal">Du kannst ...</p> ... </section>
@@ -50,7 +50,7 @@
            <input type="text" data-ok="Passfeder|Passfedern">  Textantwort, Alternativen mit |, ohne Groß-/Kleinschreibung
            <input type="text" data-ok="12,5" data-tol="0,1">   Zahl mit Toleranz (Einheit hinter der Zahl ist erlaubt)
            <textarea data-keys="Formschluss; Nut|Nabennut; Welle"></textarea>   Freitext: Anteil gefundener Schlüsselbegriffe (; trennt Begriffe, | Synonyme)
-           <input type="text" readonly data-score>             Spielergebnis eines Zusatzmoduls "6 von 8" zählt als 6/8 der Punkte;
+           <input type="text" readonly data-score>             Ergebnis eines Zusatzmoduls "6 von 8" zählt als 6/8 der Punkte;
            <input type="text" readonly data-score="richtig">   verlangt "x von y richtig" (andere Texte wie "noch nicht geprüft" = 0 Punkte, Hinweis beim Abgeben)
          Aufgaben ohne diese Angaben zählen "bearbeitet = volle Punkte". Im Lehrkraft-Modus zeigt jede bewertete Aufgabe "richtig / x % / falsch".
          Achtung: Wie die Lösungsvorschläge stehen auch diese Angaben im Quelltext. Für bewertete Prüfungen ein Moodle-Test verwenden.
@@ -588,7 +588,7 @@ function sha256(ascii){function rr(v,a){return(v>>>a)|(v<<(32-a))}var mw=Math.po
     });
   }
   function labelOf(f) { var l = f.closest('label'); return String(l ? l.textContent : f.value).replace(/\s+/g, ' ').trim(); }
-  /* Spielergebnis im Ergebnisfeld (data-score): "6 von 8" -> 0,75. data-score="richtig" verlangt "x von y richtig".
+  /* Ergebnis einer interaktiven Aufgabe im Ergebnisfeld (data-score): "6 von 8" -> 0,75. data-score="richtig" verlangt "x von y richtig".
      null = noch kein passendes Ergebnis (z. B. "noch nicht geprüft") */
   function scoreOf(f) {
     var w = (f.getAttribute('data-score') || '').trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -638,7 +638,7 @@ function sha256(ascii){function rr(v,a){return(v>>>a)|(v<<(32-a))}var mw=Math.po
       if ((f.type === 'radio' || f.type === 'checkbox') && f.hasAttribute('data-ok')) out.push(labelOf(f));
       else if (f.tagName === 'SELECT') { var o = f.querySelector('option[data-ok]'); if (o) out.push(o.text.trim()); }
       else if (f.tagName === 'TEXTAREA') { if (f.getAttribute('data-keys')) out.push('Begriffe: ' + f.getAttribute('data-keys')); }
-      else if (f.hasAttribute('data-score')) out.push('Spielergebnis "x von y' + (f.getAttribute('data-score') ? ' ' + f.getAttribute('data-score') : '') + '" = Anteil');
+      else if (f.hasAttribute('data-score')) out.push('Ergebnis der interaktiven Aufgabe "x von y' + (f.getAttribute('data-score') ? ' ' + f.getAttribute('data-score') : '') + '" = Anteil');
       else if (f.hasAttribute('data-ok')) out.push(f.getAttribute('data-ok') + (f.getAttribute('data-tol') ? ' (±' + f.getAttribute('data-tol') + ')' : ''));
     });
     return out.join(' | ');
@@ -757,7 +757,7 @@ function sha256(ascii){function rr(v,a){return(v>>>a)|(v<<(32-a))}var mw=Math.po
     var req = [], opt = 0, unchecked = [];
     tasks.forEach(function (t) {
       var tt = ((t.querySelector('.tt') || {}).textContent || 'Aufgabe').trim();
-      /* Spiel gespielt, aber Ergebnis noch nicht geprüft (kein "x von y") */
+      /* Interaktive Aufgabe bearbeitet, aber Ergebnis noch nicht geprüft (kein "x von y") */
       if (fieldsOf(t).some(function (f) { return f.hasAttribute('data-score') && f.value.trim() && scoreOf(f) === null; })) unchecked.push(tt);
       if (isDone(t) !== false) return;
       if (levelOf(t) === 'challenge') opt++; else req.push(tt);

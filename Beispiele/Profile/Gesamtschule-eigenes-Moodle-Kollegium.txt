@@ -53,8 +53,8 @@ Abschnitt | R | Themenreihe | Name
 
 # ---------- Niveaus und Bewertung ----------
 #   Niveau | <Name> | <Farbe im Text> | <Anteil an den Punkten in %>   (Reihenfolge wie in der Seite)
-# Noch fest: Vorlagen und Lernpakete rechnen mit 40/40/20 und 70 %. Ändern geht erst mit der Vorlagen-Hauptversion
-# (der Selbsttest in pruefen.py meldet es bis dahin als Fehler).
+# Noch fest: Vorlagen und Lernpakete rechnen derzeit mit drei Niveaus (40/40/20) und 70 %. Andere Werte lehnt der
+# Selbsttest in pruefen.py ab, bis Vorlagen und SCORM-Auswertung sie lesen können (eigener, späterer Umbau).
 Niveau | Einsteigerniveau | blau | 40
 Niveau | Prüfungsniveau | rot | 40
 Niveau | Profiniveau | schwarz | 20

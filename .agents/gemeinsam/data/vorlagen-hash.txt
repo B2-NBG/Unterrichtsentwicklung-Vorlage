@@ -1,2 +1,2 @@
-.agents/gemeinsam/templates/Allgemeinbildung.html | 6ed7f59f3456c42470d7d246d1e0f42457eaf7c97df5301953f2f722877f6536
-.agents/gemeinsam/templates/Fachunterricht.html | 17d0b8aac4ad289d601e8a7a9b3a254dff03da059a98d494e5bc38a43e01013d
+.agents/gemeinsam/templates/Allgemeinbildung.html | dd55d77820bec8b759836d3c7124ea0d8efda40d8919a21f387f76f464bfc928
+.agents/gemeinsam/templates/Fachunterricht.html | 9c6128303d872046f2287ddd764cc77b74c7e2609615c263c847c25e95c575ee

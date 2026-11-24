@@ -46,11 +46,11 @@ Zwei Flows mit einem eigenen Dienstkonto, das nur auf den Teamordner (`schule.tx
 Probe: GitHub → Actions → "Bauen und zustellen" → Run workflow mit Haken "Probe" (legt nach `<Bereich>/_Pilot/`).
 
 ## GitHub: Werkzeug testen ("Werkzeug testen")
-- Workflow `.github/workflows/werkzeug-testen.yml` nach jedem Push auf `main`, der `.agents/`, `AGENTS.md`, `.github/`
-  oder eine `index.html` in `Unterricht/` ändert: alle `*.test.py`, `suspend-data.test.js` (Chrome des Runners) und
+- Workflow `.github/workflows/werkzeug-testen.yml` nach jedem Push auf `main`, der `.agents/`, `.claude/`, `.gemini/`,
+  `AGENTS.md`, `.github/`, `Vorlagen/` oder in `Unterricht/` eine `index.html` oder ein Bild ändert: alle `*.test.py`, `suspend-data.test.js` (Chrome des Runners) und
   `seite-pruefen.py --ohne-browser` für jede geänderte Seite. Nur Leserechte, ohne Environment und Secrets. Er hält die
   Zustellung nicht an; ist er rot, mailt GitHub der Person, die gepusht hat. Von Hand: Run workflow (alle Seiten).
 - Actions sind auf einen Commit gepinnt, die Version steht als Kommentar daneben (`actions/checkout`,
-  `actions/create-github-app-token`). Zweimal im Jahr (Februar, September) neue Versionen prüfen: Commit des Tags mit
+  `actions/create-github-app-token`, `actions/upload-artifact`). Zweimal im Jahr (Februar, September) neue Versionen prüfen: Commit des Tags mit
   `gh api repos/<action>/git/ref/tags/<tag>` lesen, in beiden Workflows eintragen, einen Lauf von Hand machen. Eine neue
   Hauptversion erst nach dem Lesen der Änderungen übernehmen.

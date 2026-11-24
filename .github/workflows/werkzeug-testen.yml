@@ -1,4 +1,4 @@
-# Werkzeug testen: Nach einem Push auf main, der das Werkzeug oder eine Seite ändert, laufen alle Tests des Werkzeugs
+# Werkzeug testen: Nach einem Push auf main, der das Werkzeug, eine Vorlage eines Teams, eine Seite oder ihre Bilder ändert, laufen alle Tests des Werkzeugs
 # (*.test.py, suspend-data.test.js) und die statische Seitenprüfung für jede geänderte index.html in Unterricht/.
 # Hält die Zustellung NICHT an (die läuft getrennt in "Bauen und zustellen"). Ist ein Test rot, mailt GitHub dem, der
 # gepusht hat; dann reparieren (Werkzeug-Verantwortliche) bzw. die Seite nach seite-pruefen.py richten.
@@ -12,9 +12,13 @@ on:
     branches: [main]
     paths:
       - '.agents/**'
+      - '.claude/**'
+      - '.gemini/**'
       - 'AGENTS.md'
       - '.github/**'
+      - 'Vorlagen/**'
       - 'Unterricht/**/index.html'
+      - 'Unterricht/**/bilder/**'
   workflow_dispatch:
 
 permissions:
@@ -60,7 +64,9 @@ jobs:
           # Beim Push: Seiten, die seit dem Stand vor dem Push neu sind oder sich geändert haben. Von Hand oder ohne
           # brauchbaren Vorher-Stand (neuer Branch, erzwungener Push): alle Seiten.
           if [ "${{ github.event_name }}" = push ] && [ -n "$VORHER" ] && git cat-file -e "$VORHER^{commit}" 2>/dev/null; then
-            seiten=$(git diff --name-only --diff-filter=AMR "$VORHER" HEAD -- 'Unterricht/**/index.html')
+            # dazu jede Seite, deren bilder/ sich geändert hat (auch gelöschte oder umbenannte Bilder)
+            seiten=$( { git diff --name-only --diff-filter=AMR "$VORHER" HEAD -- 'Unterricht/**/index.html'
+                        git diff --name-only "$VORHER" HEAD -- 'Unterricht/**/bilder/**' | sed 's#/bilder/.*#/index.html#'; } | sort -u)
           else
             seiten=$(git ls-files 'Unterricht/**/index.html')
           fi

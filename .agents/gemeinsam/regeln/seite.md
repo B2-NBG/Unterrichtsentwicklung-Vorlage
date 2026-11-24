@@ -64,7 +64,7 @@ Titel, Untertitel, Beruf, Ausbildungsjahr, Lernfeld · Blockwoche, Hilfsmittel.
   (`<a href>`) nach außen sind erlaubt. `seite-pruefen.py` prüft das an der gebauten Fassung; in der Quelle sind nur
   relative Verweise auf `kern/` und `bilder/` erlaubt.
 - **Bilder** liegen als Dateien (png, jpg, gif, svg, webp) in `<Thema>/bilder/` und stehen als `src="bilder/…"`; nur diese
-  Schreibweise bettet der Bau ein. In CSS (`url(...)`) und Script-Texten bleiben `data:`-Adressen eingebettet. Große
+  Schreibweise bettet der Bau ein. Jedes `<img>` hat einen `alt`-Text (`alt=""` nur für Schmuck). In CSS (`url(...)`) und Script-Texten bleiben `data:`-Adressen eingebettet. Große
   Medien (Video, 3D-Modell) kommen als Datei in denselben Ordner (nicht in `bilder/`), die Seite geht dann nur als SCORM-Paket.
 - **Module aus einer bestehenden Datei der Lehrkraft** (3D-Ansicht, Simulationen, Spiele) kommen unverändert in zusätzliche
   `<style>`/`<script>` NACH den Blöcken (erlaubte Anpassungen: `module-grafiken.md` im Skill baue-e-learning).

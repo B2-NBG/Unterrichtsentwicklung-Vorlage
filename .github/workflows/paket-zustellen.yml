@@ -57,9 +57,12 @@ jobs:
           stopp() { echo "::error::$1 Es wird nichts zugestellt. Lösung: den Lauf wiederholen (Re-run jobs). Gibt es unter den 100 neuesten Läufen keinen grünen, hilft nur ein Lauf von Hand der Werkzeug-Verantwortlichen."; exit 1; }
           basis=$(gh run list --workflow paket-zustellen.yml --branch main --event push --status success --limit 1 --json headSha --jq '.[0].headSha // ""') \
             || stopp "GitHub hat den letzten grünen Lauf nicht geliefert."
-          if [ -z "$basis" ] || ! git cat-file -e "$basis^{commit}" 2>/dev/null; then basis="$VORHER"; fi
-          # Ganz neues Repo (erster Push, noch nie grün): mit dem ersten Commit vergleichen. Davor galt nie ein Schutz.
-          if ! git cat-file -e "$basis^{commit}" 2>/dev/null; then basis=$(git rev-list --max-parents=0 HEAD | tail -n 1); fi
+          # Noch nie grün (neues Repo, auch nach roten Läufen): mit dem ersten Commit vergleichen, nie mit einem roten Push.
+          # Davor galt nie ein Schutz. Grüner Lauf auf einem unbekannten Commit: mit dem Stand vor diesem Push.
+          wurzel=$(git rev-list --max-parents=0 HEAD | tail -n 1)
+          if [ -z "$basis" ]; then basis="$wurzel"
+          elif ! git cat-file -e "$basis^{commit}" 2>/dev/null; then basis="$VORHER"; fi
+          if ! git cat-file -e "$basis^{commit}" 2>/dev/null; then basis="$wurzel"; fi
           echo "Verglichen wird mit $basis"
           echo "seit=$basis" >> "$GITHUB_OUTPUT"
           # Pushes seit dem letzten grünen Lauf, älteste zuerst: "<Commit>:<wer gepusht hat>" (für den Schutz in pruefen.py).

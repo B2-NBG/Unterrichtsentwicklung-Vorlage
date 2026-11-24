@@ -11,7 +11,8 @@ Lernpaket kommt). Eine Seite in alter Form (alles eingebettet) ist ihre eigene g
 <link> und <script src> zeigen nur auf Dateien in kern/ (oder bilder/), die es gibt, und die Quelle lädt im Browser
 ohne Fehlerkasten.
 Statisch: Anfang <!doctype html>, Ende </html>, Tag-Paare, Platzhalter/TODO/TEMPLATE-Kommentar/Markdown-Zeichen,
-keine externen src/link, doppelte data-k, Felder in .print-alt, Spielergebnis (data-score) ohne Papierfassung,
+keine externen src/link, doppelte data-k, Bilder ohne alt-Text (Fehler), Sprünge in der Überschriftenfolge (Hinweis),
+Felder in .print-alt, Ergebnis einer interaktiven Aufgabe (data-score) ohne Papierfassung,
 Schriften fürs Zeichnen gefüllt und alle Zeichen der Seite in den Schriften vorhanden, Vorlagenblöcke aktuell (sync-vorlage.py).
 Seiten aus einer Vorlage eines Teams (<meta name="vorlage" content="<team>/<Name>.html">): Die Vorlage gibt es.
 Seiten aus einer freien Vorlage (<meta name="vorlage-art" content="frei">): Lösungen stehen hinter dem Hash; Vorlagenblöcke, Leerdruck und PDF-Export werden nicht geprüft (keine Bewertung).
@@ -190,6 +191,15 @@ def statisch(p, s, quelle=None):
     dup = sorted(set(k for k in keys if keys.count(k) > 1))
     if dup:
         fehler.append('doppelte data-k: ' + ', '.join(dup[:10]))
+    for m in re.finditer(r'<img\b[^>]*>', ohne):   # Bildbeschreibung für Vorlesehilfen; alt="" nur für reinen Schmuck
+        if not re.search(r'\salt\s*=', m.group(0)):
+            fehler.append('Bild ohne alt-Text (Bildbeschreibung): ' + m.group(0)[:90])
+    stufe = 0
+    for m in re.finditer(r'<h([1-6])\b[^>]*>(.*?)</h\1>', ohne, re.S):   # Gliederung für Vorlesehilfen
+        neu = int(m.group(1))
+        if stufe and neu > stufe + 1:
+            hinweise.append('Überschrift springt von h%d auf h%d: %s' % (stufe, neu, re.sub(r'<[^>]+>|\s+', ' ', m.group(2)).strip()[:60]))
+        stufe = neu
     for m in re.finditer(r'<(\w+)[^>]*class="[^"]*\bprint-alt\b[^"]*"', s):
         tag = m.group(1)
         e = s.find('</%s>' % tag, m.end())
@@ -200,7 +210,7 @@ def statisch(p, s, quelle=None):
         teil = s[m.start():e if e > 0 else len(s)]
         if 'data-score' in teil and 'print-alt' not in teil:
             tt = re.search(r'class="tt">([^<]*)', teil)
-            hinweise.append('Spielergebnis ohne Papierfassung (.print-alt) für den Leerdruck: ' + (tt.group(1) if tt else '?'))
+            hinweise.append('Ergebnis einer interaktiven Aufgabe ohne Papierfassung (.print-alt) für den Leerdruck: ' + (tt.group(1) if tt else '?'))
     vorlage, frei = sync().vorlage_von(s), sync().ist_frei(s)
     if vorlage and not os.path.isfile(os.path.join(ROOT, 'Vorlagen', *vorlage.split('/'))):
         fehler.append('Vorlage Vorlagen/%s (aus <meta name="vorlage">) gibt es nicht' % vorlage)
@@ -216,8 +226,11 @@ def statisch(p, s, quelle=None):
             fehler.append('Platzhalter der Anleitung übrig: %s (build-test-mbz.py neu ausführen)' % ph)
         hinweise.append('Anleitung zu einem Test (Skill moodle-test): Leerdruck und PDF-Export nicht geprüft')
     if ist_uebungs_app(s):
+        m = re.search(r'<script id="app-data" type="application/json">(.*?)</script>', s, re.S)
         try:
-            json.loads(re.search(r'<script id="app-data" type="application/json">(.*?)</script>', s, re.S).group(1))
+            if not m:
+                raise ValueError('der Block endet nicht mit </script> (Datei abgeschnitten?)')
+            json.loads(m.group(1))
         except ValueError as e:
             fehler.append('Übungs-App: Die Einträge (JSON in app-data) sind kaputt: %s' % e)
         hinweise.append('Übungs-App (Skill uebungs-app): Leerdruck und PDF-Export gibt es dort nicht, nicht geprüft')
