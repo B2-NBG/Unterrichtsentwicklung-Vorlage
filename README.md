@@ -15,7 +15,9 @@ Notizbücher und eine Zustellung aller Pakete nach jedem Push.
 ## Was ihr braucht
 - ein GitHub-Konto (im Kollegium: eine GitHub-Organisation der Schule),
 - Visual Studio Code mit einer KI-Erweiterung (von Anthropic, OpenAI, GitHub oder Google) und einem bezahlten Abo des
-  Anbieters,
+  Anbieters. **Tipp:** Verifizierte Lehrkräfte bekommen über [GitHub Education](https://github.com/education/teachers)
+  kostenlos GitHub Copilot Pro und für die Schule den Tarif GitHub Team (Bedingungen und aktuellen Stand dort prüfen;
+  Antrag unter GitHub → Settings → Education benefits),
 - Python 3 (am Mac `python3`) und Edge oder Chrome für die Seitenprüfung,
 - eine Moodle-Lernplattform (z. B. die ByCS in Bayern).
 
@@ -42,8 +44,10 @@ Werkzeug-Verantwortliche richten einmal ein (Anleitung für die KI: `.agents/gem
 - **Organisation und Teams:** ein Team der Werkzeug-Verantwortlichen (`schule.txt`, `Team-Werkzeug`), Teams je Abteilung
   oder Fachbereich, ihre Klassen und Fächer in `.agents/gemeinsam/data/schutz.txt`, `Schutz | teams`.
 - **Rulesets:** `python .agents/gemeinsam/scripts/schutz-github.py --anwenden` setzt die Regeln, mit denen GitHub
-  verbotene Pushes abweist. Für Rulesets in einem privaten Repo braucht die Organisation den Tarif GitHub Team (für
-  Schulen über GitHub Education oft kostenlos, den aktuellen Stand bitte prüfen).
+  verbotene Pushes abweist. Das kann auch die KI in VS Code für euch ausführen, wenn ihr Admin am Repo seid (sie nutzt
+  eure gespeicherte GitHub-Anmeldung, aus einer Cloud-Sitzung im Browser geht es nicht). Für diese Rulesets in einem
+  privaten Repo braucht die Organisation den Tarif GitHub Team. Verifizierte Lehrkräfte bekommen ihn über
+  [GitHub Education](https://github.com/education/teachers) kostenlos.
 - **Teams lesen:** eine GitHub-App mit Leserecht auf die Mitglieder, ihre Daten als Secrets im Environment `zustellung`.
 - **Zustellung:** `download` (Pakete im Lauf auf GitHub) oder `power-automate` (ein Flow legt alle Pakete in einen
   Teamordner in OneDrive/SharePoint, jedes Paket behält seinen Download-Link). Anleitung für den Flow:
