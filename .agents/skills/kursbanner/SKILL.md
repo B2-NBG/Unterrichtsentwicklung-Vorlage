@@ -1,6 +1,6 @@
 ---
 name: kursbanner
-description: Erstellt ein Kursbanner (1600x900) für einen Kurs in der Lernplattform im einheitlichen Stil der Schule (Hausfarben, Logo) mit Fach, Stufe, Untertitel und Bild. Verwenden, wenn die Lehrkraft "Kursbanner", "Banner für den Kurs" oder "Kursbild" sagt oder der Skill baue-kurs ein Kursbild braucht.
+description: Erstellt ein Kursbanner (1600x900) für einen Kurs in der Lernplattform im einheitlichen Stil der Schule (Schulfarben, Logo) mit Fach, Stufe, Untertitel und Bild. Verwenden, wenn die Lehrkraft "Kursbanner", "Banner für den Kurs" oder "Kursbild" sagt oder der Skill baue-kurs ein Kursbild braucht.
 ---
 
 # kursbanner
@@ -13,8 +13,8 @@ aussehen, nur Text und Bild wechseln.
 - **Stufe/Klasse** (Zeile 2, Versalien, gesperrt), z. B. `GRUNDSTUFE`, `10. KLASSE`
 - **Untertitel** (klein), z. B. `Fachunterricht`, `Was ist gut? Was ist richtig?`
 - **Bild** (optional): Foto oder Grafik für die rechte Seite. Ohne Bild bleibt die rechte Hälfte einfarbig oder bekommt
-  eine schlichte SVG-Illustration im Stil (flache Formen, Hausfarben).
-- **Hausfarben und Logo** aus dem Schulprofil, nie abtippen: `python .agents/gemeinsam/scripts/profil.py` zeigt
+  eine schlichte SVG-Illustration im Stil (flache Formen, Schulfarben).
+- **Schulfarben und Logo** aus dem Schulprofil, nie abtippen: `python .agents/gemeinsam/scripts/profil.py` zeigt
   `Farbe-Haupt` (Hintergrund), `Farbe-Papier` (Text), `Farbe-Band-Text` (Untertitel), `Farbe-Akzent` (Strich),
   `Farbe-Zweit`, `Farbe-Dritt` (weitere Akzente) und `Logo-Kursbanner` (Pfad im Repo). Das Logo in den Arbeitsordner kopieren.
   Der Name der Lernplattform kommt nicht ins Banner.

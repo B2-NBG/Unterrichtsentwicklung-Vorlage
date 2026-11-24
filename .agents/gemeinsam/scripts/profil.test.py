@@ -102,7 +102,7 @@ def main():
         pruefe(m.pruefen(p) == [], 'vollständiges Profil einer anderen Schulart besteht die Prüfung')
         css = m.haus_css(pfad=p)
         pruefe(css.startswith(':root { --haus-haupt:#204060;') and '--haus-akzent-16:rgba(224,112,32,.16);' in css
-               and '--haus-akzent-20:rgba(224,112,32,.2);' in css, 'haus_css: Hausfarben und Akzent durchscheinend')
+               and '--haus-akzent-20:rgba(224,112,32,.2);' in css, 'haus_css: Schulfarben und Akzent durchscheinend')
         pruefe(m.logo_data(pfad=p).startswith('data:image/png;base64,iVBOR'), 'logo_data: PNG als data:-Adresse')
         falsch = schreibe(tmp, 'farbe.txt', GUT.replace('Farbe-Haupt | #204060', 'Farbe-Haupt | blau').replace(
             'kursbanner-logo.png', 'gibt-es-nicht.png'))

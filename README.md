@@ -26,7 +26,7 @@ Notizbücher und eine Zustellung aller Pakete nach jedem Push.
 2. **Holen und öffnen:** In VS Code „Repository klonen“, einen Ordner außerhalb von OneDrive wählen, öffnen und ihm
    vertrauen.
 3. **Schulprofil einrichten:** Der KI sagen: „Richte mein Schulprofil ein.“ Sie fragt im Dialog nach Schulart
-   (Beispiele in `Beispiele/Profile/`), Name, Hausfarben, Logo, Lernplattform und ob ihr allein oder im Kollegium
+   (Beispiele in `Beispiele/Profile/`), Name, Schulfarben, Logo, Lernplattform und ob ihr allein oder im Kollegium
    arbeitet, schreibt `.agents/gemeinsam/data/schule.txt` und setzt alles in Vorlagen und Handbuch ein.
 4. **Lehrkraft-Passwort setzen:** gehört zum selben Gespräch. Die KI öffnet ein verdecktes Fenster, das Passwort kommt
    nie in den Chat. Gespeichert wird nur ein Hash in `.agents/gemeinsam/data/solution-password.txt`, der mit committet

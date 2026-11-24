@@ -1,6 +1,6 @@
 ---
 name: schule-einrichten
-description: Richtet die Schule im Dialog ein - Schulprofil (Schule, Schulart, Hausfarben, Logo, Lernplattform, allein oder Kollegium) und Lehrkraft-Passwort über ein verdecktes Fenster. Verwenden bei "Richte mein Schulprofil ein", "Schule einrichten", "Hausfarben", "Logo", "Lehrkraft-Passwort setzen".
+description: Richtet die Schule im Dialog ein - Schulprofil (Schule, Schulart, Schulfarben, Logo, Lernplattform, allein oder Kollegium) und Lehrkraft-Passwort über ein verdecktes Fenster. Verwenden bei "Richte mein Schulprofil ein", "Schule einrichten", "Schulfarben", "Logo", "Lehrkraft-Passwort setzen".
 ---
 
 # Schule einrichten
@@ -21,7 +21,7 @@ Nur fragen, was sich ändern soll. Bei einem frischen Repo alles, sonst nur das 
    das gewählte als Grundlage nach `schule.txt` kopieren; es bringt Klassenmuster, Jahrgänge, Abschnitte, Lehrplan und
    Kalender der Schulart mit. Sonst Schulart, Klassenmuster und Jahrgänge einzeln klären.
 3. **Schule:** voller Name und Kurzname (Kopf der Seiten, Kursnamen); Land.
-4. **Erscheinungsbild:** Hausfarben als Hex-Werte (`#2F4858`) oder neutral lassen. Logo als PNG: Die Lehrkraft legt die
+4. **Erscheinungsbild:** Schulfarben als Hex-Werte (`#2F4858`) oder neutral lassen. Logo als PNG: Die Lehrkraft legt die
    Datei in den Projektordner oder nennt den Pfad; nach `.agents/gemeinsam/data/erscheinungsbild/logo.png` kopieren
    (fürs Kursbanner `kursbanner-logo.png`, sonst dasselbe Bild). Fehlt ein Logo, bleibt der Platzhalter.
 5. **Lernplattform:** Name und Adresse der Moodle-Instanz. Version, Kategorie, Besitzer und Site-Hash stehen in einer

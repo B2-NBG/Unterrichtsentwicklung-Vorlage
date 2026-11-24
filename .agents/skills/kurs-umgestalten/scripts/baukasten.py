@@ -97,7 +97,7 @@ def main():
     namen = [v.split(" ", 1)[-1] for v in plan["bereiche"].values()]
     for k, v in {"{{VOLLNAME}}": e(ki["vollname"]), "{{KURZNAME}}": e(ki["kurzname"]),
                  "{{BEREICHE}}": e(", ".join(namen[:-1]) + " und " + namen[-1]),
-                 # Hausfarben aus dem Schulprofil (kurslib): Farbschema "SCHULE", Papierfarbe und einheitliches Banner
+                 # Schulfarben aus dem Schulprofil (kurslib): Farbschema "SCHULE", Papierfarbe und einheitliches Banner
                  **{"{{HAUS_%s}}" % k: v for k, v in HAUSFARBEN.items()}, "{{HAUS_P}}": PAPIER,
                  **{"{{BANNER_%d}}" % i: v for i, v in enumerate(BANNER_EINHEITLICH)}}.items():
         t = t.replace(k, v)

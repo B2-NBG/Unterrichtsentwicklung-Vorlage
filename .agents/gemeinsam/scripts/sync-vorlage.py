@@ -40,10 +40,10 @@ Seite mit ausgelagertem Kern verweist darauf (bauen.py setzt sie beim Bauen wied
 Ist Schrift-Zeichnen leer, gibt es keine Datei, und die Seiten nehmen die Systemschrift. In allen anderen Seiten und in
 den Vorlagen bleibt der Platzhalter leer.
 
-Erscheinungsbild: --vorlagen setzt in Allgemeinbildung.html die Hausfarben aus dem Schulprofil (Zeile :root { --haus-… }
+Erscheinungsbild: --vorlagen setzt in Allgemeinbildung.html die Schulfarben aus dem Schulprofil (Zeile :root { --haus-… }
 zwischen /* Erscheinungsbild: … */ und /* /Erscheinungsbild */ am Anfang des Stils, profil.haus_css()) und das Logo im
 Kopf (<img class="logo" … alt="Logo der Schule">, profil.logo_data()). Der Stil nutzt nur var(--haus-…), keine festen
-Hausfarben. Seiten behalten ihr eigenes Logo (bilder/), die Farben bekommen sie über kern/Allgemeinbildung.stil.css.
+Schulfarben. Seiten behalten ihr eigenes Logo (bilder/), die Farben bekommen sie über kern/Allgemeinbildung.stil.css.
 Nur Python-Standardbibliothek (Windows und Mac).
 """
 import argparse
@@ -256,14 +256,14 @@ def will_nils(s):
     return re.search(r'<meta\s+name="schrift"\s+content="zeichnen"\s*/?>', re.sub(r'(?s)<!--.*?-->', '', kopf)) is not None
 
 
-# ---------- Erscheinungsbild (Hausfarben und Logo aus dem Schulprofil) ----------
+# ---------- Erscheinungsbild (Schulfarben und Logo aus dem Schulprofil) ----------
 
-HAUS = re.compile(r'(/\* Erscheinungsbild: Hausfarben[^\n]*\*/\r?\n)([^\n]*?)(\r?\n[ \t]*/\* /Erscheinungsbild \*/)')
+HAUS = re.compile(r'(/\* Erscheinungsbild: (?:Haus|Schul)farben[^\n]*\*/\r?\n)([^\n]*?)(\r?\n[ \t]*/\* /Erscheinungsbild \*/)')
 LOGO = re.compile(r'(<img class="logo" src=")(data:image/[a-z]+;base64,[A-Za-z0-9+/=]*)(" alt="Logo der Schule">)')
 
 
 def erscheinungsbild_einsetzen(s):
-    """Allgemeinbildung.html mit Hausfarben und Logo aus dem Schulprofil (neuer Text)."""
+    """Allgemeinbildung.html mit Schulfarben und Logo aus dem Schulprofil (neuer Text)."""
     if len(HAUS.findall(s)) != 1:
         raise Fehler('Allgemeinbildung.html: Abschnitt /* Erscheinungsbild: … */ fehlt oder steht mehrmals im Stil')
     if len(LOGO.findall(s)) != 1:

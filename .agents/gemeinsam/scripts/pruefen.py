@@ -228,8 +228,8 @@ def selbsttest():
         for p, zustand in sync.kern_abweichungen(sync.lesen(sync.FACH)[0], allg):
             fehler.append('Kern-Datei %s %s: python .agents/gemeinsam/scripts/sync-vorlage.py --vorlagen ausführen.'
                           % (os.path.relpath(p, ROOT).replace(os.sep, '/'), zustand))
-        if sync.erscheinungsbild_einsetzen(allg) != allg:   # Hausfarben und Logo der Vorlage = Schulprofil
-            fehler.append('Allgemeinbildung.html: Hausfarben oder Logo passen nicht zum Schulprofil (schule.txt): '
+        if sync.erscheinungsbild_einsetzen(allg) != allg:   # Schulfarben und Logo der Vorlage = Schulprofil
+            fehler.append('Allgemeinbildung.html: Schulfarben oder Logo passen nicht zum Schulprofil (schule.txt): '
                           'python .agents/gemeinsam/scripts/sync-vorlage.py --vorlagen ausführen.')
     except Exception as e:
         fehler.append('Kern-Dateien nicht prüfbar: %s' % e)

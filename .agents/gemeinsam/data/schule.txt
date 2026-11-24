@@ -16,7 +16,7 @@ Beruf | ja
 Land | Bayern
 
 # ---------- Erscheinungsbild (Corporate Design) ----------
-# Hausfarben: Haupt (Band, Überschriften), Akzent (Knöpfe, Hervorhebung), Zweit und Dritt (Bereiche im Kurs), Papier und
+# Schulfarben: Haupt (Band, Überschriften), Akzent (Knöpfe, Hervorhebung), Zweit und Dritt (Bereiche im Kurs), Papier und
 # Text auf dem Band. Logo: Pfad im Repo (PNG), im Kopf der Vorlage Allgemeinbildung.html und im Handbuch;
 # Logo-Kursbanner: das Logo im Kursbanner (Skill kursbanner). sync-vorlage.py --vorlagen und pruefen.py --erneuern
 # setzen Farben und Logo in Vorlage und Handbuch ein (Seiten behalten ihr Logo in bilder/).

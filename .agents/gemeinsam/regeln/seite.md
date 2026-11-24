@@ -21,7 +21,7 @@ Gilt für jede `.html`-Seite in `Unterricht/`: E-Learning, Arbeitsblatt, Unterri
   Projektordners fehlen `kern/` und `bilder/`, die Seite sieht kaputt aus. Eine einzelne Datei zum Weitergeben erzeugt
   `bauen.py <Seite>` (Temp-Ordner); Lernpaket, Kurs, Prüfung und Schülerinnen und Schüler bekommen die gebaute Fassung.
 - **Blöcke und `kern/` nie anfassen:** Die markierten Blöcke und die Dateien in `kern/` (`<style>` und `<script>` der
-  Vorlage) nie von Hand ändern. Hausfarben (`var(--haus-…)`), Logo der Vorlage und Schrift fürs Zeichnen kommen aus dem
+  Vorlage) nie von Hand ändern. Schulfarben (`var(--haus-…)`), Logo der Vorlage und Schrift fürs Zeichnen kommen aus dem
   Schulprofil. Ändert sich eine Vorlage oder `schule.txt`: `sync-vorlage.py --vorlagen` (auch Team-Vorlagen und `kern/`),
   dann `sync-vorlage.py` (Probelauf) und `--schreiben` (alle Seiten), danach die Pakete neu bauen.
 

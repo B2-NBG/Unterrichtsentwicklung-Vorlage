@@ -2,7 +2,7 @@
 kursbild.py - Kursbild nach Gestaltungscode und Kursplan, wie im Farbschema-Baukasten.
 
 Einstellung b im Code: k Kacheln, s Farbstreifen, t nur Text (1200 x 500); f Foto-Banner im Stil des Skills
-kursbanner (1600 x 900; v e einheitlich in den Hausfarben oder v s aus dem Farbschema; n m mittig oder n o etwas höher).
+kursbanner (1600 x 900; v e einheitlich in den Schulfarben oder v s aus dem Farbschema; n m mittig oder n o etwas höher).
 Texte aus dem Kursplan unter "kursbild" ("zeile", "titel"; für das Foto-Banner "banner": titel, stufe, untertitel, foto).
 Gerendert wird mit Chrome oder Edge (headless), Windows und Mac.
 
@@ -39,7 +39,7 @@ def browser() -> str:
 def foto_banner(plan, O, f) -> tuple[str, int, int]:
     b = plan["kursbild"].get("banner") or fehler("Kursplan: kursbild.banner fehlt (Foto-Banner, Einstellung bf)")
     G, F, B, I = f["G"], f["F"], f["B"], f["I"]
-    if O["v"] == "s" and G != HAUSFARBEN["G"]:   # bei den Hausfarben ist "aus dem Schema" = einheitlich
+    if O["v"] == "s" and G != HAUSFARBEN["G"]:   # bei den Schulfarben ist "aus dem Schema" = einheitlich
         akz = sorted([F, B, I], key=lambda c: cr(c, G), reverse=True)[0]
         bg, txt, sub = G, "#FFFFFF", tint(G, .22)
     else:

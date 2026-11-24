@@ -21,7 +21,7 @@ SKILL = Path(__file__).resolve().parents[1]
 PROJEKT = Path(__file__).resolve().parents[4]
 sys.path.insert(0, str(PROJEKT / ".agents" / "gemeinsam" / "scripts"))
 from mbz import Archiv  # noqa: E402
-import profil  # noqa: E402  (Schulprofil schule.txt: Hausfarben)
+import profil  # noqa: E402  (Schulprofil schule.txt: Schulfarben)
 
 ABLAGE = PROJEKT / "Ressourcen" / "Kurssicherungen-ByCS"   # nur lokal (.gitignore)
 WADA = SKILL / "daten" / "wada-colors.json"                # Sanzo Wada, digitalisiert von mattdesl
@@ -222,8 +222,8 @@ O_STD = {"v": "e", "n": "m", "q": "t", "j": "j", "o": "n", "m": "n", "c": "n", "
 ERLAUBT = {"v": "es", "n": "mo", "q": "tpk", "j": "jn", "o": "nbg", "m": "knl", "c": "kng", "b": "kstf", "k": "hda", "z": "jn",
            "i": "fwn", "p": "lun", "f": "wgkc", "h": "tvw", "l": "dkn", "y": "gb", "g": "ng", "w": "gw", "u": "sgbn", "d": "12",
            "r": "bsgn", "x": "nj", "e": "re", "s": "nj"}
-# Hausfarben aus dem Schulprofil (schule.txt): G Grundfarbe, F/B/I Bereiche, PAPIER mögliche Abschnittsfläche.
-# Gestaltungscode "SCHULE" = Hausfarben der Schule.
+# Schulfarben aus dem Schulprofil (schule.txt): G Grundfarbe, F/B/I Bereiche, PAPIER mögliche Abschnittsfläche.
+# Gestaltungscode "SCHULE" = Schulfarben der Schule.
 HAUSFARBEN = {k: profil.wert(n).lower() for k, n in (("G", "Farbe-Haupt"), ("F", "Farbe-Akzent"),
                                                     ("B", "Farbe-Zweit"), ("I", "Farbe-Dritt"))}
 PAPIER = profil.wert("Farbe-Papier").lower()

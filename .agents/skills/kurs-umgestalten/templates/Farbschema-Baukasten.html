@@ -261,7 +261,7 @@ let S = {}, M = {A:"neutral", T:"dunkel"}, slot = "G", aktiv = {tab:Math.min(1, 
 // Gestaltungsoptionen: Schlüssel = ein Buchstabe im Gestaltungscode, Werte = ein Zeichen
 const OPTIONEN = [
   {k:"b", n:"Kursbild", o:[["k","Kacheln"],["s","Farbstreifen"],["t","nur Text"],["f","Foto-Banner"]]},
-  {k:"v", n:"Farben des Foto-Banners", o:[["e","einheitlich (Hausfarben der Schule)"],["s","aus dem Farbschema"]]},
+  {k:"v", n:"Farben des Foto-Banners", o:[["e","einheitlich (Schulfarben der Schule)"],["s","aus dem Farbschema"]]},
   {k:"n", n:"Text im Foto-Banner", o:[["m","mittig (wie bisher)"],["o","etwas höher"]]},
   {k:"k", n:"Kopfband", o:[["h","hell"],["d","dunkel"],["a","aus"]]},
   {k:"z", n:"Zahlen im Kopfband", o:[["j","an"],["n","aus"]]},
@@ -307,10 +307,10 @@ const dE = (a,b) => { const x=byHex[a],y=byHex[b]; if(!x||!y) return 99; return 
 const TINT_TAB = .22, TINT_SUB = .12, TINT_FL = .07;
 const LINIE = "#111314";  // Rahmenlinien der Unterreiter: immer schwarz
 
-// Hausfarben aus dem Schulprofil (wie Skill kursbanner): Grundfarbe, drei Bereichsfarben, Papierfarbe als mögliche Abschnittsfläche
-const SCHULE = {nr:"SCHULE", titel:"Hausfarben der Schule", text:"Grundfarbe und Bereichsfarben wie das Kursbanner der Schule. Die Papierfarbe passt als Abschnittsfläche.", G:"{{HAUS_G}}", F:"{{HAUS_F}}", B:"{{HAUS_B}}", I:"{{HAUS_I}}"};
+// Schulfarben aus dem Schulprofil (wie Skill kursbanner): Grundfarbe, drei Bereichsfarben, Papierfarbe als mögliche Abschnittsfläche
+const SCHULE = {nr:"SCHULE", titel:"Schulfarben der Schule", text:"Grundfarbe und Bereichsfarben wie das Kursbanner der Schule. Die Papierfarbe passt als Abschnittsfläche.", G:"{{HAUS_G}}", F:"{{HAUS_F}}", B:"{{HAUS_B}}", I:"{{HAUS_I}}"};
 const CREME = "{{HAUS_P}}";
-const istSchule = () => quelle === "Hausfarben" && same(SCHULE);
+const istSchule = () => quelle === "Schulfarben" && same(SCHULE);
 function setScheme(p, q) { S = {G:p.G, A:p.A||p.G, F:p.F, B:p.B, I:p.I, T:p.T||p.G}; M = {A:"neutral", T:"dunkel"}; quelle = q || ""; renderAll(); }
 // Wirksame Farbe einer Stelle: Allgemein "neutral" = Grau aus der Grundfarbe, Tests "dunkel" = aufgehellte Grundfarbe für Leisten und Icon
 function col(k) { if (k==="A" && M.A==="neutral") return tint(S.G,.3); if (k==="T" && M.T==="dunkel") return tint(S.G,.6); return S[k]; }
@@ -349,7 +349,7 @@ function renderProps() {
   kb2.className = "prop" + (istSchule() ? " on" : "");
   kb2.innerHTML = `<b>${SCHULE.titel}</b><div class="bar">${[SCHULE.G,SCHULE.F,SCHULE.B,SCHULE.I].map(c=>`<i style="background:${c}" title="${c}"></i>`).join("")}</div><span class="hint">${SCHULE.text}</span>`
     + (bw2.schrift >= 4.5 && bw2.leiste >= 1.35 ? `<span class="ok">✓ gut lesbar und unterscheidbar</span>` : `<span class="bad">✗ Orange und Petrol als Schrift auf Weiß schwach, als Fläche gut</span>`);
-  kb2.onclick = () => setScheme(SCHULE, "Hausfarben");
+  kb2.onclick = () => setScheme(SCHULE, "Schulfarben");
   hb.appendChild(kb2);
   const el = document.getElementById("props"); el.innerHTML = "";
   pSeiten[pPos].forEach(n => {
@@ -482,7 +482,7 @@ function renderOpts() {
   el.querySelectorAll("[data-m]").forEach(b => b.onclick = () => { M[b.dataset.m] = b.dataset.v; renderAll(); zeigeVorschau(); });
   document.getElementById("code").textContent = codeVon();
   if (!document.getElementById("legende").innerHTML)
-    document.getElementById("legende").innerHTML = `<p class="hint" style="margin:6px 0">Beispiel: <code>284-kh-zj-cn-if-pl-fg-qt-jj-on-ht-ld-yg-gn-wg-us-d1-rb-xn-mn-er-sn-bk-an-td</code>. Fehlt eine Einstellung im Code, gilt die Voreinstellung. Vorne steht die Nummer der Farbkombination aus dem Buch. Ist sie verändert, folgt ein <code>x</code> (z. B. <code>284x</code>), ohne Kombination steht <code>X</code>, für die Hausfarben der Schule steht <code>SCHULE</code>. Dann folgen je zwei Zeichen pro Einstellung. Am Ende stehen geänderte Farben als Großbuchstabe mit Farbcode (<code>G</code> Grundfarbe, <code>F</code>, <code>B</code>, <code>I</code> die drei Bereiche des Kurses (${BER.map(b=>b[1]).join(", ")}), <code>A</code> Allgemein, <code>T</code> Tests).</p><table class="legende">${OPTIONEN.map(o => `<tr><td><code>${o.k}</code></td><td>${o.n}</td><td>${o.o.map(([v,txt]) => `<code>${o.k}${v}</code> ${txt}`).join(" · ")}</td></tr>`).join("")}<tr><td><code>a</code></td><td>Reiter Allgemein</td><td><code>an</code> neutral · <code>ae</code> eigene Farbe</td></tr><tr><td><code>t</code></td><td>Reiter Tests</td><td><code>td</code> dunkel · <code>te</code> eigene Farbe</td></tr></table>`;
+    document.getElementById("legende").innerHTML = `<p class="hint" style="margin:6px 0">Beispiel: <code>284-kh-zj-cn-if-pl-fg-qt-jj-on-ht-ld-yg-gn-wg-us-d1-rb-xn-mn-er-sn-bk-an-td</code>. Fehlt eine Einstellung im Code, gilt die Voreinstellung. Vorne steht die Nummer der Farbkombination aus dem Buch. Ist sie verändert, folgt ein <code>x</code> (z. B. <code>284x</code>), ohne Kombination steht <code>X</code>, für die Schulfarben der Schule steht <code>SCHULE</code>. Dann folgen je zwei Zeichen pro Einstellung. Am Ende stehen geänderte Farben als Großbuchstabe mit Farbcode (<code>G</code> Grundfarbe, <code>F</code>, <code>B</code>, <code>I</code> die drei Bereiche des Kurses (${BER.map(b=>b[1]).join(", ")}), <code>A</code> Allgemein, <code>T</code> Tests).</p><table class="legende">${OPTIONEN.map(o => `<tr><td><code>${o.k}</code></td><td>${o.n}</td><td>${o.o.map(([v,txt]) => `<code>${o.k}${v}</code> ${txt}`).join(" · ")}</td></tr>`).join("")}<tr><td><code>a</code></td><td>Reiter Allgemein</td><td><code>an</code> neutral · <code>ae</code> eigene Farbe</td></tr><tr><td><code>t</code></td><td>Reiter Tests</td><td><code>td</code> dunkel · <code>te</code> eigene Farbe</td></tr></table>`;
 }
 function zeigeVorschau() {
   const r = document.querySelector(".studio").getBoundingClientRect(), anz = document.getElementById("anzeige").offsetHeight + 22;
@@ -514,14 +514,14 @@ function codeLaden(text) {
   if (m[1]) { if (!COMBO[+m[1]]) return `Kombination Nr. ${m[1]} gibt es nicht (1 bis 348).`; ohneVerlauf = true; ladeNr(+m[1]); ohneVerlauf = false; }
   if (hausfarben) S = {G:SCHULE.G, A:SCHULE.G, F:SCHULE.F, B:SCHULE.B, I:SCHULE.I, T:SCHULE.G};
   Object.assign(S, farben); O = neuO; M = neuM;
-  quelle = hausfarben ? (Object.keys(farben).length ? "eigene Auswahl" : "Hausfarben") : m[1] ? (m[2] || Object.keys(farben).some(k => "GFBI".includes(k)) ? `Nr. ${m[1]}, geändert` : `Nr. ${m[1]}`) : "eigene Auswahl";
+  quelle = hausfarben ? (Object.keys(farben).length ? "eigene Auswahl" : "Schulfarben") : m[1] ? (m[2] || Object.keys(farben).some(k => "GFBI".includes(k)) ? `Nr. ${m[1]}, geändert` : `Nr. ${m[1]}`) : "eigene Auswahl";
   renderAll();
   return fehler.length ? `Geladen. Nicht erkannt: ${fehler.join(", ")}` : "Code geladen.";
 }
 
 // --- Kursbild ---
 // Foto-Banner im Stil des Skills kursbanner (1600 x 900): Fläche links, Foto rechts, Titel, Strich, Stufe, Untertitel.
-// Farben: einheitlich in den Hausfarben (Schulprofil) oder aus dem Farbschema (Grundfarbe, Akzent = Bereichsfarbe mit dem besten Kontrast).
+// Farben: einheitlich in den Schulfarben (Schulprofil) oder aus dem Farbschema (Grundfarbe, Akzent = Bereichsfarbe mit dem besten Kontrast).
 const FOTO_METALL = KI.banner.foto;
 let fbNr = 0;
 function bannerFarben() {
@@ -671,7 +671,7 @@ function renderButtons() {}
 // --- Anzeige: gewählte Kombination und Farben (bleibt beim Scrollen oben stehen) ---
 function renderAnzeige() {
   const m = (quelle||"").match(/Nr\. (\d+)/), geaendert = /geändert/.test(quelle||"");
-  const kopf = (istSchule() ? `<div class="nr"><small>Farbkombination</small>Hausfarben der Schule` : m ? `<div class="nr"><small>Farbkombination${geaendert ? " (geändert)" : ""}</small>Nr. ${m[1]}` : `<div class="nr"><small>Farbkombination</small>eigene Auswahl`) + `<span class="cd" title="Gestaltungscode">${codeVon()}</span></div>`;
+  const kopf = (istSchule() ? `<div class="nr"><small>Farbkombination</small>Schulfarben der Schule` : m ? `<div class="nr"><small>Farbkombination${geaendert ? " (geändert)" : ""}</small>Nr. ${m[1]}` : `<div class="nr"><small>Farbkombination</small>eigene Auswahl`) + `<span class="cd" title="Gestaltungscode">${codeVon()}</span></div>`;
   const felder = SLOTS.map(([k,n]) => {
     const auto = (k==="A" && M.A==="neutral") || (k==="T" && M.T==="dunkel");
     const farbe = k==="T" && auto ? S.G : col(k);

@@ -9,7 +9,7 @@ Lernplattform, Lehrplan, Zusammenarbeit, Zustellung). Die eine Stelle, an der Sk
   profil.zahl('Bestehensgrenze')     70
   profil.muster('Klassenmuster')     regulärer Ausdruck aus allen Zeilen (je Zeile eine Alternative, denn | trennt Werte)
   profil.utf8_ausgabe()              Ausgabe auf UTF-8 (Windows-Konsole), am Anfang von main()
-  profil.haus_css()                  ':root { --haus-haupt:#2F4858; … }' (Hausfarben als CSS-Variablen)
+  profil.haus_css()                  ':root { --haus-haupt:#2F4858; … }' (Schulfarben als CSS-Variablen)
   profil.logo_data('Logo')           Logo als data:-Adresse
 
 Ein anderes Profil (Tests, Beispielprofile): Umgebungsvariable SCHULPROFIL=<Pfad>.
@@ -116,7 +116,7 @@ def muster(schluessel, pfad=None):
                            'jede Alternative auf eine eigene Zeile schreiben.' % (schluessel, e))
 
 
-# Hausfarben als CSS-Variablen (Vorlage Allgemeinbildung.html, Handbuch): Name -> Schlüssel im Profil
+# Schulfarben als CSS-Variablen (Vorlage Allgemeinbildung.html, Handbuch): Name -> Schlüssel im Profil
 HAUSFARBEN = (('haupt', 'Farbe-Haupt'), ('akzent', 'Farbe-Akzent'), ('zweit', 'Farbe-Zweit'), ('dritt', 'Farbe-Dritt'),
               ('papier', 'Farbe-Papier'), ('band-text', 'Farbe-Band-Text'))
 HAUS_ALPHA = (('akzent', 16), ('akzent', 20))   # Akzent durchscheinend (Hervorhebungen), als --haus-akzent-16 usw.
@@ -124,7 +124,7 @@ RX_FARBE = re.compile(r'#[0-9A-Fa-f]{6}')
 
 
 def haus_css(pfad=None):
-    """:root { --haus-haupt:#…; … } aus den Hausfarben (eine Zeile). Fehlt eine Farbe: ProfilFehler."""
+    """:root { --haus-haupt:#…; … } aus den Schulfarben (eine Zeile). Fehlt eine Farbe: ProfilFehler."""
     teile = []
     farben = {}
     for name, k in HAUSFARBEN:

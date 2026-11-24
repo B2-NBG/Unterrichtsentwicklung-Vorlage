@@ -12,7 +12,7 @@ Automatische Teile im Handbuch (zwischen <!-- AUTO:name --> und <!-- /AUTO:name 
           zum Werkzeug aus .agents/handbuch/neuigkeiten.txt
   fragen  "Häufige Fragen" aus .agents/handbuch/fragen.txt mit Link auf den Abschnitt, der sie beantwortet (unsichtbar, nur für die Suche)
   skills  alle Skills: Kurztexte aus .agents/handbuch/skills.txt, sonst Beschreibung und Auslöser aus der SKILL.md (Helfer stehen nicht im Handbuch)
-  erscheinungsbild, logo, kurzname   aus dem Schulprofil (schule.txt): Hausfarben als CSS-Variablen (der Stil nutzt nur
+  erscheinungsbild, logo, kurzname   aus dem Schulprofil (schule.txt): Schulfarben als CSS-Variablen (der Stil nutzt nur
           var(--haus-…)), Logo als data:-Adresse, Kurzname der Schule im Kopf
 Prüfungen: jede Frage und jeder interne Link hat ein Ziel, ids sind eindeutig, Anfang und Ende der Seite, Tags geschlossen,
 keine Platzhalter und Markdown-Zeichen, keine externen Ressourcen, "die KI" statt Produktname.
