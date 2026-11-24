@@ -1,0 +1,21 @@
+# Fächer und Lernfelder für Ablageort, Paketnamen, Schriftfeld und Handbuch:
+#   Kürzel | voller Name | Klassen (optional, mit Komma)
+# Das Kürzel ist der Ordner- und Dateiname (Unterricht/<Klasse>/<Kürzel>/..., nur Buchstaben und Ziffern, höchstens 8 Zeichen),
+# der volle Name steht im Schriftfeld und im Handbuch. Lernfelder heißen LF<Nummer>. Weil dieselbe Nummer in jedem Beruf
+# etwas anderes bedeutet, steht dahinter die Klasse (z. B. MGF10); Fächer ohne Klasse gelten für alle.
+# Die Liste ist sortiert: zuerst nach Abteilung (Fächer ohne Klasse stehen oben), dann nach Klasse, dann nach Kürzel.
+# Ein neues Fach (unter "Other" eingetippt) wird an der passenden Stelle eingefügt. Stehen bei einem Lernfeld Klassen aus
+# zwei Abteilungen, bekommt jede Abteilung ihre eigene Zeile. Zu welcher Abteilung eine Klasse gehört, steht in schutz.txt.
+# Zeilen mit # werden ignoriert. Liest unterrichtsmaterial.py (.agents/gemeinsam/scripts).
+# Alle Klassen (Fächer ohne Klasse oder für die Sammelordner ALLE …)
+
+# Alle Klassen
+D | Deutsch
+E | Englisch
+Eth | Ethik
+M | Mathematik
+PuG | Politik und Gesellschaft
+Spo | Sport
+
+# Beispielklasse MUSTER10 (Lernfelder heißen LF<Nummer>, dahinter die Klasse)
+LF1 | Lernfeld 1: Beispiel-Lernfeld | MUSTER10

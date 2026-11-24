@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+  <question type="category">
+    <category>
+      <text>$course$/top/Standard für Test - Beispiel Messen</text>
+    </category>
+  </question>
+  <question type="multichoice">
+    <name><text>Tiefe messen</text></name>
+    <questiontext format="html"><text>Mit welchem Teil des Messschiebers misst du die Tiefe einer Bohrung?</text></questiontext>
+    <generalfeedback format="html"><text>Die Tiefenmessstange fährt hinten aus, wenn du den Schieber öffnest.</text></generalfeedback>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text>Mit der Tiefenmessstange</text>
+      <feedback format="html"><text>Richtig: Sie liegt am Bohrungsgrund an.</text></feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text>Mit den Messschnäbeln für Außenmaße</text>
+      <feedback format="html"><text>Nicht ganz: Die Messschnäbel umfassen ein Werkstück von außen.</text></feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text>Mit den Messschneiden für Innenmaße</text>
+      <feedback format="html"><text>Nicht ganz: Die Messschneiden messen einen Durchmesser von innen, nicht die Tiefe.</text></feedback>
+    </answer>
+  </question>
+  <question type="numerical">
+    <name><text>Nonius ablesen</text></name>
+    <questiontext format="html"><text>Die Null des Nonius steht zwischen 23 und 24 mm. Der 7. Strich des Nonius trifft einen Strich der Hauptskala. Welches Maß in mm zeigt der Messschieber?</text></questiontext>
+    <generalfeedback format="html"><text>Ganze Millimeter links der Nonius-Null, dazu die Zehntel vom übereinstimmenden Strich.</text></generalfeedback>
+    <defaultgrade>2</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <answer fraction="100" format="moodle_auto_format">
+      <text>23.7</text>
+      <tolerance>0.01</tolerance>
+      <feedback format="html"><text>Richtig: 23 mm + 7 · 0,1 mm = 23,7 mm.</text></feedback>
+    </answer>
+  </question>
+  <question type="shortanswer">
+    <name><text>Ablesefehler</text></name>
+    <questiontext format="html"><text>Wie heißt der Fehler, der entsteht, wenn du die Skala schräg von der Seite abliest?</text></questiontext>
+    <generalfeedback format="html"><text>Immer senkrecht auf die Skala schauen.</text></generalfeedback>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <usecase>0</usecase>
+    <answer fraction="100" format="moodle_auto_format">
+      <text>Parallaxe</text>
+      <feedback format="html"><text>Richtig!</text></feedback>
+    </answer>
+    <answer fraction="100" format="moodle_auto_format">
+      <text>Parallaxefehler</text>
+      <feedback format="html"><text>Richtig!</text></feedback>
+    </answer>
+  </question>
+  <question type="matching">
+    <name><text>Einheiten</text></name>
+    <questiontext format="html"><text>Ordne die gleich großen Längen einander zu.</text></questiontext>
+    <generalfeedback format="html"><text>1 m = 100 cm = 1000 mm, 1 mm = 1000 µm.</text></generalfeedback>
+    <defaultgrade>2</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <shuffleanswers>true</shuffleanswers>
+    <subquestion format="html">
+      <text>1 cm</text>
+      <answer><text>10 mm</text></answer>
+    </subquestion>
+    <subquestion format="html">
+      <text>1 m</text>
+      <answer><text>1000 mm</text></answer>
+    </subquestion>
+    <subquestion format="html">
+      <text>1 mm</text>
+      <answer><text>1000 µm</text></answer>
+    </subquestion>
+  </question>
+</quiz>

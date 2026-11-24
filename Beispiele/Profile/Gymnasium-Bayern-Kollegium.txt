@@ -1,0 +1,104 @@
+# Beispielprofil: Gymnasium Bayern, Kollegium. Nach .agents/gemeinsam/data/schule.txt kopieren und anpassen,
+# danach sync-vorlage.py --vorlagen und pruefen.py --erneuern (README).
+# Schulprofil: alles, was an Schule, Schulart, Lernplattform und Erscheinungsbild hängt, an einer Stelle.
+# Die Skripte lesen es über .agents/gemeinsam/scripts/profil.py, niemand tippt diese Werte in Skripte, Regeln oder Skills.
+# Form: eine Zeile je Angabe, "Schlüssel | Wert" (mehrere Werte mit | getrennt). Ein Schlüssel, der mehrfach vorkommt,
+# ist eine Liste (z. B. Niveau, Abschnitt). Zeilen mit # werden ignoriert, Leerzeichen um | zählen nicht.
+# Diese Datei ist Werkzeug (schutz.txt): Ändern dürfen sie nur Werkzeug-Verantwortliche. Sie gilt für die ganze Schule.
+# Eine Änderung hier ändert Lernpakete und Kurse: vorher und nachher referenz.py (handbuch.md, "Selbsttest"). Danach
+# pruefen.py --erneuern am Rechner: Es schreibt die erzeugten Blöcke (<!-- AUTO:… -->) in AGENTS.md, Regeln und Skills neu.
+
+# ---------- Schule ----------
+Schule | Musterstadt-Gymnasium
+Kurzname | Gymnasium Musterstadt
+# Schulart: Name | so im Satz "Ich unterrichte …" (an einer Berufsschule, an einem Gymnasium)
+Schulart | Gymnasium | an einem Gymnasium
+# Beruf: ja, wenn das Schriftfeld den Beruf führt und der Auswahldialog ihn fragt (berufe.txt)
+Beruf | nein
+Land | Bayern
+
+# ---------- Erscheinungsbild (Corporate Design) ----------
+# Hausfarben: Haupt (Band, Überschriften), Akzent (Knöpfe, Hervorhebung), Zweit und Dritt (Bereiche im Kurs), Papier und
+# Text auf dem Band. Logo: Pfad im Repo (PNG), im Kopf der Vorlage Allgemeinbildung.html und im Handbuch;
+# Logo-Kursbanner: das Logo im Kursbanner (Skill kursbanner). sync-vorlage.py --vorlagen und pruefen.py --erneuern
+# setzen Farben und Logo in Vorlage und Handbuch ein (Seiten behalten ihr Logo in bilder/).
+Farbe-Haupt | #2F4858
+Farbe-Akzent | #F6AE2D
+Farbe-Zweit | #33658A
+Farbe-Dritt | #86BBD8
+Farbe-Papier | #FAFAF7
+Farbe-Band-Text | #D5DEE5
+Logo | .agents/gemeinsam/data/erscheinungsbild/logo.png
+Logo-Kursbanner | .agents/gemeinsam/data/erscheinungsbild/kursbanner-logo.png
+# Schrift für Seiten mit Technischem Zeichnen (<meta name="schrift" content="zeichnen">): Ordner mit WOFF-Teilmengen, leer = Systemschrift
+Schrift-Zeichnen |
+
+# ---------- Klassen und Jahrgänge ----------
+# Klassenmuster: regulärer Ausdruck für das Klassenkürzel (Ordnername in Unterricht/). Jahrgänge: kleinster und größter.
+# Jahr-Versatz: Ausbildungsjahr = Jahrgang - Versatz (Berufsschule: 10. Klasse = 1. Jahr), Jahr-Bezeichnung im Schriftfeld.
+# Sammelname: Ordner für Material mehrerer Klassen (ALLE10 = alle 10. Klassen, ALLE = alle Jahrgänge).
+Klassenmuster | [5-9][a-f]
+Klassenmuster | 1[01][a-f]
+Klassenmuster | Q1[23]
+Jahrgänge | 5 | 13
+Jahr-Versatz | 0
+Jahr-Bezeichnung | Jahrgangsstufe
+Sammelname | ALLE
+# Beispielklassen: nur für Meldungen ("erwartet ist ein Klassenkürzel wie …")
+Beispielklassen | 7b | Q12
+
+# ---------- Abschnitte (Ordner unter Unterricht/<Klasse>/<Fach>/) ----------
+#   Abschnitt | <Kürzel> | <Name> | Nummer oder Name   (Nummer: BW1, BW2 …; Name: M-<Name>)
+Abschnitt | LS | Lernsequenz | Nummer
+Abschnitt | R | Themenreihe | Name
+
+# ---------- Niveaus und Bewertung ----------
+#   Niveau | <Name> | <Farbe im Text> | <Anteil an den Punkten in %>   (Reihenfolge wie in der Seite)
+# Noch fest: Vorlagen und Lernpakete rechnen mit 40/40/20 und 70 %. Ändern geht erst mit der Vorlagen-Hauptversion
+# (der Selbsttest in pruefen.py meldet es bis dahin als Fehler).
+Niveau | Einsteigerniveau | blau | 40
+Niveau | Prüfungsniveau | rot | 40
+Niveau | Profiniveau | schwarz | 20
+Bestehensgrenze | 70
+# Notenstufen im Kurs: Note ab Prozent der Höchstpunktzahl
+Note | 1 | 92
+Note | 2 | 81
+Note | 3 | 67
+Note | 4 | 50
+Note | 5 | 30
+Note | 6 | 0
+
+# ---------- Lernplattform (Moodle) ----------
+# Werte der eigenen Moodle-Instanz, aus einer frischen Kurssicherung abzulesen (Datei moodle_backup.xml):
+# Adresse (wwwroot), Version (moodle_version, moodle_release), Kategorie (Name und Nummer), Eigentümer der Dateien
+# (Nummer des Lehrkraft-Kontos). Bei einer neuen Moodle-Version mit einer frischen Sicherung vergleichen.
+Plattform | ByCS Lernplattform
+Plattform-Kurz | ByCS
+Plattform-Art | Moodle
+Plattform-Beschreibung | BayernCloud Schule, läuft auf Moodle, früher mebis
+Moodle-Adresse | https://lernplattform.bycs.de
+Moodle-Site-Hash |
+Moodle-Version | 2026042004 | 5.2.4 (Build: 20261005)
+Moodle-Sicherung | 2026042000 | 5.2
+Moodle-Kategorie | 1 | Musterschule
+Moodle-Besitzer | 2
+
+# ---------- Lehrplan, Kalender, Sprache ----------
+Lehrplan | Bayerischer LehrplanPLUS | https://www.lehrplanplus.bayern.de
+Ferien-Quelle | https://www.km.bayern.de/termine/ferien-und-feiertage
+# Sprachsensibel schreiben (sprache.md): Pflicht in diesen Klassentypen, sonst Richtschnur
+Sprache-Pflicht |
+
+# ---------- Zusammenarbeit und Zustellung ----------
+# Schutz: teams (GitHub-Organisation mit Teams und Rulesets, schutz.txt) oder aus (eine Lehrkraft allein).
+# Team-Werkzeug: GitHub-Team der Werkzeug-Verantwortlichen.
+# Zustellung: power-automate (Flow legt Pakete in den Teamordner) oder download (Pakete als Download im GitHub-Lauf).
+Schutz | teams
+# Bei Schutz "teams": GitHub-Team der Werkzeug-Verantwortlichen
+Team-Werkzeug | werkzeug-verantwortliche
+Zustellung | download
+# Nur bei Zustellung "power-automate" (Anleitung: einrichtung-admin.md), zum Beispiel:
+#   Teamordner | <Team> | Dokumente | LERNPAKETE
+#   Teamordner-Link | <Link zum Ordner im Web>
+#   Schulkonto | <Name des Schulkontos>
+#   Flow-Kopf | X-Schule-Schluessel

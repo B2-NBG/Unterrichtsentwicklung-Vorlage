@@ -1,0 +1,2 @@
+# Bilder in Themenordnern bleiben Byte für Byte, wie sie sind (kein Umwandeln der Zeilenenden, auch nicht bei SVG)
+Unterricht/**/bilder/** -text

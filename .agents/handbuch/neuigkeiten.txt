@@ -1,0 +1,5 @@
+# Neuigkeiten für das Kollegium: Was sich an Regeln, Werkzeugen und Abläufen ändert. Erscheint im Handbuch unter "Was ist neu".
+# Eine Zeile je Neuigkeit, neueste oben: TT.MM.JJJJ | ein Satz, ohne Technik, aus Sicht der Kolleg/innen.
+# Änderungen an Lernpaketen stehen automatisch drin (aus der Änderungsliste jedes Pakets).
+# Die Prüfung pruefen.py sorgt dafür, dass Änderungen an Skills, Vorlagen und Regeln hier oder im Handbuch landen.
+01.12.2026 | Erste öffentliche Fassung des Werkzeugs.

@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Farbschema-Baukasten – {{VOLLNAME}}</title>
+<!-- Arbeitswerkzeug für die Lehrkräfte (kein Schülermaterial): Farbschema für einen ByCS-Kurs auswählen.
+     Erzeugt von .agents/skills/kurs-umgestalten/scripts/baukasten.py aus der Vorlage templates/Farbschema-Baukasten.html. Farben und Kombinationen: Sanzo Wada,
+     "A Dictionary of Color Combinations", digitalisiert von mattdesl
+     (github.com/mattdesl/dictionary-of-colour-combinations). -->
+<style>
+:root{--ui:#2b2f36;--ui2:#5d6470;--line:#d9dce1;--bg:#f3f4f6}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ui);background:var(--bg)}
+.wrap{max-width:1400px;margin:0 auto;padding:24px 20px 60px}
+h1{font-size:26px;margin:0 0 4px}
+h2{font-size:19px;margin:34px 0 10px;padding-top:14px;border-top:1px solid var(--line)}
+p.lead{margin:0 0 16px;color:var(--ui2)}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+button,.btn{font:inherit;cursor:pointer;border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 12px;color:var(--ui)}
+button:hover{border-color:#9aa1ab}
+button.on{background:var(--ui);color:#fff;border-color:var(--ui)}
+.mini{display:inline-flex;gap:2px;vertical-align:middle;margin-left:6px}
+.mini i{width:14px;height:14px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.12)}
+.hint{font-size:13px;color:var(--ui2)}
+.anzeige{position:sticky;top:0;z-index:20;background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px 10px;margin:12px 0;box-shadow:0 2px 10px rgba(0,0,0,.1);display:flex;gap:4px 10px;align-items:center;flex-wrap:wrap}
+.anzeige .nr{font-size:19px;font-weight:800;line-height:1.1;margin-right:6px}
+.anzeige .nr small{display:block;font-size:10px;font-weight:600;color:var(--ui2);letter-spacing:.04em;text-transform:uppercase}
+.anzeige .f{display:flex;align-items:center;gap:6px;font-size:12px;line-height:1.2;text-align:left;padding:3px 6px;border:1px solid transparent;border-radius:8px;background:none}
+.anzeige .f:hover{border-color:#9aa1ab;background:#f7f8fa}
+.anzeige .f.on{border-color:var(--ui);color:var(--ui);background:#f7f8fa}
+.anzeige .knoepfe{margin-left:auto;display:flex;gap:6px;align-items:center}
+.anzeige .zufall{font-size:20px;line-height:1;padding:5px 10px}
+.anzeige .zurueck{font-size:13px;padding:6px 10px}
+.anzeige .zurueck:disabled{opacity:.4;cursor:default}
+#baukasten{scroll-margin-top:150px}
+.anzeige .f i{width:20px;height:20px;border-radius:6px;border:1px solid rgba(0,0,0,.15);flex:none}
+.anzeige .f small{display:none}
+.opts{display:grid;grid-template-columns:1fr;gap:10px}
+.studio{display:grid;grid-template-columns:minmax(220px,300px) minmax(0,1fr);gap:12px;height:calc(100vh - var(--anz,110px) - 10px);min-height:420px}
+.studio-l,.studio-r{overflow:auto;min-height:0;border-radius:10px}
+.studio-r .browser{min-height:100%}
+.studio-l .card{padding:12px 14px}
+.studio-l .codebox{flex-direction:column;align-items:stretch}
+.studio-l .codebox input{min-width:0}
+@media (max-width:760px){.studio{grid-template-columns:1fr;grid-template-rows:minmax(0,58fr) minmax(0,42fr)}.studio-r{order:-1}}
+.tab.hov:not(.akt):hover,.stab.hov:not(.akt):hover{background:var(--hb)!important;color:var(--hf)!important}
+.kbmini{width:100%;aspect-ratio:12/5;position:relative;border-radius:6px;overflow:hidden;margin-top:6px}
+.opt b{display:block;font-size:13px;margin-bottom:4px}
+.seg{display:flex;flex-wrap:wrap;gap:4px}
+.seg button{padding:4px 9px;font-size:13px}
+.codebox{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.code{font:600 15px ui-monospace,Menlo,Consolas,monospace;background:#f3f4f6;padding:6px 10px;border-radius:6px;user-select:all;word-break:break-all}
+.codebox input{font:14px ui-monospace,Menlo,Consolas,monospace;padding:6px 8px;border:1px solid var(--line);border-radius:8px;min-width:260px;flex:1}
+.legende{font-size:13px;border-collapse:collapse;margin-top:8px}
+.legende td{padding:3px 10px 3px 0;vertical-align:top;border-bottom:1px solid #eef0f2}
+.anzeige .cd{font:600 10px ui-monospace,Menlo,Consolas,monospace;color:var(--ui2);display:block;margin-top:2px}
+.note{background:#fffbea;border:1px solid #f0dc9a;border-radius:8px;padding:10px 12px;font-size:14px}
+
+/* Vorschläge */
+.props{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.prop{text-align:left;padding:12px;border-radius:10px}
+.prop b{display:block;font-size:16px}
+.prop .bar{display:flex;height:26px;border-radius:6px;overflow:hidden;margin:8px 0 6px}
+.prop .bar i{flex:1}
+.prop .bad,.prop .ok{font-size:12px;display:block;margin-top:4px}
+.prop.on{outline:3px solid var(--ui);outline-offset:1px;background:#fff;color:var(--ui)}
+
+/* Moodle-Nachbau */
+.browser{border:1px solid #c7cbd1;border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.navbar{background:#fff;border-bottom:1px solid #dee2e6;padding:5px 14px;display:flex;gap:18px;align-items:center;font-size:12px;color:#495057}
+.navbar .logo{font-weight:700;color:#343a40}
+.course{padding:8px 16px 20px}
+.course h3{font-size:19px;margin:0 0 8px;font-weight:600;color:#1d2125}
+.crumb{font-size:11px;color:#6a737b}
+.tabs{display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid #dee2e6;margin-top:6px}
+.tab{padding:8px 14px 7px;border-radius:7px 7px 0 0;cursor:pointer;font-weight:600;font-size:15px;border-top:4px solid transparent;user-select:none;position:relative}
+.tab.hid{opacity:.75}
+.tab.hid::after{content:"verborgen";font-size:10px;font-weight:600;position:absolute;right:4px;top:-15px;background:#eee;color:#555;padding:0 4px;border-radius:3px}
+.subtabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px 6px 0;border-bottom:1px solid #dee2e6}
+.stab{padding:6px 11px;border-radius:6px 6px 0 0;cursor:pointer;font-size:14px;user-select:none}
+.sectionbox{padding:16px;border:1px solid #dee2e6;border-top:0;border-radius:0 0 8px 8px;min-height:180px}
+.kopf-wrap{position:relative}
+.callout{position:absolute;right:-6px;top:-30px;background:#e8342e;color:#fff;font-size:12px;font-weight:700;padding:3px 9px;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.callout::after{content:"";position:absolute;left:22px;bottom:-6px;border:6px solid transparent;border-top-color:#e8342e;border-bottom:0}
+.act{display:flex;gap:12px;align-items:center;padding:9px 6px;border-bottom:1px solid #eef0f2}
+.act .ic{width:36px;height:36px;border-radius:8px;display:grid;place-items:center;font-size:18px;flex:none}
+.act .ty{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#6a737b}
+.act .nm{color:#0f6cbf;font-weight:500}
+.bsp{font-size:11px;border:1px dashed #9aa1ab;color:#6a737b;border-radius:4px;padding:0 5px;margin-left:6px;font-weight:400}
+.badge{font-size:11px;background:#e9ecef;color:#495057;border-radius:4px;padding:1px 6px;margin-left:6px}
+.sub{border:1px solid #dee2e6;border-radius:8px;margin:12px 0;overflow:hidden}
+.sub > .sh{padding:9px 12px;font-weight:600;display:flex;gap:8px;align-items:center;cursor:pointer}
+.sub > .sb{padding:0 12px 6px}
+.sub.zu > .sb{display:none}
+.empty{color:#8a9097;font-style:italic;padding:14px 4px}
+
+/* Kursbild */
+.kb-row{display:grid;grid-template-columns:2fr 1fr;gap:16px;align-items:start}
+.kb{width:100%;aspect-ratio:12/5;border-radius:8px;overflow:hidden;position:relative}
+.kursliste{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.kursliste .img{overflow:hidden;position:relative}
+.kursliste .img .kb{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:0}
+.kursliste.r2 .img{aspect-ratio:2/1}.kursliste.r2 .img .kb{width:120%}
+.kursliste.r3 .img{aspect-ratio:3/1}.kursliste.r3 .img .kb{width:100%}
+.kopf{position:relative;width:100%;aspect-ratio:4.19/1;overflow:hidden;border-radius:8px;container-type:inline-size;background:#e5e7eb;margin-top:6px}
+.kopf .bn{position:absolute;left:0;width:100%;aspect-ratio:16/9;top:50%;transform:translateY(-50%)}
+.kopf .nm{position:absolute;left:2.2%;top:58%;background:#fff;border-radius:1.1cqw;padding:.9cqw 2cqw;font:500 3.6cqw/1.2 system-ui,Segoe UI,Arial;color:#1f2937;white-space:nowrap}
+.safe{position:absolute;left:8.33%;top:10%;width:83.33%;height:80%;border:2px dashed #ff5a4f;border-radius:4px;pointer-events:none;display:none}
+.safe span{position:absolute;left:6px;top:4px;font-size:11px;font-weight:700;color:#fff;background:#ff5a4f;padding:0 6px;border-radius:3px}
+.kb.zeige .safe{display:block}
+.kursliste .t{padding:10px 12px;font-size:14px}
+
+/* Baukasten */
+.bk{display:grid;grid-template-columns:300px 1fr;gap:16px}
+.slot{display:flex;align-items:center;gap:10px;padding:8px;border:2px solid transparent;border-radius:8px;cursor:pointer;width:100%;text-align:left;background:#fff}
+.slot.on{border-color:var(--ui);background:#f7f8fa}
+.slot .sw{width:34px;height:34px;border-radius:6px;border:1px solid rgba(0,0,0,.15);flex:none}
+.slot small{display:block;color:var(--ui2);font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(30px,1fr));gap:4px}
+.grid i{aspect-ratio:1;border-radius:5px;cursor:pointer;border:1px solid rgba(0,0,0,.12)}
+.grid i:hover{transform:scale(1.25);box-shadow:0 2px 6px rgba(0,0,0,.25);position:relative;z-index:1}
+.grid i.sel{outline:3px solid var(--ui);outline-offset:1px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:13px;padding:4px 8px;border-radius:14px;border:1px solid var(--line);background:#fff;cursor:pointer}
+.chip:hover{border-color:#9aa1ab}
+.warn li{margin:3px 0}
+.ok{color:#1a7444}.bad{color:#b3261e}.mid{color:#8a5a00}
+textarea{width:100%;min-height:110px;font:13px/1.4 ui-monospace,Menlo,Consolas,monospace;border:1px solid var(--line);border-radius:8px;padding:8px}
+input[type=number]{font:inherit;width:90px;padding:6px 8px;border:1px solid var(--line);border-radius:8px}
+@media (max-width:860px){.bk,.kb-row{grid-template-columns:1fr}}
+@media (max-width:1000px){.anzeige .f .nm,.anzeige .f br,.anzeige .nr .cd{display:none}.anzeige .nr{font-size:16px}}
+@media (max-width:760px){.anzeige{flex-wrap:nowrap;gap:2px}.anzeige .f b,.anzeige .nr small{display:none}.anzeige .f{padding:3px}.anzeige .nr{font-size:15px;white-space:nowrap}.anzeige .zufall{font-size:17px;padding:4px 8px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Farbschema-Baukasten</h1>
+<p class="lead">Kurs „{{VOLLNAME}}“ · Farben aus Sanzo Wada, <i>A Dictionary of Color Combinations</i> · Arbeitswerkzeug für die Lehrkräfte</p>
+
+<div class="note"><b>So geht's:</b> Die Datei funktioniert ohne Internet, einfach im Browser öffnen. 1. Einen Vorschlag anklicken oder unten im Baukasten eigene Farben wählen. 2. In der Kursansicht die Reiter durchklicken. 3. Den Kopfband-Stil ausprobieren. Du kannst auch eigene Farben zusammenstellen (Abschnitt 3). 4. Gefällt dir ein Schema, den <b>Gestaltungscode</b> kopieren (oben links in der Kursansicht) und im Chat der KI geben. Die KI baut damit die Kurssicherung.</div>
+
+<div class="anzeige" id="anzeige"></div>
+
+<h2>1 · Vorschläge aus dem Buch</h2>
+<div class="row" style="margin-bottom:10px">
+  <button id="pzurueck">← zurück</button><button id="pvor">vorwärts →</button><button id="pzufall" title="Drei zufällige Vorschläge">🔀 Zufall</button>
+  <span class="hint" id="pinfo"></span>
+</div>
+<div class="props" id="propsHaus" style="margin-bottom:12px"></div>
+<div class="props" id="props"></div>
+
+<h2>2 · So sieht der Kurs aus</h2>
+<p class="hint" style="margin-top:0">Links einstellen, rechts sofort sehen. Das <b>Kopfband</b> ist der Abschnittstext oben in jedem Reiter (Icon, Titel, ein Satz „Darum geht's“, Anzahl der Inhalte), die Sätze sind Entwürfe. Unterabschnitte klappen per Klick auf und zu. <span class="bsp" style="margin:0">Beispiel</span> = Platzhalter, nicht in der Sicherung.</p>
+<div class="studio">
+<div class="studio-l">
+<div class="card">
+  <b style="font-size:16px">Gestaltung einstellen</b>
+  <p class="hint" style="margin:2px 0 10px">Jede Einstellung wirkt sofort in der Kursansicht. Alles hier lässt sich in der ByCS so umsetzen.</p>
+  <div class="opts" id="opts"></div>
+  <div class="codebox">
+    <span><b>Gestaltungscode:</b></span><span class="code" id="code"></span><button id="codecopy">Code kopieren</button><span class="hint" id="codeinfo"></span>
+  </div>
+  <div class="codebox" style="border-top:0;margin-top:6px;padding-top:0">
+    <input id="codein" placeholder="Code einfügen, z. B. von einer Kollegin oder einem Kollegen"><button id="codeladen">Code laden</button>
+  </div>
+  <details style="margin-top:10px"><summary class="hint" style="cursor:pointer">So ist der Code aufgebaut</summary><div id="legende"></div></details>
+</div>
+</div>
+<div class="studio-r">
+<div class="browser">
+  <div class="navbar"><span class="logo">Lernplattform</span><span>Startseite</span><span>Dashboard</span><span>Meine Kurse</span></div>
+  <div class="course">
+    <div class="crumb">Meine Kurse › {{KURZNAME}}</div>
+    <h3>{{VOLLNAME}}</h3>
+    <div class="tabs" id="tabs"></div>
+    <div class="subtabs" id="subtabs"></div>
+    <div class="sectionbox" id="section"></div>
+  </div>
+</div>
+</div>
+</div>
+
+<h2 id="baukasten">3 · Baukasten: eigenes Schema</h2>
+<div class="bk">
+  <div class="card">
+    <b>Welche Stelle färben?</b>
+    <p class="hint" style="margin:4px 0 8px">Stelle anklicken, dann rechts eine Farbe wählen.</p>
+    <div id="slots"></div>
+  </div>
+  <div>
+    <div class="card" id="farbwahl">
+      <div class="row" style="justify-content:space-between">
+        <b>Alle 159 Farben aus dem Buch</b>
+        <span class="hint" id="hover">Mit der Maus über eine Farbe fahren, um den Namen zu sehen.</span>
+      </div>
+      <div class="grid" id="grid" style="margin-top:10px"></div>
+      <div id="incombo" style="margin-top:12px"></div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <b>Kombination aus dem Buch laden</b>
+      <div class="row" style="margin-top:8px">
+        <label>Nr. <input type="number" id="nr" min="1" max="348" value="286"></label>
+        <button id="laden">Laden</button>
+        <button id="zufall">🔀 Zufällige Vierer-Kombination</button>
+        <span class="hint" id="nrinfo"></span>
+      </div>
+      <p class="hint" style="margin:10px 0 6px">Die Gestaltung oben bleibt beim Laden erhalten. Die dunkelste Farbe wird die Grundfarbe, die anderen bekommen der Reihe nach {{BEREICHE}}. „Allgemein“ wird neutral, „Tests“ dunkel (links umschaltbar). Vierer-Kombinationen mit einer dunklen Farbe, die gut für den Kurs passen:</p>
+      <div class="chips" id="vierer"></div>
+    </div>
+  </div>
+</div>
+
+<h2>4 · Kursbild</h2>
+<div class="kb-row">
+  <div><div class="kb" id="kb"></div><p class="hint">Kursbild in voller Größe (1200 × 500). Daraus wird später eine PNG-Datei. <label><input type="checkbox" id="safe"> Sicheren Bereich zeigen</label></p>
+  <div id="kopfbox" style="display:none;margin:12px 0 4px"><p class="hint" style="margin:0"><b>So zeigt die ByCS das Foto-Banner oben auf der Kursseite:</b> als flacher Streifen aus der Mitte, mit dem Kursnamen im weißen Kasten. Text, der unter dem Kasten liegt oder abgeschnitten wird, sieht man dort nicht.</p><div class="kopf" id="kopf"></div></div>
+  <p class="hint">Moodle zeigt das Bild in „Meine Kurse“ je nach Bildschirm in schmalen oder breiten Kacheln und schneidet dabei an den Seiten oder oben und unten etwas ab. Alles Wichtige liegt deshalb im sicheren Bereich in der Mitte. Nur Rand und Hintergrund dürfen wegfallen.</p></div>
+  <div>
+    <div class="kursliste r2"><div class="img"><div class="kb" id="kb2"></div></div><div class="t"><span class="hint">Kurs</span><br><b>{{VOLLNAME}}</b></div></div>
+    <p class="hint">Schmale Kachel (z. B. Handy, viele Spalten): links und rechts wird etwas abgeschnitten.</p>
+    <div class="kursliste r3"><div class="img"><div class="kb" id="kb3"></div></div><div class="t"><span class="hint">Kurs</span><br><b>{{VOLLNAME}}</b></div></div>
+    <p class="hint">Breite Kachel (großer Bildschirm): oben und unten wird etwas abgeschnitten.</p>
+  </div>
+</div>
+
+<h2>5 · Lesbarkeit prüfen</h2>
+<div class="card"><ul class="warn" id="warn" style="margin:0;padding-left:20px"></ul></div>
+
+<h2>6 · Ergebnis zum Weitergeben</h2>
+<p class="hint" style="margin-top:0">Hier steht dein aktuelles Schema als Text. „Kopieren“ klicken und den Text per Mail oder Teams schicken.</p>
+<div class="card">
+  <textarea id="out" readonly></textarea>
+  <div class="row" style="margin-top:8px"><button id="copy">Kopieren</button><span class="hint" id="copied"></span></div>
+</div>
+</div>
+
+<script>
+const KI = /*KURSINFO*/null;   // Kursdaten aus der Sicherung (baukasten.py)
+const BER = ["F","B","I"].map(k => [k, KI.bereiche[k].replace(/^\S+ /,"")]);
+
+const WADA = [["Hermosa Pink","#f9c1ce",[176,227,273],83.4,22.1,1.6],["Corinthian Pink","#f8b6ba",[27,43,87,97,128,169,174,206,246,254,264,342],80.3,25.4,7.9],["Cameo Pink","#e0b3b6",[101,105,116,120,165,231],77.2,17.2,4.9],["Fawn","#d1b0a7",[18,125,308],74.5,11.2,9.4],["Light Brown Drab","#b59392",[35,68,185,191,223,239,244,268,285,321],64.1,13.0,5.3],["Coral Red","#f58e84",[92,123,320,332],70.3,39.3,23.2],["Fresh Color","#f6917e",[240],71.0,37.5,27.3],["Grenadine Pink","#f48067",[6,21,112,166,193,201,230,300,315,341],66.9,43.8,34.7],["Eosine Pink","#f37f94",[34,59,90,108,134,153,197,242,248,276,287,314,327,336],67.3,46.7,10.3],["Spinel Red","#f27291",[14,147,165,184,195,224,277],64.5,52.2,8.3],["Old Rose","#d46d7a",[55,162,260,265],58.8,42.1,12.3],["Eugenia Red A","#e2625e",[284],58.4,50.8,28.5],["Eugenia Red B","#da525d",[17,77,252,262,270,280,282,325],54.3,54.7,23.7],["Raw Sienna","#bb7125",[3,13,33,70,86,130,131,182,243,247,252,255,268,269,279,293,298,319,327],55.1,25.5,52.2],["Vinaceous Tawny","#c56127",[40,85,244],53.2,38.2,50.2],["Jasper Red","#eb5324",[155,194,216,219],56.8,58.4,57.6],["Spectrum Red","#e31f26",[257,266,301,322],49.6,70.9,50.1],["Red Orange","#dd4027",[31,164,179,241,264],51.8,60.6,50.9],["Etruscan Red","#c55347",[25,47,97,137,152,185,275],50.7,45.9,31.1],["Burnt Sienna","#ae5224",[198,242,263,285,286,297,312,333,343],46.4,36.2,43.8],["Ochre Red","#ab544d",[199,283],46.8,35.7,21.8],["Scarlet","#cb2f43",[136,308,332],46.5,61.5,28.9],["Carmine","#cc1236",[39,117,122,154,225,232,307,313],44.3,67.2,33.7],["Indian Lake","#c53c69",[299,331],47.5,57.2,6.7],["Rosolanc Purple","#b73f74",[48,144,170,204,277,346],45.9,52.4,-3.2],["Pomegranite Purple","#b71f57",[220,271],41.4,61.0,8.4],["Hydrangea Red","#a94151",[142],43.1,44.4,14.2],["Brick Red","#a84222",[37,108,246,322,328],42.5,41.5,40.7],["Carmine Red","#a62c37",[35,51,104,130,181,200,221,228,233,237,245,338],38.7,50.2,24.7],["Pompeian Red","#ab2439",[30,71,120,212,311,324],38.9,54.8,23.8],["Red","#a72144",[251,261],37.9,54.6,15.4],["Brown","#7c4226",[110,121,145,161],35.1,23.5,28.6],["Hay's Russet","#793327",[58,82,95,152,186,231,249,304,314,336,345],31.2,30.7,23.5],["Vandyke Red","#82241f",[16,133,147,316,335],30.2,40.6,27.6],["Pansy Purple","#7d133a",[157,273],27.6,45.9,6.1],["Pale Burnt Lake","#802626",[124,171,177,205,217,258,269,283],30.2,39.0,22.7],["Violet Red","#642d5e",[9],27.8,30.4,-17.7],["Vistoris Lake","#6d4145",[63,91,165,226,290,337],33.1,20.3,6.1],["Sulpher Yellow","#f5ecc2",[52,72,80,104,132,135,151,208,246,254,270,294,296,310,315,320,321,326],93.2,-1.7,21.6],["Pale Lemon Yellow","#ffefae",[3,31,60,76,99,109,111,169,185,195,203,228,241,261,272,281,290,292,336],94.9,-0.1,34.1],["Naples Yellow","#fbe6a0",[14,115,166,193,303,325],91.7,0.3,36.6],["Ivory Buff","#ebd3a2",[11,50,94,102,126,178,184,190,209,214,235,243,262,266,301,343],85.6,3.4,27.3],["Seashell Pink","#fdd4bd",[45,84,88,113,150,176,194,276,334],88.1,12.1,17.3],["Light Pinkish Cinnamon","#fcc79b",[317],84.2,15.6,29.8],["Pinkish Cinnamon","#eeb480",[78,161,175,232,258,263,292,305,310],77.8,17.2,34.7],["Cinnamon Buff","#fdc57e",[23,127,137,180,210,234,246,323,344],83.5,14.7,43.7],["Cream Yellow","#fdbf68",[122,192,215,226,267,278,294,295,300,302,304,311,329,342],81.8,16.5,52.0],["Golden Yellow","#f3a257",[26,81,132,138,140,179,206,229,309,315],73.9,25.9,51.2],["Vinaceous Cinnamon","#eea78c",[203,205,213,256,260,279,299],75.0,24.7,24.8],["Ochraceous Salmon","#d8a37b",[32,71,121,186,217,220,223,238,296,339],71.4,16.5,29.1],["Isabella Color","#c5a56e",[4,12,241,292],69.7,7.1,33.0],["Maple","#c59f6b",[282],68.2,9.6,32.9],["Olive Buff","#c1c494",[83,175,200,330,348],78.0,-7.1,23.7],["Ecru","#c2ae93",[167,249,275,279,292,302,317,327],72.2,4.2,16.7],["Yellow","#fff200",[22,62,68,154,240,251,295,313],95.0,-6.5,95.6],["Lemon Yellow","#f8ed43",[45,123,138,158,168,173,189,210,253,259,289,298,306,317,333],92.7,-9.4,77.8],["Apricot Yellow","#ffdd00",[107,129,163,198,213,247,265,284,305,319],89.4,1.9,89.5],["Pyrite Yellow","#cab356",[239,250,255,287],73.6,0.4,49.8],["Olive Ocher","#d6b43e",[66,148,149,156,157,249,278],74.9,3.6,61.8],["Yellow Ocher","#e2b540",[42,96,118,124,126,191,222,325],76.2,8.4,62.8],["Orange Yellow","#fcb315",[114,148,153,164,170,257,286,338],78.5,19.6,78.2],["Yellow Orange","#f99d1b",[2,53,89,151,171,209,222,235,267,288,297,312,319,335],73.0,29.4,72.9],["Apricot Orange","#f68c50",[211,253,309,328],69.4,37.7,49.6],["Orange","#f37420",[7,46,141,144,149,256,272],63.8,47.2,64.7],["Peach Red","#f15a30",[115,250,274,285,298,303,326,340],59.1,57.5,54.4],["English Red","#d96629",[1,131,190,308,339],57.2,43.3,54.4],["Cinnamon Rufous","#c27544",[8,10,103,158,172,204,206],57.2,27.8,40.2],["Orange Rufous","#c16b27",[91,102,222],54.6,31.6,51.2],["Sulphine Yellow","#c19f2c",[36,65,142,160,252],67.2,4.3,60.6],["Khaki","#bc892b",[129,146,159,236,248],61.0,13.9,55.1],["Citron Yellow","#b2b73e",[40,87,145,150,153,196,305,323],72.5,-13.1,58.2],["Citrine","#b09f36",[59,93,132,133,262],65.6,-2.6,54.5],["Buffy Citrine","#96874d",[100,177,233],56.6,0.0,33.3],["Dark Citrine","#8b835b",[10,41,274,304],54.7,-1.4,23.1],["Light Grayish Olive","#848061",[107,184],53.2,-2.3,17.0],["Krongbergs Green","#84875e",[29],55.1,-6.2,21.5],["Olive","#837e31",[96,201,254,258,277,310,334],52.2,-5.7,41.5],["Orange Citrine","#986f2d",[212,342],50.2,11.5,42.0],["Sudan Brown","#a36752",[207,214,273],49.9,23.0,22.5],["Olive Green","#6b7140",[66,243,270,297],46.4,-8.5,26.5],["Light Brownish Olive","#806e4b",[199,318],47.5,3.7,22.2],["Deep Grayish Olive","#635a3a",[146,343],38.6,-0.3,19.9],["Pale Raw Umber","#71502f",[26,73,160,234,296],37.1,11.2,25.0],["Sepia","#644b1e",[24,288],33.8,6.9,30.2],["Madder Brown","#762c19",[28,79,98,173,237,275,323],29.1,32.0,29.3],["Mars Brown Tobacco","#653514",[19],28.0,20.5,29.8],["Vandyke Brown","#4b3317",[110,113,118,182,192,328],23.8,8.5,22.1],["Turquoise Green","#b5decc",[36,74,147,163,173,202,223,230,263,272,285,293,300,305,317,346],85.3,-16.9,4.6],["Glaucous Green","#b4cdc2",[7,150,171,207,239,260],80.3,-10.2,2.3],["Dark Greenish Glaucous","#b7c2a9",[264,311],77.1,-7.6,11.4],["Yellow Green","#afd472",[111,141,276,326,334],80.6,-24.6,43.9],["Light Green Yellow","#c7d14f",[61,289,291,311,346],81.1,-15.9,60.6],["Night Green","#87c540",[19,32,158,326],73.3,-36.0,57.0],["Olive Yellow","#a6a159",[124,211,265,347],65.5,-6.1,37.8],["Artemesia Green","#709390",[293,312],58.1,-12.8,-2.9],["Andover Green","#6d7e77",[244,346],51.2,-7.8,1.5],["Rainette Green","#8fa071",[73,162,188,266,301],63.7,-12.5,22.4],["Chromium Green","#719470",[105,200,219,283],57.9,-18.1,15.0],["Pistachio Green","#648f7b",[127,137],55.8,-18.6,5.7],["Sea Green","#00b49b",[17,21,58,86,133,250,260,284,291,340,347],65.1,-48.9,0.5],["Benzol Green","#00978d",[15,54,92,122,155,247,266,267,281,304,306],53.6,-54.6,-8.3],["Light Porcelain Green","#00908a",[44,193,328],53.3,-37.5,-6.8],["Green","#489b6e",[198,216,293],57.8,-34.5,15.6],["Dull Viridian Green","#009465",[136,256,306,316],53.5,-49.0,14.4],["Oil Green","#819238",[245,299,320],57.6,-16.0,43.8],["Diamine Green","#1a7444",[38,146,217,242,251,313],42.7,-35.7,18.6],["Cossack Green","#437742",[5,135,262,270,278,294,319,341,348],45.5,-27.2,23.4],["Lincoln Green","#555832",[70,121,203,210,280,290],36.3,-5.9,21.2],["Blackish Olive","#42533e",[109,318,336],33.3,-10.1,9.7],["Deep Slate Olive","#253122",[189,229,268,303,310,321,332,341,342,348],18.8,-7.7,7.5],["Nile Blue","#bce4e5",[25,250,268,302,306,330,345],87.7,-13.3,-5.0],["Pale King's Blue","#a7d4e4",[16,49,72,75,167,196,213,234,287],82.2,-12.7,-12.9],["Light Glaucous Blue","#a5c8d1",[54,93,119,152,178,204,227,320,339,341],78.2,-10.6,-8.7],["Salvia Blue","#97acc8",[29,129,135,139,142,188,209,212,237,272,294,321,330],69.5,-2.8,-16.8],["Cobalt Green","#96d1aa",[156,188,201,202,230,271,281,282,290,291,308,333],79.0,-25.6,13.0],["Calamine BLue","#78cdd0",[20,41,65,159,176,255,261,287,291,300],77.1,-26.2,-10.4],["Venice Green","#62c6bf",[78,128,138,189,283,345],73.7,-31.7,-6.1],["Cerulian Blue","#0093a5",[1,63,99,125,148,227,240,264],55.0,-30.2,-20.1],["Peacock Blue","#00939b",[131,286],52.8,-48.9,-17.5],["Green Blue","#099197",[12,74,79,178,208,252,259,271,330],54.1,-31.3,-12.9],["Olympic Blue","#5a82b3",[44,67,157,194,231,274,324],53.1,-3.6,-30.7],["Blue","#006eb8",[49,51,88,143,154,186,191,215,257,267,295,333],43.5,-8.8,-48.8],["Antwarp Blue","#007190",[85,106,114,140,163,172,208,244,258,281,299,302,334],42.0,-29.1,-27.7],["Helvetia Blue","#005b8d",[39,48,161,187,218,259,312,347],35.3,-12.1,-36.4],["Dark Medici Blue","#547076",[160,224,241,249],45.1,-9.2,-6.9],["Dusky Green","#004f46",[94,219,225,278,284,318,332,338],28.0,-36.3,-3.3],["Deep Lyons Blue","#1c4286",[22,38,101,126,179,199,236,247,314,344],28.5,6.6,-42.7],["Violet Blue","#40456a",[75,83,89,98,125,233,286,289,297,309,339],30.1,5.4,-22.4],["Vandar Poel's Blue","#064f6e",[5,77,151,167,168,309,343],30.8,-11.3,-24.5],["Dark Tyrian Blue","#12354e",[2,60,67,119,141,245,279],20.6,-5.8,-19.1],["Dull Violet Black","#1e0e3f",[95,106,145,265,277,289,295,331],8.1,19.4,-28.8],["Deep Indigo","#051230",[6,28,139,155,182,211,232],5.8,4.1,-21.8],["Deep Slate Green","#112f2c",[84,149,166,271,318,325],16.9,-12.1,-2.2],["Grayish Lavender A","#b5b1d8",[8,15,159,177,218,248,307],73.4,7.5,-19.4],["Grayish Lavender B","#c0a9b3",[47,56,174,187,235,327,329,338],71.3,10.0,-2.2],["Laelia Pink","#ca92a8",[20,254,280,337],66.5,24.3,-2.7],["Lilac","#b984af",[143,162,282,347],61.5,25.9,-14.3],["Eupatorium Purple","#bf5892",[215,315,322],52.2,46.7,-11.7],["Light Mauve","#9a72aa",[23,80,128,134,180,274,331],53.6,23.9,-24.0],["Aconite Violet","#a36aa5",[43,64,90,187,220,257,269,301,307,324,344],52.7,30.7,-22.4],["Dull Blue Violet","#80719e",[9,100],50.2,13.4,-22.5],["Dark Soft Violet","#66629c",[64,127,197],44.0,12.3,-31.2],["Blue Violet","#6450a1",[116,175,196,322,345],39.1,23.6,-41.9],["Purple Drab","#84565b",[236],41.9,19.9,5.6],["Deep Violet / Plumbeous","#70727c",[183,192,218],48.0,0.8,-5.9],["Veronia Purple","#8c4c62",[13,24,168,183],41.0,29.6,0.1],["Dark Slate Purple","#704357",[225,248],34.3,22.2,-3.6],["Taupe Brown","#7a4456",[57,123,174,224,275,280,288],36.2,25.6,0.1],["Violet Carmine","#713b4c",[337],32.3,25.9,0.8],["Violet","#4f4086",[42,56,130,156,164,181,205,214,226,316,331,335],31.5,20.7,-37.9],["Red Violet","#59256a",[4,37,134,136,170,172,183,316],25.1,33.1,-30.1],["Cotinga Purple","#501345",[61,181,238,253,307,329,348],18.4,32.9,-15.8],["Dusky Madder Violet","#4e1d4c",[18,50,53,82,103,314],20.1,28.6,-18.3],["White","#ffffff",[55],100.0,0.0,0.0],["Neutral Gray","#b6bfc1",[34,139,180,195,197,221,228,229,273,303,324,340],76.7,-3.0,-2.0],["Mineral Gray","#a2b0ad",[11,30],70.8,-5.6,-0.1],["Warm Gray","#a1a39a",[69,76,81,143,169,238,259,261],66.7,-2.2,4.7],["Slate Color","#34454c",[27,33,57,140,202,243,245,251,253,263,296,329,335],27.8,-5.4,-7.0],["Black","#111314",[46,52,62,69,112,117,144,190,207,216,221,242,255,256,269,276,288,298,313,323,337,340,344],5.6,-0.4,-1.1]];  // [name, hex, [Kombinationen], L*, a*, b*]
+const byHex = {}; WADA.forEach(c => byHex[c[1]] = c);
+const COMBO = {}; WADA.forEach(c => c[2].forEach(n => (COMBO[n] = COMBO[n] || []).push(c)));
+
+const PROPS = [
+  {nr:286, titel:"Nr. 286 · kräftig", text:"Rostrot, Petrol und Signalgelb auf Blaugrau. Klar unterscheidbar, technisch.", G:"#40456a", F:"#ae5224", B:"#00939b", I:"#fcb315"},
+  {nr:263, titel:"Nr. 263 · sanft", text:"Schiefer, Rost, Mint und Zimt. Ruhig und zurückhaltend.", G:"#34454c", F:"#ae5224", B:"#b5decc", I:"#eeb480"},
+  {nr:341, titel:"Nr. 341 · frisch", text:"Dunkeloliv, Grün, Eisblau und Koralle. Freundlich, natürlich.", G:"#253122", F:"#437742", B:"#a5c8d1", I:"#f48067"}
+];
+const SLOTS = [
+  ["G","Grundfarbe","Schrift, aktiver Reiter, dunkles Kopfband"],
+  ["A","Allgemein","Organisatorisches, Standard: neutral"],
+  ["F",KI.bereiche.F,"Reiter, Unterreiter, Kopfband"],
+  ["B",KI.bereiche.B,"Reiter, Unterreiter, Kopfband"],
+  ["I",KI.bereiche.I,"Reiter, Unterreiter, Kopfband"],
+  ["T","📝 Tests","Standard: dunkel, fällt auf"]
+];
+let S = {}, M = {A:"neutral", T:"dunkel"}, slot = "G", aktiv = {tab:Math.min(1, KI.kurs.length-1), sub:0}, quelle = "";
+// Gestaltungsoptionen: Schlüssel = ein Buchstabe im Gestaltungscode, Werte = ein Zeichen
+const OPTIONEN = [
+  {k:"b", n:"Kursbild", o:[["k","Kacheln"],["s","Farbstreifen"],["t","nur Text"],["f","Foto-Banner"]]},
+  {k:"v", n:"Farben des Foto-Banners", o:[["e","einheitlich (Hausfarben der Schule)"],["s","aus dem Farbschema"]]},
+  {k:"n", n:"Text im Foto-Banner", o:[["m","mittig (wie bisher)"],["o","etwas höher"]]},
+  {k:"k", n:"Kopfband", o:[["h","hell"],["d","dunkel"],["a","aus"]]},
+  {k:"z", n:"Zahlen im Kopfband", o:[["j","an"],["n","aus"]]},
+  {k:"c", n:"Größe des Kopfbands", o:[["k","klein"],["n","normal"],["g","groß"]]},
+  {k:"i", n:"Icon-Feld im Kopfband", o:[["f","farbig"],["w","weiß"],["n","ohne"]]},
+  {k:"p", n:"Farbleiste am Kopfband", o:[["l","links"],["u","unten"],["n","keine"]]},
+  {k:"f", n:"Abschnittsfläche", o:[["w","weiß"],["g","getönt"],["k","kräftig getönt"],["c","Papierfarbe der Schule"]]},
+  {k:"q", n:"Form der Reiter", o:[["t","Reiter"],["p","runde Knöpfe"],["k","eckige Knöpfe"]]},
+  {k:"j", n:"Icons in den Reiternamen", o:[["j","an"],["n","aus"]]},
+  {k:"o", n:"Hover-Farbe (Maus über Reiter)", o:[["n","aus"],["b","Bereichsfarbe"],["g","Grundfarbe"]]},
+  {k:"h", n:"Hauptreiter", o:[["t","getönt mit Leiste"],["v","voll gefärbt"],["w","weiß mit Leiste"]]},
+  {k:"l", n:"Leiste oben am Hauptreiter", o:[["d","dünn"],["k","kräftig"],["n","keine"]]},
+  {k:"y", n:"Ausgewählter Hauptreiter", o:[["g","Grundfarbe"],["b","Bereichsfarbe"]]},
+  {k:"g", n:"Schriftgröße der Reiter", o:[["n","normal"],["g","groß"]]},
+  {k:"w", n:"Hintergrund der Unterreiter", o:[["g","getönt"],["w","weiß"]]},
+  {k:"u", n:"Linien der Unterreiter", o:[["s","schwarz"],["g","Grundfarbe"],["b","Bereichsfarbe"],["n","keine"]]},
+  {k:"d", n:"Linienstärke der Unterreiter", o:[["1","dünn"],["2","kräftig"]]},
+  {k:"r", n:"Rahmen der Unterabschnitte", o:[["b","Bereichsfarbe mit Leiste"],["s","schwarz"],["g","dünn grau"],["n","kein Rahmen"]]},
+  {k:"x", n:"Kopfzeile der Unterabschnitte", o:[["n","weiß"],["j","getönt"]]},
+  {k:"m", n:"Abstände", o:[["k","kompakt"],["n","normal"],["l","luftig"]]},
+  {k:"e", n:"Ecken", o:[["r","rund"],["e","eckig"]]},
+  {k:"s", n:"Schatten (Kopfband, Unterabschnitte)", o:[["n","aus"],["j","an"]]}
+];
+const O_STD = {v:"e", n:"m", q:"t", j:"j", o:"n", m:"n", c:"n", b:"k", k:"h", z:"j", i:"f", p:"l", f:"g", h:"t", l:"d", y:"g", g:"n", w:"g", u:"s", d:"1", r:"b", x:"n", e:"r", s:"n"};  // = Kursfassung V7
+let O = Object.assign({}, O_STD);
+
+// --- Kursinhalt (aus der Sicherung) ---
+const TYP = {scorm:["📦","Lernpaket","#e6f0ff"], datei:["📄","Datei","#eef1f4"], aufgabe:["📤","Aufgabe","#fde9ef"], h5p:["▶️","Interaktiver Inhalt","#e8f6ee"], quiz:["❓","Test","#fde9ef"], url:["🔗","Link","#eef1f4"], label:["🏷️","Textfeld","#f2eefb"], seite:["📃","Textseite","#eef1f4"]};
+const L = (t,n,h) => ({t,n,h});
+const SUB = (n,items,h) => ({sub:n,items,h});
+const D = (t,n) => ({t,n,d:1});  // Beispiel-Element, nicht in der Sicherung
+const KURS = KI.kurs;
+
+// --- Farbe ---
+const rgb = h => [1,3,5].map(i => parseInt(h.slice(i,i+2),16));
+const hex = a => "#" + a.map(x => Math.round(x).toString(16).padStart(2,"0")).join("");
+const tint = (h,p) => hex(rgb(h).map(x => 255-(255-x)*p));
+const lum = h => { const c = rgb(h).map(x => { x/=255; return x<=.03928 ? x/12.92 : Math.pow((x+.055)/1.055,2.4); }); return .2126*c[0]+.7152*c[1]+.0722*c[2]; };
+const cr = (a,b) => { const A=lum(a),B=lum(b); return (Math.max(A,B)+.05)/(Math.min(A,B)+.05); };
+const onCol = h => cr(h,"#ffffff") >= cr(h,"#1d2125") ? "#ffffff" : "#1d2125";
+const name = h => byHex[h] ? byHex[h][0] : h;
+const dE = (a,b) => { const x=byHex[a],y=byHex[b]; if(!x||!y) return 99; return Math.hypot(x[3]-y[3],x[4]-y[4],x[5]-y[5]); };
+const TINT_TAB = .22, TINT_SUB = .12, TINT_FL = .07;
+const LINIE = "#111314";  // Rahmenlinien der Unterreiter: immer schwarz
+
+// Hausfarben aus dem Schulprofil (wie Skill kursbanner): Grundfarbe, drei Bereichsfarben, Papierfarbe als mögliche Abschnittsfläche
+const SCHULE = {nr:"SCHULE", titel:"Hausfarben der Schule", text:"Grundfarbe und Bereichsfarben wie das Kursbanner der Schule. Die Papierfarbe passt als Abschnittsfläche.", G:"{{HAUS_G}}", F:"{{HAUS_F}}", B:"{{HAUS_B}}", I:"{{HAUS_I}}"};
+const CREME = "{{HAUS_P}}";
+const istSchule = () => quelle === "Hausfarben" && same(SCHULE);
+function setScheme(p, q) { S = {G:p.G, A:p.A||p.G, F:p.F, B:p.B, I:p.I, T:p.T||p.G}; M = {A:"neutral", T:"dunkel"}; quelle = q || ""; renderAll(); }
+// Wirksame Farbe einer Stelle: Allgemein "neutral" = Grau aus der Grundfarbe, Tests "dunkel" = aufgehellte Grundfarbe für Leisten und Icon
+function col(k) { if (k==="A" && M.A==="neutral") return tint(S.G,.3); if (k==="T" && M.T==="dunkel") return tint(S.G,.6); return S[k]; }
+const testsDunkel = () => M.T === "dunkel";
+
+// --- Vorschläge: je drei auf einmal, blättern (zurück/vorwärts) und Zufall ---
+// Reihenfolge: zuerst die drei Startvorschläge, dann alle passenden Vierer-Kombinationen, die besten zuerst
+function schema(n) { const s = COMBO[n].map(c=>c[1]).sort((a,b)=>lum(a)-lum(b)); return {nr:n, G:s[0], F:s[1], B:s[2], I:s[3]}; }
+function bewertung(p) {
+  const fb = [p.F,p.B,p.I], de = Math.min(dE(p.F,p.B), dE(p.F,p.I), dE(p.B,p.I));
+  const leiste = Math.min(...fb.map(c => cr(c,"#ffffff"))), schrift = Math.min(...fb.map(c => cr(tint(c,TINT_TAB), p.G)));
+  return {wert: de * Math.min(leiste, 2) * (schrift >= 4.5 ? 1 : .3), de, leiste, schrift};
+}
+let PREIHE = null, pSeiten = null, pPos = 0, pCursor = 0;
+function pInit() {
+  if (PREIHE) return;
+  const start = PROPS.map(p => p.nr);
+  PREIHE = start.concat(VIERER.filter(n => !start.includes(n)).sort((a,b) => bewertung(schema(b)).wert - bewertung(schema(a)).wert));
+  pSeiten = [PREIHE.slice(0,3)]; pCursor = 3;
+}
+function pVor() {
+  if (pPos < pSeiten.length-1) pPos++;
+  else { if (pCursor >= PREIHE.length) pCursor = 0; pSeiten.push(PREIHE.slice(pCursor, pCursor+3)); pCursor += 3; pPos++; }
+  renderProps();
+}
+function pZurueck() { if (pPos > 0) { pPos--; renderProps(); } }
+function pZufall() {
+  const pool = VIERER.slice(), neu = [];
+  while (neu.length < 3 && pool.length) neu.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+  pSeiten = pSeiten.slice(0, pPos+1); pSeiten.push(neu); pPos++; renderProps();
+}
+function renderProps() {
+  pInit();
+  const hb = document.getElementById("propsHaus"); hb.innerHTML = "";
+  const kb2 = document.createElement("button"), bw2 = bewertung(SCHULE);
+  kb2.className = "prop" + (istSchule() ? " on" : "");
+  kb2.innerHTML = `<b>${SCHULE.titel}</b><div class="bar">${[SCHULE.G,SCHULE.F,SCHULE.B,SCHULE.I].map(c=>`<i style="background:${c}" title="${c}"></i>`).join("")}</div><span class="hint">${SCHULE.text}</span>`
+    + (bw2.schrift >= 4.5 && bw2.leiste >= 1.35 ? `<span class="ok">✓ gut lesbar und unterscheidbar</span>` : `<span class="bad">✗ Orange und Petrol als Schrift auf Weiß schwach, als Fläche gut</span>`);
+  kb2.onclick = () => setScheme(SCHULE, "Hausfarben");
+  hb.appendChild(kb2);
+  const el = document.getElementById("props"); el.innerHTML = "";
+  pSeiten[pPos].forEach(n => {
+    const fest = PROPS.find(p => p.nr === n), p = fest || schema(n), b = document.createElement("button"), bw = bewertung(p);
+    b.className = "prop" + (quelle === "Nr. "+n && same(p) ? " on" : "");
+    const text = fest ? fest.text : `${name(p.F)}, ${name(p.B)} und ${name(p.I)} auf ${name(p.G)}.`;
+    const lesbar = bw.schrift >= 4.5 && bw.leiste >= 1.35 && bw.de >= 20
+      ? `<span class="ok">✓ gut lesbar und unterscheidbar</span>`
+      : `<span class="bad">✗ ${bw.leiste < 1.35 ? "eine Farbe auf Weiß sehr schwach" : bw.de < 20 ? "zwei Bereichsfarben sehr ähnlich" : "Schrift schwach"}</span>`;
+    b.innerHTML = `<b>${fest ? fest.titel : "Nr. " + n}</b><div class="bar">${[p.G,p.F,p.B,p.I].map(c=>`<i style="background:${c}" title="${name(c)} ${c}"></i>`).join("")}</div><span class="hint">${text}</span>${lesbar}`;
+    b.onclick = () => fest ? setScheme(fest, "Nr. "+n) : ladeNr(n);
+    el.appendChild(b);
+  });
+  document.getElementById("pzurueck").disabled = pPos === 0;
+  document.getElementById("pinfo").textContent = `Vorschläge: Nr. ${pSeiten[pPos].join(", ")} · 37 passende Kombinationen im Buch`;
+}
+const same = p => S.G===p.G && S.F===p.F && S.B===p.B && S.I===p.I;
+
+// --- Kursansicht ---
+const rund = px => O.e === "e" ? 0 : px;
+const sp = () => ({k:.6, n:1, l:1.45})[O.m];                               // Abstände
+const kb = () => ({k:{p:.6,t:16,x:13,b:38,e:20}, n:{p:1,t:20,x:15,b:52,e:28}, g:{p:1.4,t:26,x:17,b:70,e:38}})[O.c];  // Kopfbandgröße
+const ohneIcon = s => O.j==="n" ? s.replace(/^\S+\s/, "") : s;
+const schwach = c => cr(c,"#ffffff") < 1.5;                       // z. B. Gelb: als Linie kaum sichtbar
+const linieU = c => O.u==="s" ? LINIE : O.u==="g" ? S.G : O.u==="b" ? c : null;
+const schatten = () => O.s==="j" ? "box-shadow:0 2px 8px rgba(0,0,0,.14);" : "";
+const flaecheVon = c => O.f==="g" ? tint(c,TINT_FL) : O.f==="k" ? tint(c,.14) : O.f==="c" ? CREME : "#fff";
+function rahmenStil(c) {
+  const r = rund(8);
+  if (O.r==="b") { const l = schwach(c) ? LINIE : c; return `border:1px solid ${tint(l,.45)};border-left:6px solid ${l};border-radius:${r}px;background:#fff`; }
+  if (O.r==="s") return `border:1px solid ${LINIE};border-left:6px solid ${LINIE};border-radius:${r}px;background:#fff`;
+  if (O.r==="g") return `border:1px solid #c8ccd1;border-radius:${r}px;background:#fff`;
+  return `border:0;background:transparent`;
+}
+function itemHTML(it, c) {
+  if (it.sub) {
+    const kopfzeile = O.x==="j" ? `background:${tint(c,TINT_SUB)};` : "";
+    return `<div class="sub" data-sub style="${rahmenStil(c)};${schatten()}margin:${12*sp()}px 0"><div class="sh" style="${kopfzeile}color:${S.G};padding:${9*sp()}px 12px">${it.sub}${it.h?'<span class="badge">verborgen</span>':''}<span style="margin-left:auto;font-weight:400" class="hint">${it.items.length} Elemente ▾</span></div><div class="sb">${it.items.map(x=>itemHTML(x,c)).join("")}</div></div>`;
+  }
+  const t = TYP[it.t];
+  return `<div class="act"><div class="ic" style="background:${t[2]}">${t[0]}</div><div><div class="ty">${t[1]}</div><div class="nm">${it.n}${it.d?'<span class="bsp">Beispiel</span>':''}${it.h?'<span class="badge">verborgen</span>':''}</div></div></div>`;
+}
+function zaehle(items) {
+  const z = {}; const geh = a => a.forEach(x => x.sub ? (x.h || geh(x.items)) : (x.h || x.t==="label" || (z[x.t] = (z[x.t]||0)+1))); geh(items);
+  const w = {scorm:["Lernpaket","Lernpakete"], h5p:["Lernvideo","Lernvideos"], aufgabe:["Abgabe","Abgaben"], quiz:["Test","Tests"], datei:["Datei","Dateien"], url:["Link","Links"], label:["Hinweis","Hinweise"], seite:["Seite","Seiten"]};
+  return Object.keys(z).map(k => `${z[k]} ${w[k][z[k]>1?1:0]}`);
+}
+const leiste = c => O.p==="l" ? `border-left:8px solid ${c};` : O.p==="u" ? `border-bottom:6px solid ${c};` : "";
+function kopfHTML(sec, c) {
+  const icon = sec.icon || sec.n.split(" ")[0], titel = sec.titel || sec.n.slice(sec.n.split(" ")[0].length+1);
+  const chips = O.z==="j" ? zaehle(sec.items) : [];
+  const dunkel = O.k==="d";
+  const chipStyle = dunkel ? `background:rgba(255,255,255,.14);color:#fff` : `background:#fff;color:${S.G};border:1px solid ${tint(c,.45)}`;
+  const chipHTML = chips.map(x=>`<span style="display:inline-block;font-size:12px;padding:2px 9px;border-radius:12px;margin:6px 6px 0 0;${chipStyle}">${x}</span>`).join("");
+  const badgeBg = O.i==="w" ? `#fff;border:1px solid ${tint(c,.45)}` : c;
+  const g = kb(), pad = `${14*g.p*sp()}px ${16*g.p*sp()}px`;
+  const badge = O.i==="n" ? "" : `<div style="width:${g.b}px;height:${g.b}px;border-radius:${rund(12)}px;background:${badgeBg};display:grid;place-items:center;font-size:${g.e}px;flex:none">${icon}</div>`;
+  if (!dunkel)
+    return `<div style="display:flex;gap:14px;align-items:center;background:${tint(c,TINT_TAB)};${leiste(c)}border-radius:${rund(8)}px;padding:${pad};margin-bottom:${12*sp()}px;${schatten()}">${badge}<div><div style="font-size:${g.t}px;font-weight:700;color:${S.G}">${titel}</div><div style="color:${S.G};font-size:${g.x}px">${sec.s}</div>${chipHTML}</div></div>`;
+  return `<div style="display:flex;gap:14px;align-items:center;background:${S.G};${leiste(c)}border-radius:${rund(8)}px;padding:${pad};margin-bottom:${12*sp()}px;${schatten()}">${badge}<div><div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:${tint(c,.9)};font-weight:700">${KI.kopfzeile}</div><div style="font-size:${g.t}px;font-weight:700;color:#fff">${titel}</div><div style="color:rgba(255,255,255,.85);font-size:${g.x}px">${sec.s}</div>${chipHTML}</div></div>`;
+}
+function hauptStil(k, c, on) {
+  const leisteB = O.l==="k" ? 8 : O.l==="n" ? 0 : 4;
+  const form = O.q==="t" ? `border-radius:${rund(7)}px ${rund(7)}px 0 0;border-top-width:${leisteB}px;`
+             : `border-radius:${O.q==="p" ? 999 : rund(4)}px;border:${leisteB ? 2 : 0}px solid transparent;margin-bottom:${4*sp()}px;`;
+  const r = form + `font-size:${O.g==="g"?17:15}px;padding:${8*sp()}px ${14*sp()}px ${7*sp()}px;`;
+  if (k==="T" && testsDunkel())
+    return r + (on ? `background:${S.G};color:#fff;border-color:#fff;box-shadow:0 0 0 2px ${S.G} inset, 0 0 0 4px #fff inset` : `background:${tint(S.G,.85)};color:#fff;border-color:${S.G}`);
+  if (on && O.y==="b") { const s = cr(c,"#ffffff") >= cr(c,S.G) ? "#fff" : S.G; return r + `background:${c};color:${s};border-color:${S.G}`; }
+  if (on) return r + `background:${S.G};color:#fff;border-color:${c}`;
+  if (O.h==="v") { const s = cr(c,"#ffffff") >= cr(c,S.G) ? "#fff" : S.G; return r + `background:${c};color:${s};border-color:${c}`; }
+  if (O.h==="w") return r + `background:#fff;color:${S.G};border-color:${c};box-shadow:0 0 0 1px #dee2e6 inset`;
+  return r + `background:${tint(c,TINT_TAB)};color:${S.G};border-color:${c}`;
+}
+function unterStil(c, on) {
+  const l = linieU(c), w = +O.d;
+  const form = O.q==="t" ? `border-radius:${rund(6)}px ${rund(6)}px 0 0;` : `border-radius:${O.q==="p" ? 999 : rund(4)}px;margin-bottom:${4*sp()}px;`;
+  const r = form + `font-size:${O.g==="g"?16:14}px;padding:${6*sp()}px ${11*sp()}px;`;
+  const bg = O.w==="w" ? "#fff" : tint(c,TINT_SUB);
+  if (!l) return r + (on ? `background:#fff;color:${S.G};font-weight:700;border-bottom:3px solid ${schwach(c)?LINIE:c}` : `background:${bg};color:${S.G}`);
+  return r + (on ? `background:#fff;color:${S.G};font-weight:700;border:${w}px solid ${l};border-bottom:${O.q==="t" ? w+2 : w}px solid ${l}` : `background:${bg};color:${S.G};border:${w}px solid ${l}`);
+}
+function hover(d, c) {
+  if (O.o==="b") { d.style.setProperty("--hb", tint(c,.5)); d.style.setProperty("--hf", S.G); }
+  if (O.o==="g") { d.style.setProperty("--hb", S.G); d.style.setProperty("--hf", "#fff"); }
+}
+function renderKurs() {
+  const tabs = document.getElementById("tabs"), subs = document.getElementById("subtabs"), box = document.getElementById("section");
+  tabs.innerHTML = ""; subs.innerHTML = "";
+  tabs.style.gap = subs.style.gap = `${4*sp()}px`;
+  tabs.style.borderBottom = subs.style.borderBottom = O.q==="t" ? "" : "0";
+  box.style.padding = `${16*sp()}px`;
+  KURS.forEach((t,i) => {
+    const c = col(t.k), d = document.createElement("div"), on = i===aktiv.tab;
+    d.className = "tab" + (t.h ? " hid" : "") + (on ? " akt" : "") + (O.o!=="n" ? " hov" : ""); d.textContent = ohneIcon(t.n);
+    d.style.cssText = hauptStil(t.k, c, on);
+    hover(d, c);
+    d.onclick = () => { aktiv = {tab:i, sub:0}; renderKurs(); };
+    tabs.appendChild(d);
+  });
+  const T = KURS[aktiv.tab];
+  T.subs.forEach((s,j) => {
+    const c = col(s.k || T.k), d = document.createElement("div"), on = j===aktiv.sub;
+    d.className = "stab" + (on ? " akt" : "") + (O.o!=="n" ? " hov" : ""); d.innerHTML = ohneIcon(s.n) + (s.d ? '<span class="bsp">Beispiel</span>' : "");
+    d.style.cssText = unterStil(c, on);
+    hover(d, c);
+    d.onclick = () => { aktiv.sub = j; renderKurs(); };
+    subs.appendChild(d);
+  });
+  const sec = T.subs[aktiv.sub], c = col(sec.k || T.k);
+  box.style.background = flaecheVon(c);
+  box.style.borderRadius = `0 0 ${rund(8)}px ${rund(8)}px`;
+  let h = "";
+  if (O.k !== "a") h += `<div class="kopf-wrap">${aktiv.tab===1&&aktiv.sub===2?'<span class="callout">Das ist das Kopfband</span>':''}${kopfHTML(sec,c)}</div>`;
+  h += sec.items.length ? sec.items.map(x=>itemHTML(x,c)).join("") : `<div class="empty">Dieser Abschnitt ist in der Sicherung noch leer.</div>`;
+  box.innerHTML = h;
+  box.querySelectorAll("[data-sub] > .sh").forEach(e => e.onclick = () => e.parentNode.classList.toggle("zu"));
+}
+
+// --- Gestaltung: Einstellungen, Code, Legende ---
+function renderOpts() {
+  const el = document.getElementById("opts");
+  const gruppen = OPTIONEN.map(o => `<div class="opt"><b>${o.n}</b><div class="seg">${o.o.map(([v,txt]) => `<button data-o="${o.k}" data-v="${v}" class="${O[o.k]===v?"on":""}">${txt}</button>`).join("")}</div></div>`)
+    .concat([["A","Reiter Allgemein",[["neutral","neutral"],["eigen","eigene Farbe"]]],["T","Reiter Tests",[["dunkel","dunkel"],["eigen","eigene Farbe"]]]]
+      .map(([k,n,w]) => `<div class="opt"><b>${n}</b><div class="seg">${w.map(([v,txt]) => `<button data-m="${k}" data-v="${v}" class="${M[k]===v?"on":""}">${txt}</button>`).join("")}</div></div>`));
+  el.innerHTML = gruppen.join("");
+  const kbOpt = el.querySelector('[data-o="b"]').closest(".opt");
+  kbOpt.insertAdjacentHTML("beforeend", '<div class="kbmini" id="kbmini" title="Kursbild, groß in Abschnitt 4"></div>');
+  el.querySelectorAll("[data-o]").forEach(b => b.onclick = () => { O[b.dataset.o] = b.dataset.v; renderAll(); zeigeVorschau(); });
+  el.querySelectorAll("[data-m]").forEach(b => b.onclick = () => { M[b.dataset.m] = b.dataset.v; renderAll(); zeigeVorschau(); });
+  document.getElementById("code").textContent = codeVon();
+  if (!document.getElementById("legende").innerHTML)
+    document.getElementById("legende").innerHTML = `<p class="hint" style="margin:6px 0">Beispiel: <code>284-kh-zj-cn-if-pl-fg-qt-jj-on-ht-ld-yg-gn-wg-us-d1-rb-xn-mn-er-sn-bk-an-td</code>. Fehlt eine Einstellung im Code, gilt die Voreinstellung. Vorne steht die Nummer der Farbkombination aus dem Buch. Ist sie verändert, folgt ein <code>x</code> (z. B. <code>284x</code>), ohne Kombination steht <code>X</code>, für die Hausfarben der Schule steht <code>SCHULE</code>. Dann folgen je zwei Zeichen pro Einstellung. Am Ende stehen geänderte Farben als Großbuchstabe mit Farbcode (<code>G</code> Grundfarbe, <code>F</code>, <code>B</code>, <code>I</code> die drei Bereiche des Kurses (${BER.map(b=>b[1]).join(", ")}), <code>A</code> Allgemein, <code>T</code> Tests).</p><table class="legende">${OPTIONEN.map(o => `<tr><td><code>${o.k}</code></td><td>${o.n}</td><td>${o.o.map(([v,txt]) => `<code>${o.k}${v}</code> ${txt}`).join(" · ")}</td></tr>`).join("")}<tr><td><code>a</code></td><td>Reiter Allgemein</td><td><code>an</code> neutral · <code>ae</code> eigene Farbe</td></tr><tr><td><code>t</code></td><td>Reiter Tests</td><td><code>td</code> dunkel · <code>te</code> eigene Farbe</td></tr></table>`;
+}
+function zeigeVorschau() {
+  const r = document.querySelector(".studio").getBoundingClientRect(), anz = document.getElementById("anzeige").offsetHeight + 22;
+  if (Math.abs(r.top - anz) > 40) window.scrollTo({top: r.top + window.scrollY - anz, behavior: "smooth"});
+}
+function codeVon() {
+  const m = (quelle||"").match(/Nr\. (\d+)/), geaendert = /geändert/.test(quelle||"");
+  const teile = [istSchule() ? "SCHULE" : m ? m[1] + (geaendert ? "x" : "") : "X"]
+    .concat(OPTIONEN.map(o => o.k + O[o.k]), ["a" + (M.A==="eigen" ? "e" : "n"), "t" + (M.T==="eigen" ? "e" : "d")]);
+  if (!istSchule() && (!m || geaendert)) ["G","F","B","I"].forEach(k => teile.push(k + S[k].slice(1)));
+  if (M.A==="eigen") teile.push("A" + S.A.slice(1));
+  if (M.T==="eigen") teile.push("T" + S.T.slice(1));
+  return teile.join("-");
+}
+function codeLaden(text) {
+  const teile = text.trim().replace(/\s+/g,"").split("-"), fehler = [];
+  const m = (teile.shift()||"").match(/^(\d{1,3})(x?)$|^X$|^SCHULE$/i);
+  if (!m) return "Der Code muss mit der Nummer der Farbkombination, SCHULE oder X beginnen.";
+  const hausfarben = /^SCHULE$/i.test(m[0]);
+  const neuO = Object.assign({}, O_STD), neuM = {A:"neutral", T:"dunkel"}, farben = {};
+  teile.forEach(p => {
+    const o = OPTIONEN.find(x => x.k === p[0]);
+    if (/^[a-z][a-z0-9]$/.test(p) && o && o.o.some(([v]) => v === p[1])) neuO[p[0]] = p[1];
+    else if (/^a[ne]$/.test(p)) neuM.A = p[1]==="e" ? "eigen" : "neutral";
+    else if (/^t[de]$/.test(p)) neuM.T = p[1]==="e" ? "eigen" : "dunkel";
+    else if (/^[GFBIAT][0-9a-fA-F]{6}$/.test(p)) farben[p[0]] = "#" + p.slice(1).toLowerCase();
+    else fehler.push(p);
+  });
+  if (m[1]) { if (!COMBO[+m[1]]) return `Kombination Nr. ${m[1]} gibt es nicht (1 bis 348).`; ohneVerlauf = true; ladeNr(+m[1]); ohneVerlauf = false; }
+  if (hausfarben) S = {G:SCHULE.G, A:SCHULE.G, F:SCHULE.F, B:SCHULE.B, I:SCHULE.I, T:SCHULE.G};
+  Object.assign(S, farben); O = neuO; M = neuM;
+  quelle = hausfarben ? (Object.keys(farben).length ? "eigene Auswahl" : "Hausfarben") : m[1] ? (m[2] || Object.keys(farben).some(k => "GFBI".includes(k)) ? `Nr. ${m[1]}, geändert` : `Nr. ${m[1]}`) : "eigene Auswahl";
+  renderAll();
+  return fehler.length ? `Geladen. Nicht erkannt: ${fehler.join(", ")}` : "Code geladen.";
+}
+
+// --- Kursbild ---
+// Foto-Banner im Stil des Skills kursbanner (1600 x 900): Fläche links, Foto rechts, Titel, Strich, Stufe, Untertitel.
+// Farben: einheitlich in den Hausfarben (Schulprofil) oder aus dem Farbschema (Grundfarbe, Akzent = Bereichsfarbe mit dem besten Kontrast).
+const FOTO_METALL = KI.banner.foto;
+let fbNr = 0;
+function bannerFarben() {
+  if (O.v !== "s" || istSchule()) return {bg:"{{BANNER_0}}", txt:"{{BANNER_1}}", sub:"{{BANNER_2}}", akz:"{{BANNER_3}}"};
+  const akz = ["F","B","I"].map(k => S[k]).sort((a,b) => cr(b,S.G) - cr(a,S.G))[0];
+  return {bg:S.G, txt:"#FFFFFF", sub:tint(S.G,.22), akz};
+}
+function fotoBanner() {
+  const f = bannerFarben(), id = "fb" + (++fbNr), font = `font-family="Inter,'Segoe UI',system-ui,Arial"`;
+  // Gleiche Schriftgrößen und Abstände wie der Kursbanner-Skill; "höher" verschiebt nur den ganzen Textblock nach oben.
+  const dy = O.n === "o" ? -60 : 0;
+  const text = `<text x="100" y="${415+dy}" fill="${f.txt}" ${font} font-size="168" font-weight="900" textLength="${KI.banner.lt}" lengthAdjust="spacingAndGlyphs">${KI.banner.titel}</text>
+       <rect x="100" y="${488+dy}" width="96" height="7" fill="${f.akz}"/>
+       <text x="100" y="${578+dy}" fill="${f.txt}" ${font} font-size="50" font-weight="500" letter-spacing="9" textLength="${KI.banner.ls}" lengthAdjust="spacingAndGlyphs">${KI.banner.stufe}</text>
+       <text x="100" y="${640+dy}" fill="${f.sub}" ${font} font-size="27" letter-spacing="1">${KI.banner.untertitel}</text>`;
+  return `<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%">
+    <defs><linearGradient id="${id}" x1="800" x2="1180" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${f.bg}"/><stop offset="1" stop-color="${f.bg}" stop-opacity="0"/></linearGradient></defs>
+    <rect width="1600" height="900" fill="${f.bg}"/>
+    ${FOTO_METALL ? `<image href="${FOTO_METALL}" x="800" y="0" width="800" height="900" preserveAspectRatio="xMidYMid slice"/>` : ""}
+    <!-- Foto ohne Farbschleier: Nur die Fläche links und der Übergang nehmen die Grundfarbe an. -->
+    <rect x="799" width="381" height="900" fill="url(#${id})"/>
+    ${text}</svg>`;
+}
+function kbHTML() {
+  if (O.b === "f") return fotoBanner();
+  const G = S.G, tiles = ["F","B","I"].map(k => [k, KI.bereiche[k].split(" ")[0], KI.bereiche[k].replace(/^\S+ /,"")]).concat([["T","📝","Tests"]]);
+  const grid = `background-image:linear-gradient(#ffffff10 1px,transparent 1px),linear-gradient(90deg,#ffffff10 1px,transparent 1px);background-size:4% 9.6%`;
+  const font = `font-family="system-ui,Segoe UI,Arial"`;
+  const balken = `<div style="position:absolute;left:0;right:0;bottom:0;height:5%;display:flex">${tiles.map(t=>`<i style="flex:1;background:${col(t[0])}"></i>`).join("")}</div>`;
+  const titel = x => `<text x="${x}" y="178" fill="${tint(S.F,.85)}" ${font} font-size="21" font-weight="700" letter-spacing="4" text-anchor="middle">${KI.kb.zeile}</text>
+    <text x="${x}" y="252" fill="#ffffff" ${font} font-size="62" font-weight="800" text-anchor="middle" >${KI.kb.titel}</text>
+    <text x="${x}" y="298" fill="#ffffffcc" ${font} font-size="21" text-anchor="middle">${BER.map(b=>b[1]).join(" · ")}</text>`;
+  if (O.b === "s")   // Farbstreifen: vier senkrechte Bänder mit Icons rechts
+    return `<div style="position:absolute;inset:0;background:${G};${grid}"></div>
+    <svg viewBox="0 0 1200 500" style="position:absolute;inset:0;width:100%;height:100%">
+      ${tiles.map((t,i)=>`<rect x="${700+i*95}" y="0" width="95" height="500" fill="${col(t[0])}"/><text x="${747+i*95}" y="270" font-size="50" text-anchor="middle">${t[1]}</text>`).join("")}
+      ${titel(370)}</svg>`;
+  if (O.b === "t")   // nur Text, mittig, Farbbalken unten
+    return `<div style="position:absolute;inset:0;background:${G};${grid}"></div>${balken}
+    <svg viewBox="0 0 1200 500" style="position:absolute;inset:0;width:100%;height:100%">${titel(600)}
+      ${tiles.map((t,i)=>`<circle cx="${540+i*40}" cy="345" r="11" fill="${col(t[0])}"/>`).join("")}</svg>`;
+  return `<div style="position:absolute;inset:0;background:${G};${grid}"></div>${balken}
+  <svg viewBox="0 0 1200 500" style="position:absolute;inset:0;width:100%;height:100%">
+    <circle cx="880" cy="250" r="165" fill="none" stroke="#ffffff22" stroke-width="2"/>
+    <circle cx="880" cy="250" r="112" fill="none" stroke="#ffffff22" stroke-width="2" stroke-dasharray="12 8"/>
+    <line x1="690" y1="250" x2="1070" y2="250" stroke="#ffffff22" stroke-width="2" stroke-dasharray="30 8 4 8"/>
+    <line x1="880" y1="60" x2="880" y2="440" stroke="#ffffff22" stroke-width="2" stroke-dasharray="30 8 4 8"/>
+    ${titel(400)}
+    ${tiles.map((t,i)=>{const x=[760,890,760,890][i], y=[130,130,260,260][i];return `<rect x="${x}" y="${y}" width="110" height="110" rx="18" fill="${col(t[0])}" stroke="#ffffff55" stroke-width="2"/><text x="${x+55}" y="${y+74}" font-size="54" text-anchor="middle">${t[1]}</text>`;}).join("")}
+  </svg>`;
+}
+function renderKB() { ["kb","kb2","kb3","kbmini"].forEach(id => { const e = document.getElementById(id); if (e) { e.innerHTML = kbHTML(); if (id !== "kb2" && id !== "kb3") e.style.aspectRatio = O.b === "f" ? "16/9" : ""; } });
+  const kb = document.getElementById("kopfbox"); kb.style.display = O.b === "f" ? "" : "none";
+  if (O.b === "f") document.getElementById("kopf").innerHTML = `<div class="bn">${fotoBanner()}</div><div class="nm">${KI.vollname}</div>`; document.getElementById("kb").insertAdjacentHTML("beforeend", '<div class="safe"><span>sicherer Bereich</span></div>'); }
+
+// --- Baukasten ---
+function renderSlots() {
+  const el = document.getElementById("slots"); el.innerHTML = "";
+  SLOTS.forEach(([k,n,info]) => {
+    const b = document.createElement("button"); b.className = "slot" + (k===slot ? " on" : "");
+    const auto = (k==="A" && M.A==="neutral") || (k==="T" && M.T==="dunkel");
+    const was = auto ? (k==="A" ? "neutral: helles Grau aus der Grundfarbe" : "dunkel: Grundfarbe mit weißer Schrift") : `${name(S[k])} · ${S[k]}`;
+    b.innerHTML = `<span class="sw" style="background:${k==="T"&&auto ? S.G : col(k)}"></span><span><b>${n}</b><small>${was}</small><small>${info}</small></span>`;
+    b.onclick = () => { slot = k; renderSlots(); renderGrid(); renderAnzeige(); };
+    el.appendChild(b);
+    if (k==="A" || k==="T") {
+      const d = document.createElement("div"); d.style.cssText = "margin:2px 0 8px 52px";
+      const std = k==="A" ? "neutral" : "dunkel";
+      d.innerHTML = `<div class="row" style="gap:6px"><button data-m="${std}" class="${M[k]===std?"on":""}" style="padding:3px 9px;font-size:13px">${std}</button><button data-m="eigen" class="${M[k]==="eigen"?"on":""}" style="padding:3px 9px;font-size:13px">eigene Farbe</button></div>` +
+        (M[k]==="eigen" ? `<div class="hint" style="margin-top:6px">Passt laut Buch zu euren Farben:</div><div class="chips" style="margin-top:4px">${fuenfte().map(h=>`<span class="chip" data-f="${h}"><span class="mini" style="margin:0 4px 0 0"><i style="background:${h}"></i></span>${name(h)}</span>`).join("") || '<span class="hint">keine passende gefunden</span>'}</div>` : "");
+      d.querySelectorAll("[data-m]").forEach(x => x.onclick = () => { M[k] = x.dataset.m; slot = k; renderAll(); });
+      d.querySelectorAll("[data-f]").forEach(x => x.onclick = () => { S[k] = x.dataset.f; slot = k; renderAll(); });
+      el.appendChild(d);
+    }
+  });
+}
+function hsl(h) { const [r,g,b] = rgb(h).map(x=>x/255), mx=Math.max(r,g,b), mn=Math.min(r,g,b), l=(mx+mn)/2, d=mx-mn; let hu=0, s=d===0?0:d/(1-Math.abs(2*l-1));
+  if (d) hu = mx===r ? ((g-b)/d)%6 : mx===g ? (b-r)/d+2 : (r-g)/d+4; return [(hu*60+360)%360, s, l]; }
+const SORT = WADA.slice().sort((a,b) => { const A=hsl(a[1]),B=hsl(b[1]); const ga=A[1]<.12?1:0, gb=B[1]<.12?1:0; return ga-gb || (ga ? A[2]-B[2] : Math.floor(A[0]/15)-Math.floor(B[0]/15) || A[2]-B[2]); });
+function renderGrid() {
+  const el = document.getElementById("grid"); el.innerHTML = "";
+  SORT.forEach(c => {
+    const i = document.createElement("i"); i.style.background = c[1]; i.title = `${c[0]} ${c[1]}`;
+    if (c[1] === S[slot]) i.className = "sel";
+    i.onmouseenter = () => document.getElementById("hover").textContent = `${c[0]} · ${c[1]} · in ${c[2].length} Kombinationen`;
+    i.onclick = () => { S[slot] = c[1]; if (slot==="A"||slot==="T") M[slot] = "eigen"; const m = (quelle||"").match(/Nr\. (\d+)/); quelle = m ? `Nr. ${m[1]}, geändert` : "eigene Auswahl"; renderAll(); };
+    el.appendChild(i);
+  });
+  const cur = byHex[S[slot]];
+  document.getElementById("incombo").innerHTML = cur ? `<span class="hint"><b>${cur[0]}</b> steckt im Buch in diesen Kombinationen (anklicken zum Laden):</span><div class="chips" style="margin-top:6px">${cur[2].map(n=>`<span class="chip" data-nr="${n}">Nr. ${n}${miniHTML(n)}</span>`).join("")}</div>` : "";
+  bindChips(document.getElementById("incombo"));
+}
+// Fünfte Farbe: kommt im Buch zusammen mit mindestens zwei der vier Farben vor und ist von den Bereichsfarben gut zu unterscheiden
+function fuenfte() {
+  const vier = [S.G,S.F,S.B,S.I], z = {};
+  Object.values(COMBO).forEach(v => { const h = v.map(c=>c[1]); const mit = vier.filter(x => h.includes(x)).length; if (mit) h.forEach(x => { if (!vier.includes(x)) z[x] = (z[x]||0) + mit; }); });
+  return Object.keys(z).filter(h => z[h]>=2 && [S.F,S.B,S.I].every(x => dE(h,x)>=20)).sort((a,b)=>z[b]-z[a]).slice(0,5);
+}
+const miniHTML = n => `<span class="mini">${COMBO[n].map(c=>`<i style="background:${c[1]}"></i>`).join("")}</span>`;
+function bindChips(root) { root.querySelectorAll("[data-nr]").forEach(e => e.onclick = () => ladeNr(+e.dataset.nr)); }
+function ladeNr(n) {
+  const v = COMBO[n]; if (!v) { document.getElementById("nrinfo").textContent = "Diese Nummer gibt es nicht (1 bis 348)."; return; }
+  document.getElementById("nr").value = n;
+  const s = v.map(c=>c[1]).sort((a,b)=>lum(a)-lum(b));
+  const p = {G:s[0], F:s[1]||S.F, B:s[2]||S.B, I:s[3]||S.I};
+  setScheme(p, "Nr. "+n);
+  document.getElementById("nrinfo").textContent = `Nr. ${n}: ${v.map(c=>c[0]).join(", ")}` + (v.length<4 ? ` (nur ${v.length} Farben, der Rest bleibt)` : "");
+}
+const VIERER = Object.keys(COMBO).map(Number).filter(n => { const v = COMBO[n]; if (v.length!==4) return false; const L = v.map(c=>c[3]).sort((a,b)=>a-b); return L[0]<35 && L[1]>40; });
+function renderVierer() {
+  const el = document.getElementById("vierer");
+  el.innerHTML = VIERER.map(n=>`<span class="chip" data-nr="${n}">Nr. ${n}${miniHTML(n)}</span>`).join("");
+  bindChips(el);
+}
+
+// --- Prüfung ---
+function renderWarn() {
+  const w = [], ok = [], hin = [];
+  const g = cr(S.G,"#ffffff");
+  (g>=4.5 ? ok : w).push(`Grundfarbe mit weißer Schrift (aktiver Reiter, dunkles Kopfband): Kontrast ${g.toFixed(1)} : 1` + (g>=4.5 ? "" : " – zu hell, bitte eine dunklere Grundfarbe wählen"));
+  if (testsDunkel()) { const t = cr(tint(S.G,.85),"#ffffff"); (t>=4.5 ? ok : w).push(`📝 Tests (dunkel): weiße Schrift auf dem Reiter ${t.toFixed(1)} : 1` + (t>=4.5 ? "" : " – schlecht lesbar")); }
+  SLOTS.slice(1).forEach(([k,n]) => {
+    if (k==="T" && testsDunkel()) return;
+    if (k==="A" && M.A==="neutral") { const t = cr(tint(col("A"),TINT_TAB), S.G); (t>=4.5 ? ok : w).push(`Allgemein (neutral): Schrift auf dem Reiter ${t.toFixed(1)} : 1`); return; }
+    const t = cr(tint(S[k],TINT_TAB), S.G);
+    (t>=4.5 ? ok : w).push(`${n}: Schrift auf dem Reiter ${t.toFixed(1)} : 1` + (t>=4.5 ? "" : " – schlecht lesbar"));
+    const s = cr(S[k],"#ffffff");
+    if (s < 1.35) (k==="A" ? hin : w).push(k==="A" ? `Allgemein: Die Farbleiste ist sehr hell (${s.toFixed(2)} : 1). Das passt, wenn „Allgemein“ bewusst zurückhaltend sein soll.` : `${n}: Die Farbleiste ist auf Weiß kaum zu sehen (${s.toFixed(2)} : 1). Eine kräftigere Farbe wählen.`);
+  });
+  const B = BER.concat(M.A==="eigen" ? [["A","Allgemein"]] : [], M.T==="eigen" ? [["T","Tests"]] : []);
+  for (let i=0;i<B.length;i++) for (let j=i+1;j<B.length;j++) { const d = dE(S[B[i][0]],S[B[j][0]]); if (d<20) w.push(`${B[i][1]} und ${B[j][1]} sehen sich sehr ähnlich (Abstand ${d.toFixed(0)}). Schwer zu unterscheiden.`); }
+  if (O.u==="b") BER.forEach(([k,n]) => { if (schwach(S[k])) w.push(`${n}: Linien der Unterreiter in der Bereichsfarbe sind kaum zu sehen. Besser „schwarz“ oder „Grundfarbe“.`); });
+  if (O.y==="b") BER.forEach(([k,n]) => { const s = Math.max(cr(S[k],"#ffffff"), cr(S[k],S.G)); if (s < 4.5) w.push(`${n}: Schrift auf dem ausgewählten Reiter in Bereichsfarbe nur ${s.toFixed(1)} : 1 – schlecht lesbar.`); });
+  if (O.h==="v") BER.forEach(([k,n]) => { const s = Math.max(cr(S[k],"#ffffff"), cr(S[k],S.G)); if (s < 4.5) w.push(`${n}: Schrift auf dem voll gefärbten Reiter nur ${s.toFixed(1)} : 1 – schlecht lesbar.`); });
+  document.getElementById("warn").innerHTML = w.map(x=>`<li class="bad">✗ ${x}</li>`).join("") + hin.map(x=>`<li class="mid">ℹ︎ ${x}</li>`).join("") + ok.map(x=>`<li class="ok">✓ ${x}</li>`).join("") + `<li class="hint">Mindestwert für gut lesbare Schrift: 4,5 : 1.</li>`;
+}
+
+// --- Ergebnis ---
+function renderOut() {
+  const t = [`Farbschema ${KI.vollname} (Quelle: ${quelle || "eigene Auswahl"})`]
+    .concat(SLOTS.map(([k,n]) => `${n.replace(/^\S+ /,"")}: ` + (k==="A"&&M.A==="neutral" ? `neutral (Grau aus der Grundfarbe, ${col("A")})` : k==="T"&&M.T==="dunkel" ? `dunkel (Grundfarbe ${S.G}, weiße Schrift)` : `${name(S[k])} ${S[k]}`)))
+    .concat(OPTIONEN.map(o => `${o.n}: ${o.o.find(([v]) => v===O[o.k])[1]}`), [`Gestaltungscode: ${codeVon()}`]);
+  document.getElementById("out").value = t.join("\n");
+  try { localStorage.setItem("farbschema-"+KI.kurzname, JSON.stringify({S,M,O,quelle})); } catch(e) {}
+}
+function renderButtons() {}
+// --- Anzeige: gewählte Kombination und Farben (bleibt beim Scrollen oben stehen) ---
+function renderAnzeige() {
+  const m = (quelle||"").match(/Nr\. (\d+)/), geaendert = /geändert/.test(quelle||"");
+  const kopf = (istSchule() ? `<div class="nr"><small>Farbkombination</small>Hausfarben der Schule` : m ? `<div class="nr"><small>Farbkombination${geaendert ? " (geändert)" : ""}</small>Nr. ${m[1]}` : `<div class="nr"><small>Farbkombination</small>eigene Auswahl`) + `<span class="cd" title="Gestaltungscode">${codeVon()}</span></div>`;
+  const felder = SLOTS.map(([k,n]) => {
+    const auto = (k==="A" && M.A==="neutral") || (k==="T" && M.T==="dunkel");
+    const farbe = k==="T" && auto ? S.G : col(k);
+    const text = auto ? (k==="A" ? "neutral" : "dunkel") : name(S[k]);
+    return `<button class="f${k===slot?" on":""}" data-slot="${k}" title="${n.replace(/^\S+ /,"")}: ${auto ? (k==="A"?"neutral":"dunkel") : name(S[k])+" "+S[k]} – Farbe im Baukasten wählen"><i style="background:${farbe}"></i><span><b>${n.replace(/^\S+ /,"")}</b><br><span class="nm">${text}</span></span></button>`;
+  }).join("");
+  const el = document.getElementById("anzeige");
+  requestAnimationFrame(() => document.documentElement.style.setProperty("--anz", (el.offsetHeight + 22) + "px"));
+  el.innerHTML = kopf + felder + `<span class="knoepfe"><button class="zufall" id="zufall2" title="Zufällige Farbkombination aus dem Buch" aria-label="Zufällige Farbkombination">🔀</button><button class="zurueck" id="zurueck" title="Letzte Änderung rückgängig machen" ${verlauf.length < 2 ? "disabled" : ""}>zurück</button><button class="zurueck" id="vorwaerts" title="Zurückgenommene Änderung wiederherstellen" ${vorwaerts.length ? "" : "disabled"}>vorwärts</button></span>`;
+  // Farbe anklicken: diese Stelle im Baukasten auswählen und zur Farbauswahl springen
+  el.querySelectorAll("[data-slot]").forEach(b => b.onclick = () => {
+    slot = b.dataset.slot; renderSlots(); renderGrid(); renderAnzeige();
+    // zur Karte "Alle 159 Farben aus dem Buch" springen, unterhalb der stehenbleibenden Anzeige
+    const ziel = document.getElementById("farbwahl").getBoundingClientRect().top + window.scrollY - el.offsetHeight - 16;
+    window.scrollTo({top: ziel, behavior: "smooth"});
+  });
+  document.getElementById("zufall2").onclick = () => ladeNr(VIERER[Math.floor(Math.random()*VIERER.length)]);
+  document.getElementById("zurueck").onclick = zurueck;
+  document.getElementById("vorwaerts").onclick = vor;
+}
+// --- Verlauf für "zurück": jeder neue Zustand wird gemerkt (höchstens 100) ---
+let verlauf = [], vorwaerts = [], ohneVerlauf = false;
+const zustand = () => JSON.stringify({S, M, O, quelle});
+function merke() {
+  if (ohneVerlauf) return;
+  const z = zustand();
+  if (verlauf[verlauf.length-1] !== z) { verlauf.push(z); vorwaerts = []; if (verlauf.length > 100) verlauf.shift(); }
+}
+function setze(zs) { const z = JSON.parse(zs); S = z.S; M = z.M; O = z.O; quelle = z.quelle; ohneVerlauf = true; renderAll(); ohneVerlauf = false; }
+function zurueck() {
+  if (verlauf.length < 2) return;
+  vorwaerts.push(verlauf.pop());
+  setze(verlauf[verlauf.length-1]);
+}
+function vor() {
+  if (!vorwaerts.length) return;
+  const z = vorwaerts.pop(); verlauf.push(z); setze(z);
+}
+function renderAll() { merke(); renderAnzeige(); renderOpts(); renderProps(); renderKurs(); renderKB(); renderSlots(); renderGrid(); renderWarn(); renderOut(); renderButtons(); }
+
+document.getElementById("codecopy").onclick = () => { const c = codeVon(); try { navigator.clipboard.writeText(c); } catch(e) {} document.getElementById("codeinfo").textContent = "Kopiert."; };
+document.getElementById("pzurueck").onclick = pZurueck;
+document.getElementById("pvor").onclick = pVor;
+document.getElementById("pzufall").onclick = pZufall;
+document.getElementById("codeladen").onclick = () => { document.getElementById("codeinfo").textContent = codeLaden(document.getElementById("codein").value); };
+document.getElementById("safe").onchange = e => document.getElementById("kb").classList.toggle("zeige", e.target.checked);
+document.getElementById("laden").onclick = () => ladeNr(+document.getElementById("nr").value);
+document.getElementById("zufall").onclick = () => ladeNr(VIERER[Math.floor(Math.random()*VIERER.length)]);
+document.getElementById("copy").onclick = () => { const o = document.getElementById("out"); o.select(); try { navigator.clipboard.writeText(o.value); } catch(e) { document.execCommand("copy"); } document.getElementById("copied").textContent = "Kopiert. Jetzt im Chat einfügen."; };
+
+renderVierer();
+let start = null; try { start = JSON.parse(localStorage.getItem("farbschema-"+KI.kurzname)); } catch(e) {}
+if (start && start.S) {
+  S = start.S; M = start.M||M; quelle = start.quelle||"";
+  O = Object.assign({}, O_STD, start.O||{});
+  if (!start.O && start.kopf) O.k = {hell:"h", dunkel:"d", aus:"a"}[start.kopf] || "h";        // ältere Speicherstände
+  if (!start.O && start.flaeche) O.f = start.flaeche==="getoent" ? "g" : "w";
+  renderAll();
+}
+else { setScheme(PROPS[0], "Nr. 286"); if (KI.code) codeLaden(KI.code); }
+</script>
+</body>
+</html>

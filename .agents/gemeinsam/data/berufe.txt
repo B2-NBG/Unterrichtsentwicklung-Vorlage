@@ -1,0 +1,7 @@
+# Berufe für das Schriftfeld: eine Zeile pro Beruf, alphabetisch sortiert.
+# Die KI zeigt im Auswahldialog höchstens vier passende. Ein neuer Beruf (eingetippt unter "Other") wird eingefügt,
+# danach wird die Liste wieder alphabetisch sortiert. Zeilen mit # werden ignoriert. Nicht benötigte Berufe einfach löschen.
+Alle Berufe
+Fachkraft für Lagerlogistik
+Industriemechaniker/in
+Kaufmann/Kauffrau für Büromanagement

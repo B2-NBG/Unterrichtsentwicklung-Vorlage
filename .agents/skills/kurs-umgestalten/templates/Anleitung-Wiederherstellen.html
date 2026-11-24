@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kurs wiederherstellen</title>
+<style>
+:root{
+  --navy:#1f2a44; --navy-2:#2e3d63; --bg:#f5f3ee; --card:#ffffff; --text:#1d2433; --muted:#5b6475;
+  --line:#e2ded4; --orange:#e8a33d; --orange-soft:#fdf1dc; --red:#c8432b; --red-soft:#fbe6e1;
+  --green:#2f8a57; --green-soft:#e2f3e9; --blue:#2f6db5; --blue-soft:#e3edf9; --teal-soft:#e4f3f1;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#141821; --card:#1d2230; --text:#e8eaf0; --muted:#a3abbd; --line:#2f3646;
+    --orange-soft:#3a2d17; --red-soft:#3d1f1a; --green-soft:#17321f; --blue-soft:#182a40; --teal-soft:#16302d;
+    --navy:#0f1626; --navy-2:#24314f; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:linear-gradient(135deg,var(--navy),var(--navy-2));color:#fff;padding:36px 16px 44px;border-bottom:6px solid var(--orange)}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px}
+header .wrap{padding:0}
+header small{letter-spacing:.08em;text-transform:uppercase;color:var(--orange);font-weight:700}
+h1{margin:6px 0 8px;font-size:clamp(1.6rem,4vw,2.3rem);line-height:1.2}
+header p{margin:0;color:#d6dbe7;max-width:640px}
+main{padding:24px 0 48px}
+.alert{display:flex;gap:14px;background:var(--red-soft);border-left:6px solid var(--red);border-radius:10px;padding:16px 18px;margin:0 0 28px}
+.alert .ico{font-size:1.6rem;line-height:1}
+.alert b{color:var(--red)}
+section.step{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:0 0 22px;overflow:hidden}
+.step-head{display:flex;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.num{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#fff;font-size:1.15rem}
+.s1 .num{background:var(--blue)} .s1 .step-head{background:var(--blue-soft)}
+.s2 .num{background:var(--orange)} .s2 .step-head{background:var(--orange-soft)}
+.s3 .num{background:var(--green)} .s3 .step-head{background:var(--green-soft)}
+.s4 .num{background:var(--red)} .s4 .step-head{background:var(--red-soft)}
+.step-head h2{margin:0;font-size:1.25rem}
+.step-body{padding:16px 20px 20px}
+ol,ul{margin:0;padding-left:1.3em} li{margin:6px 0}
+code{background:var(--teal-soft);padding:1px 6px;border-radius:5px;font-size:.92em}
+.ui{font-weight:700;color:var(--blue)}
+.key{display:inline-block;background:var(--orange);color:#1d2433;font-weight:800;padding:1px 8px;border-radius:6px}
+table{width:100%;border-collapse:collapse;font-size:.96rem}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{width:28%;color:var(--muted);font-weight:700}
+tr:last-child th,tr:last-child td{border-bottom:0}
+tr.hot{background:var(--orange-soft)}
+.dates{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:10px 0 4px}
+.date{border-radius:10px;padding:10px 12px;border:1px solid var(--line);background:var(--bg)}
+.date .k{font-size:.85rem;color:var(--muted)} .date .d{font-weight:800;font-size:1.1rem}
+.b1{border-top:5px solid var(--blue)} .b2{border-top:5px solid var(--orange)} .b3{border-top:5px solid var(--green)} .b4{border-top:5px solid var(--red)}
+.hint{margin-top:14px;background:var(--blue-soft);border-radius:10px;padding:12px 14px;font-size:.95rem}
+.prob td:first-child{font-weight:700;width:34%}
+footer{color:var(--muted);font-size:.85rem;text-align:center;padding:0 16px 32px}
+@media (max-width:600px){ .dates{grid-template-columns:1fr} th{width:auto} th,td{display:block;padding:6px 12px} th{padding-top:12px} .prob td:first-child{width:auto} }
+@media print{ header{-webkit-print-color-adjust:exact;print-color-adjust:exact} section.step{break-inside:avoid} }
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <small>ByCS Lernplattform · {{VOLLNAME}}</small>
+  <h1>Kurs wiederherstellen</h1>
+  <p>Wiederherstellen der Sicherung <code style="background:rgba(255,255,255,.15);color:#fff">{{DATEI}}</code>{{BLOCKPLAN_SATZ}}</p>
+</div></header>
+
+<main class="wrap">
+
+<div class="alert"><span class="ico">⚠️</span><div>
+  <b>Kursbeginn in Sicherung und Kurs müssen gleich sein.</b> Moodle verschiebt beim Wiederherstellen alle Termine um den Abstand zwischen dem Kursbeginn der Sicherung und dem Kursbeginn des Kurses. Lehrkräfte können den Kursbeginn in der ByCS <b>nicht ändern</b> (Schloss-Symbol). Diese Sicherung hat den Kursbeginn <b>{{KURSBEGINN}}, 00:00</b>.
+</div></div>
+
+<section class="step s1">
+  <div class="step-head"><span class="num">1</span><h2>Kurs vorbereiten</h2></div>
+  <div class="step-body"><ol>
+    <li>Neuer, leerer Kurs: alle Klassen einschreiben, dann <span class="ui">Weitere Funktionen → ByCS-Gruppen</span>: ☑ Automatisiert Kursgruppen aus ByCS-Gruppen erstellen · ☑ Kursgruppen für Klassen · speichern.</li>
+    <li><span class="ui">Teilnehmer/innen → Gruppen</span>: Jede Klasse gibt es <b>genau einmal</b>, mit Mitgliedern{{GRUPPEN_SATZ}}</li>
+    <li><span class="ui">Einstellungen</span>: <b>Kursbeginn ablesen</b> (er ist gesperrt). Dort muss <span class="key">{{KURSBEGINN}}, 00:00</span> stehen. Steht ein anderer Tag dort, nicht wiederherstellen, sondern der KI den Tag nennen: Die KI baut eine Sicherung mit diesem Kursbeginn.</li>
+  </ol></div>
+</section>
+
+<section class="step s2">
+  <div class="step-head"><span class="num">2</span><h2>Wiederherstellen</h2></div>
+  <div class="step-body">
+    <p style="margin-top:0">Im Kurs: <span class="ui">Weitere Funktionen → Wiederherstellen</span> → <code>{{DATEI}}</code> hochladen → <span class="ui">Wiederherstellen</span>.</p>
+    <table>
+      <tr><th>Ziel</th><td>Unter „In diesen Kurs wiederherstellen“:<br>
+        Kurs hat schon Inhalt: <b>„Inhalt des Kurses löschen und dann wiederherstellen“</b><br>
+        Neuer, leerer Kurs: <b>„Den gesicherten Kurs mit diesem Kurs verschmelzen“</b><br>
+        → <span class="ui">Weiter</span> direkt darunter.<br><small>Nie „verschmelzen“ in einen Kurs mit Inhalt, sonst sind alle Reiter doppelt da.</small></td></tr>
+      <tr><th>Einstellungen</th><td>
+        <ul>
+          <li>Einschreibemethoden einbeziehen: <b>Nein</b></li>
+          <li>☑ <b>Gruppen und Gruppierungen einbeziehen</b></li>
+          <li>Falls angeboten: Aktuelle Rollen und Einschreibungen behalten: <b>Ja</b></li>
+          <li>Falls angeboten: Aktuelle Gruppen und Gruppierungen behalten: <b>Ja</b></li>
+          <li>Alles andere so lassen</li>
+        </ul></td></tr>
+      <tr class="hot"><th>Schema / Kurs&shy;einstellungen</th><td>
+        <ul>
+          <li>Kurseinstellungen überschreiben: <b>Ja</b> (sonst fehlen Reiter-Format und Kursbild)</li>
+          <li>Kursname, z. B. „{{VOLLNAME}}“ (die Fassungsnummer „{{FASSUNG}}“ darf weg)</li>
+          <li>Kurzer Kursname: muss in der ByCS einmalig sein</li>
+          <li><span class="key">Kursbeginn: so lassen</span> (gesperrt, muss {{KURSBEGINN}} sein) ⚠️</li>
+        </ul></td></tr>
+      <tr><th>Prüfen und Abschluss</th><td><b>Wiederherstellung durchführen</b>.</td></tr>
+    </table>
+    <div class="hint">💡 Der genaue Wortlaut der „behalten“-Optionen kann in der ByCS abweichen. Wichtig ist nur: Die Klassengruppen dürfen beim Löschen <b>nicht</b> mitgelöscht werden.</div>
+  </div>
+</section>
+
+<section class="step s3">
+  <div class="step-head"><span class="num">3</span><h2>Danach prüfen</h2></div>
+  <div class="step-body"><ol>
+    <li><span class="ui">Teilnehmer/innen → Gruppen</span>: Jede Klasse ist weiterhin genau einmal da.</li>
+{{PRUEF_PUNKTE}}
+    <li>Aus Sicht einer Klasse:
+      <ul>
+        <li>Sich selbst in eine Klassengruppe aufnehmen.</li>
+        <li>Im Profilmenü unter <span class="ui">Rolle wechseln</span> die Rolle der Lernenden wählen.</li>
+        <li>Es dürfen nur Reiter zu sehen sein, deren Montag schon erreicht ist.</li>
+        <li>Danach zurückwechseln und sich wieder aus der Gruppe nehmen.</li>
+      </ul></li>
+    <li>Kursbild und Farben der Reiter ansehen. Alte Kurse oder Testkurse erst löschen, wenn alles passt.</li>
+  </ol></div>
+</section>
+
+<section class="step s4">
+  <div class="step-head"><span class="num">!</span><h2>Häufige Probleme</h2></div>
+  <div class="step-body">
+    <table class="prob">
+      <tr><td>Alle Termine um Wochen verschoben</td><td>Kursbeginn der Sicherung und des Kurses waren verschieden. der KI den Kursbeginn des Kurses nennen, neue Sicherung bauen lassen und erneut wiederherstellen.</td></tr>
+      <tr><td>Gruppen doppelt</td><td>Die Gruppen wurden nicht behalten oder die ByCS-Gruppen erst danach eingeschaltet. Die doppelten, leeren Gruppen löschen.</td></tr>
+      <tr><td>Reiter doppelt</td><td>Es wurde „verschmelzen“ in einen Kurs mit Inhalt gewählt. Erneut mit „Inhalt löschen und dann wiederherstellen“.</td></tr>
+      <tr><td>„Kurzer Kursname wird bereits verwendet“</td><td>Einen anderen Kurznamen eintragen oder die KI eine neue Fassung bauen lassen.</td></tr>
+      <tr><td>Reiter-Format oder Kursbild fehlen</td><td>„Kurseinstellungen überschreiben“ stand auf Nein. Erneut wiederherstellen.</td></tr>
+      <tr><td>Eine Klasse sieht nichts</td><td>Sie ist in keiner Klassengruppe, oder der Montag ihrer Schulwoche ist noch nicht erreicht.</td></tr>
+      <tr><td>Fehlermeldung beim Wiederherstellen</td><td>Die Meldung Wort für Wort der KI geben.</td></tr>
+    </table>
+  </div>
+</section>
+
+</main>
+<footer>Gebaut am {{STAND}} mit dem Skill kurs-umgestalten{{QUELLE}}</footer>
+</body>
+</html>

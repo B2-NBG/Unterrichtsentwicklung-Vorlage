@@ -1,0 +1,75 @@
+# Werkzeug testen: Nach einem Push auf main, der das Werkzeug oder eine Seite ändert, laufen alle Tests des Werkzeugs
+# (*.test.py, suspend-data.test.js) und die statische Seitenprüfung für jede geänderte index.html in Unterricht/.
+# Hält die Zustellung NICHT an (die läuft getrennt in "Bauen und zustellen"). Ist ein Test rot, mailt GitHub dem, der
+# gepusht hat; dann reparieren (Werkzeug-Verantwortliche) bzw. die Seite nach seite-pruefen.py richten.
+# Nur Leserechte, kein Environment, keine Secrets: Der Lauf kann nichts zustellen und nichts committen.
+# Von Hand: Actions > "Werkzeug testen" > Run workflow (prüft dann alle Seiten).
+# Actions sind auf einen Commit gepinnt (Version im Kommentar), zweimal im Jahr prüfen: einrichtung-admin.md.
+name: Werkzeug testen
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.agents/**'
+      - 'AGENTS.md'
+      - '.github/**'
+      - 'Unterricht/**/index.html'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: werkzeug-testen-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  testen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262   # v4.4.0
+        with:
+          fetch-depth: 0   # handbuch.test.py arbeitet in einem Klon, der Vergleich der Seiten braucht den Stand vor dem Push
+
+      - name: Git-Name für die Test-Repos
+        run: |
+          git config --global user.name "Werkzeug-Test"
+          git config --global user.email "werkzeug-test@example.invalid"
+          git config --global init.defaultBranch main
+
+      - name: Tests des Werkzeugs
+        run: |
+          rot=""
+          for t in $(git ls-files '*.test.py'); do
+            echo "::group::$t"
+            if python3 "$t"; then echo "bestanden"; else rot="$rot $t"; fi
+            echo "::endgroup::"
+          done
+          echo "::group::suspend-data.test.js"
+          if node .agents/skills/baue-lernpaket/tests/suspend-data.test.js; then echo "bestanden"; else rot="$rot suspend-data.test.js"; fi
+          echo "::endgroup::"
+          if [ -n "$rot" ]; then echo "::error::Rot:$rot"; exit 1; fi
+
+      - name: Geänderte Seiten prüfen (ohne Browser)
+        if: always()
+        env:
+          VORHER: ${{ github.event.before }}
+        run: |
+          # Beim Push: Seiten, die seit dem Stand vor dem Push neu sind oder sich geändert haben. Von Hand oder ohne
+          # brauchbaren Vorher-Stand (neuer Branch, erzwungener Push): alle Seiten.
+          if [ "${{ github.event_name }}" = push ] && [ -n "$VORHER" ] && git cat-file -e "$VORHER^{commit}" 2>/dev/null; then
+            seiten=$(git diff --name-only --diff-filter=AMR "$VORHER" HEAD -- 'Unterricht/**/index.html')
+          else
+            seiten=$(git ls-files 'Unterricht/**/index.html')
+          fi
+          [ -z "$seiten" ] && { echo "Keine geänderten Seiten."; exit 0; }
+          rot=""
+          while IFS= read -r s; do
+            [ -f "$s" ] || continue
+            echo "::group::$s"
+            python3 .agents/gemeinsam/scripts/seite-pruefen.py --ohne-browser "$s" || rot="$rot $s"
+            echo "::endgroup::"
+          done <<< "$seiten"
+          if [ -n "$rot" ]; then echo "::error::Seitenprüfung rot:$rot"; exit 1; fi

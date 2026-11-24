@@ -1,0 +1,890 @@
+<!doctype html>
+<!--
+  Handbuch für das Kollegium. Eigenes Layout, nicht die E-Learning-Vorlage. Eine Datei, offline, ohne Bibliotheken.
+  Bereiche zwischen AUTO-Kommentaren erzeugt .agents/handbuch/handbuch.py, nie von Hand ändern (Einzelheiten im Kopf des Skripts).
+  Bausteine in main: section.kapitel mit h2 (id, optional data-nav = kurzer Name in der Seitenleiste), article mit h3 (id) und span.nr,
+  ol.schritte, div.hinweis.merke / .achtung, p.prompt (Beispielsatz für die KI, bekommt einen Kopieren-Knopf), table, code.
+  Drei Wege: section.kapitel trägt data-weg="nutzen|korrigieren|erstellen|immer", die Kacheln im Kopf data-wahl. Gezeigt wird nur der
+  gewählte Weg (body data-zeige), "erstellen" zeigt auch "korrigieren", "immer" ist immer da.
+  Sichtbar stehen nur Schritte. Hintergründe kommen in <details class="mehr"><summary><span class="tag">Zusatzinfos</span> Titel</summary><div>…</div></details>.
+  Die Häufigen Fragen stehen unsichtbar in der Seite und sind nur über die Suche zu finden.
+  Im Text heißt es immer "die KI", nie ein Produktname.
+  Bei Zustellung über Power Automate können Links direkt zur Linkseite führen (die Adresse enthält einen
+  Schlüssel, darum nur in einem privaten Repo).
+-->
+<html lang="de" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Handbuch Lernpakete</title>
+<!-- AUTO:erscheinungsbild --><style id="erscheinungsbild">:root { --haus-haupt:#2F4858; --haus-akzent:#F6AE2D; --haus-zweit:#33658A; --haus-dritt:#86BBD8; --haus-papier:#FAFAF7; --haus-band-text:#D5DEE5; --haus-akzent-16:rgba(246,174,45,.16); --haus-akzent-20:rgba(246,174,45,.2); }</style><!-- /AUTO:erscheinungsbild -->
+<style>
+  :root {
+    --bg:var(--haus-papier); --panel:#FFFFFF; --panel2:#FBF9F3; --ink:#1B2433; --muted:#5A6474; --line:#E4DFD3; --raster:rgba(47,72,88,.055);
+    --band:var(--haus-haupt); --band2:#243660; --onBand:var(--haus-papier); --onBand2:#C3CCDB; --amber:var(--haus-akzent); --amberInk:#8A5200; --amberSoft:#FDF1DC;
+    --link:#1F5F99; --rot:#C8322F; --rotSoft:#FBE9E7; --gruen:#1F7A4A; --gruenSoft:#E4F3EA;
+    --stufe1:#1F5F99; --stufe2:#C8322F; --stufe3:#1B2433; --aufStufe:#FFFFFF;
+    --schatten:0 1px 2px rgba(47,72,88,.06), 0 10px 28px rgba(47,72,88,.07);
+    --kopf:Bahnschrift, "DIN Alternate", "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+    --text:"Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+    --mono:Consolas, "SF Mono", Menlo, monospace;
+    color-scheme:light;
+  }
+  :root[data-theme="dark"] {
+    --bg:#10161F; --panel:#182231; --panel2:#141D2A; --ink:#E8EDF3; --muted:#A0ADBD; --line:#2B394B; --raster:rgba(200,215,235,.05);
+    --band:#0B1222; --band2:#17233D; --onBand2:#AFBBD0; --amberInk:#F2B866; --amberSoft:#33270F;
+    --link:#8DBDEC; --rot:#EF7B76; --rotSoft:#3A2020; --gruen:#62CC94; --gruenSoft:#17332A;
+    --stufe1:#3C7FBF; --stufe2:#CF4B47; --stufe3:#55637A;
+    --schatten:0 1px 2px rgba(0,0,0,.3), 0 10px 28px rgba(0,0,0,.28);
+    color-scheme:dark;
+  }
+  *, *::before, *::after { box-sizing:border-box; }
+  html { scroll-padding-top:24px; -webkit-text-size-adjust:100%; }
+  @media (prefers-reduced-motion:no-preference) { html { scroll-behavior:smooth; } }
+  body { margin:0; background:var(--bg); color:var(--ink); font:17px/1.62 var(--text); }
+  h1, h2, h3 { font-family:var(--kopf); line-height:1.16; margin:0; font-weight:600; letter-spacing:-.005em; }
+  p { margin:.6em 0; }
+  a { color:var(--link); text-underline-offset:2px; }
+  code { font-family:var(--mono); font-size:.86em; background:var(--amberSoft); color:var(--amberInk); padding:1px 6px; border-radius:5px; overflow-wrap:anywhere; }
+  :focus-visible { outline:3px solid var(--amber); outline-offset:2px; border-radius:3px; }
+  .skip { position:absolute; left:-999px; top:8px; background:var(--panel); color:var(--ink); padding:8px 14px; z-index:50; border-radius:6px; }
+  .skip:focus { left:8px; }
+
+  /* Gerüst: Seitenleiste und Inhalt */
+  .shell { display:grid; grid-template-columns:292px minmax(0, 1fr); min-height:100vh; }
+  .side { position:sticky; top:0; height:100vh; overflow-y:auto; background:var(--band); color:var(--onBand); padding:20px 16px 16px; display:flex; flex-direction:column; gap:14px; scrollbar-width:thin; scrollbar-color:var(--band2) transparent; }
+  .brand { display:flex; align-items:center; gap:12px; color:inherit; text-decoration:none; padding:2px 6px; }
+  .brand img { width:40px; height:50px; object-fit:contain; background:var(--haus-papier); border-radius:8px; padding:4px; flex:none; }
+  .brand b { display:block; font:600 1.2rem/1.1 var(--kopf); }
+  .brand small { color:var(--onBand2); font-size:.8rem; }
+  .suche { position:relative; }
+  .suche input { width:100%; font:inherit; font-size:.95rem; padding:9px 12px 9px 34px; border-radius:9px; border:1px solid transparent; background:var(--band2); color:var(--onBand); }
+  .suche input::placeholder { color:var(--onBand2); opacity:1; }
+  .suche::before { content:""; position:absolute; left:12px; top:13px; width:11px; height:11px; border:2px solid var(--onBand2); border-radius:50%; }
+  .suche::after { content:""; position:absolute; left:22px; top:24px; width:7px; height:2px; background:var(--onBand2); transform:rotate(45deg); transform-origin:left; }
+  #treffer { position:absolute; left:0; right:0; top:calc(100% + 6px); z-index:30; background:var(--panel); color:var(--ink); border-radius:10px; box-shadow:0 12px 34px rgba(0,0,0,.34); overflow:hidden; max-height:66vh; overflow-y:auto; }
+  #treffer[hidden] { display:none; }
+  #treffer a { display:block; padding:9px 12px; color:inherit; text-decoration:none; border-top:1px solid var(--line); font-size:.86rem; line-height:1.35; }
+  #treffer a:first-child { border-top:0; }
+  #treffer a:hover, #treffer a:focus { background:var(--amberSoft); }
+  #treffer b { display:block; font-size:.92rem; }
+  #treffer span { color:var(--muted); }
+  #treffer mark { background:var(--amber); color:#1B2433; border-radius:2px; padding:0 1px; }
+  #treffer p { margin:0; padding:10px 12px; font-size:.88rem; color:var(--muted); }
+  #navi { flex:1; font-size:.92rem; }
+  .navgruppe { margin:0 0 10px; }
+  #navi a { display:block; color:var(--onBand2); text-decoration:none; padding:4px 8px 4px 10px; border-left:3px solid transparent; border-radius:0 6px 6px 0; line-height:1.3; }
+  #navi a:hover { color:var(--onBand); background:var(--band2); }
+  #navi a.navkopf { color:var(--onBand); font:600 1rem/1.3 var(--kopf); padding-top:6px; padding-bottom:6px; }
+  #navi a.aktiv { color:var(--onBand); border-left-color:var(--amber); background:var(--band2); }
+  #navi a span { display:inline-block; min-width:1.9em; color:var(--amber); font-size:.8rem; font-weight:600; }
+  .werkzeug { display:flex; flex-wrap:wrap; gap:8px; }
+  .werkzeug .auf { flex:1 0 100%; }
+  .auf-oben { font:inherit; font-size:.88rem; color:var(--link); background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:7px 14px; margin:14px 0 0; cursor:pointer; }
+  .auf-oben:hover { border-color:var(--link); }
+  .werkzeug button { flex:1; font:inherit; font-size:.84rem; color:var(--onBand); background:transparent; border:1px solid var(--band2); border-radius:8px; padding:7px 6px; cursor:pointer; }
+  .werkzeug button:hover { background:var(--band2); }
+  .topbar { display:none; }
+  .schleier { display:none; }
+  main { min-width:0; }
+  .breite { max-width:900px; margin:0 auto; padding:0 44px; }
+
+  /* Einstieg: Zeichnungsraster, Maßlinie */
+  .hero { background-color:var(--panel); background-image:linear-gradient(var(--raster) 1px, transparent 1px), linear-gradient(90deg, var(--raster) 1px, transparent 1px); background-size:24px 24px; border-bottom:1px solid var(--line); padding:56px 0 44px; }
+  .augenbraue { font:600 .84rem/1.2 var(--kopf); letter-spacing:.09em; text-transform:uppercase; color:var(--amberInk); margin:0 0 14px; }
+  .hero h1 { font-size:clamp(2.1rem, 4.6vw, 3.25rem); max-width:17em; line-height:1.08; }
+  .masslinie { position:relative; height:13px; width:min(340px, 62%); margin:20px 0 18px; }
+  .masslinie::before { content:""; position:absolute; left:0; right:0; top:6px; height:1px; background:var(--amber); }
+  .masslinie::after { content:""; position:absolute; left:0; right:0; top:0; bottom:0; border-left:1px solid var(--amber); border-right:1px solid var(--amber); }
+  .lead { font-size:1.14rem; color:var(--muted); max-width:38em; margin:0; }
+  .kennzahlen { color:var(--muted); font-size:.92rem; margin:14px 0 0; }
+  .kennzahlen b { color:var(--ink); font-family:var(--kopf); font-size:1.08rem; }
+  .wege { display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; margin:30px 0 0; }
+  .weg { display:flex; flex-direction:column; gap:4px; text-decoration:none; color:var(--ink); background:var(--panel); border:1px solid var(--line); border-top:4px solid var(--amber); border-radius:10px; padding:16px 18px 15px; box-shadow:var(--schatten); transition:transform .15s ease, box-shadow .15s ease; }
+  .weg:hover { transform:translateY(-2px); }
+  .weg b { font:600 1.2rem/1.2 var(--kopf); }
+  .weg span { font-size:.92rem; color:var(--muted); line-height:1.4; }
+  .weg em { margin-top:auto; padding-top:8px; font-style:normal; font-size:.86rem; font-weight:600; color:var(--amberInk); }
+  .weg.gewaehlt { box-shadow:0 0 0 3px var(--amber), var(--schatten); }
+  .wegwahl { font-size:.95rem; color:var(--muted); margin:18px 0 0; }
+  .kontakt { font-size:.92rem; color:var(--muted); margin:8px 0 0; }
+
+  /* Drei Wege: nur zeigen, was gebraucht wird (ohne Skript ist alles sichtbar) */
+  body[data-zeige="start"] [data-weg]:not([data-weg="immer"]),
+  body[data-zeige="nutzen"] [data-weg]:not([data-weg="immer"]):not([data-weg="nutzen"]),
+  body[data-zeige="korrigieren"] [data-weg]:not([data-weg="immer"]):not([data-weg="korrigieren"]),
+  body[data-zeige="erstellen"] [data-weg="nutzen"] { display:none; }
+
+  /* Zusatzinfos: Hintergründe zum Aufklappen */
+  details.mehr { margin:14px 0; border:1px solid var(--line); border-radius:9px; background:var(--panel2); }
+  details.mehr > summary { cursor:pointer; padding:9px 14px; font-weight:600; font-size:.95rem; line-height:1.4; }
+  details.mehr > summary:hover { color:var(--link); }
+  details.mehr[open] > summary { border-bottom:1px solid var(--line); }
+  details.mehr > div { padding:6px 16px 10px; font-size:.97rem; }
+  .tag { display:inline-block; font:600 .7rem/1 var(--kopf); letter-spacing:.07em; text-transform:uppercase; color:var(--amberInk); background:var(--amberSoft); padding:4px 8px; border-radius:20px; margin:0 6px 0 2px; }
+
+  /* Kapitel und Abschnitte */
+  .kapitel { padding:54px 0 6px; }
+  .kapitel > .breite > .marke { display:inline-block; font:600 .8rem/1 var(--kopf); letter-spacing:.08em; text-transform:uppercase; color:var(--band); background:var(--amber); padding:5px 9px; border-radius:4px; margin-bottom:12px; }
+  .kapitel h2 { font-size:clamp(1.7rem, 3vw, 2.2rem); }
+  .ziel { color:var(--muted); font-size:1.04rem; margin:.5em 0 0; max-width:40em; }
+  article { padding:30px 0 8px; border-top:1px solid var(--line); margin-top:26px; }
+  .kapitel h2 + .ziel + article, .kapitel h2 + article { margin-top:22px; }
+  article h3 { font-size:1.42rem; display:flex; align-items:baseline; gap:10px; margin-bottom:.45em; }
+  .nr { font:600 .78rem/1 var(--kopf); color:var(--onBand); background:var(--band); padding:5px 7px; border-radius:5px; flex:none; position:relative; top:-2px; }
+  :root[data-theme="dark"] .nr { background:var(--band2); }
+
+  ol.schritte { list-style:none; counter-reset:s; margin:14px 0; padding:0; }
+  ol.schritte > li { counter-increment:s; position:relative; padding:0 0 15px 44px; }
+  ol.schritte > li::before { content:counter(s); position:absolute; left:0; top:0; width:29px; height:29px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:var(--band); color:var(--onBand); font:600 .9rem/1 var(--kopf); }
+  :root[data-theme="dark"] ol.schritte > li::before { background:var(--band2); }
+  ol.schritte > li:not(:last-child)::after { content:""; position:absolute; left:14px; top:32px; bottom:3px; width:1px; background:var(--line); }
+  ol.schritte ul { margin:6px 0 0; padding-left:20px; }
+  article ul { padding-left:22px; }
+  article ul li { margin:.32em 0; }
+
+  .hinweis { border-radius:9px; padding:12px 16px; margin:16px 0; font-size:.97rem; border-left:4px solid; }
+  .hinweis.merke { background:var(--amberSoft); border-color:var(--amber); }
+  .hinweis.achtung { background:var(--rotSoft); border-color:var(--rot); }
+  .hinweis p { margin:0; }
+  .prompt { position:relative; background:var(--panel); border:1px solid var(--line); border-left:4px solid var(--band); border-radius:8px; padding:10px 84px 10px 14px; margin:10px 0; font-size:.96rem; }
+  :root[data-theme="dark"] .prompt { border-left-color:var(--amber); }
+  .kopie { position:absolute; right:8px; top:8px; font:inherit; font-size:.76rem; color:var(--muted); background:var(--panel2); border:1px solid var(--line); border-radius:6px; padding:3px 8px; cursor:pointer; }
+  .kopie:hover { color:var(--ink); border-color:var(--muted); }
+  .kopie.ok { color:var(--gruen); border-color:var(--gruen); }
+
+  table { width:100%; border-collapse:collapse; margin:14px 0; font-size:.94rem; background:var(--panel); border-radius:9px; overflow:hidden; box-shadow:0 0 0 1px var(--line); }
+  th, td { padding:9px 12px; text-align:left; vertical-align:top; border-top:1px solid var(--line); }
+  th { background:var(--panel2); border-top:0; font-family:var(--kopf); font-weight:600; }
+
+  /* Punkte als Balken mit Maßlinie */
+  .balken { display:flex; flex-wrap:wrap; margin:20px 0 16px; }
+  .seg { padding:12px 14px 11px; color:var(--aufStufe); min-width:0; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .seg b { display:block; font:600 1.75rem/1 var(--kopf); }
+  .seg span { font-size:.84rem; line-height:1.25; display:block; margin-top:4px; }
+  .seg.s1 { width:40%; background:var(--stufe1); border-radius:9px 0 0 9px; }
+  .seg.s2 { width:40%; background:var(--stufe2); }
+  .seg.s3 { width:20%; background:var(--stufe3); border-radius:0 9px 9px 0; }
+  .mass { position:relative; flex:0 0 70%; height:26px; margin-top:7px; text-align:center; }
+  .mass::before { content:""; position:absolute; left:0; right:0; top:12px; height:1px; background:var(--muted); }
+  .mass::after { content:""; position:absolute; left:0; right:0; top:4px; height:17px; border-left:1px solid var(--muted); border-right:1px solid var(--muted); }
+  .mass span { position:relative; z-index:1; background:var(--bg); padding:0 10px; font-size:.86rem; font-weight:600; color:var(--ink); line-height:26px; }
+
+  /* Was ist neu */
+  ol.zeitleiste { list-style:none; margin:18px 0 0; padding:0; }
+  ol.zeitleiste li { display:grid; grid-template-columns:96px 84px minmax(0, 1fr); gap:10px; padding:10px 0; border-top:1px solid var(--line); align-items:baseline; }
+  ol.zeitleiste time { font-size:.88rem; color:var(--muted); font-variant-numeric:tabular-nums; }
+  ol.zeitleiste .art { justify-self:start; font-size:.72rem; font-weight:600; padding:2px 7px; border-radius:20px; background:var(--amberSoft); color:var(--amberInk); }
+  ol.zeitleiste .neu-paket .art, ol.zeitleiste li.neu-paket .art { background:var(--gruenSoft); color:var(--gruen); }
+  ol.zeitleiste p { margin:0; font-size:.95rem; line-height:1.45; }
+  details.aelter { margin-top:12px; }
+  details.aelter summary { cursor:pointer; font-weight:600; color:var(--link); font-size:.95rem; }
+
+  .karten { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:12px; margin:14px 0; }
+  .karte { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:13px 14px; display:flex; flex-direction:column; }
+  .karte p { margin:.45em 0; font-size:.93rem; line-height:1.42; }
+  .karte code.name { align-self:flex-start; font-weight:600; }
+  .karte .prompt { margin:auto 0 0; font-size:.87rem; background:var(--panel2); padding-right:70px; }
+
+  /* Knopf zur Linkseite, Gründe */
+  .knopf { display:inline-block; background:var(--band); color:var(--onBand); font-weight:600; text-decoration:none; padding:10px 18px; border-radius:9px; box-shadow:var(--schatten); }
+  .knopf:hover { background:var(--band2); }
+  :root[data-theme="dark"] .knopf { background:var(--amber); color:#1B2433; }
+  .klein { font-size:.88rem; color:var(--muted); }
+  .gruende .karte b { font:600 1.1rem/1.25 var(--kopf); }
+
+  footer { color:var(--muted); font-size:.88rem; padding:40px 0 64px; }
+
+  @media (max-width:1040px) {
+    .shell { display:block; }
+    .topbar { display:flex; align-items:center; gap:10px; position:sticky; top:0; z-index:20; background:var(--band); color:var(--onBand); padding:9px 14px; }
+    .topbar button { font:inherit; font-size:.9rem; color:var(--onBand); background:var(--band2); border:0; border-radius:7px; padding:6px 12px; cursor:pointer; }
+    .topbar b { font:600 1.02rem/1.2 var(--kopf); }
+    html { scroll-padding-top:66px; }
+    .side { position:fixed; left:0; top:0; bottom:0; width:min(300px, 86vw); height:auto; z-index:40; transform:translateX(-102%); transition:transform .2s ease; }
+    body.menue .side { transform:none; }
+    body.menue .schleier { display:block; position:fixed; inset:0; z-index:30; background:rgba(11,18,34,.5); }
+    .breite { padding:0 20px; }
+  }
+  @media (max-width:680px) {
+    body { font-size:16px; }
+    .hero { padding:32px 0 30px; }
+    .wege { grid-template-columns:1fr; }
+    .karten { grid-template-columns:1fr; }
+    ol.zeitleiste li { grid-template-columns:auto 1fr; }
+    ol.zeitleiste p { grid-column:1 / -1; }
+    .seg { padding:10px 9px; }
+    .seg span { font-size:.72rem; }
+    table { display:block; overflow-x:auto; }
+  }
+
+  @page { size:A4; margin:18mm 16mm 18mm; @bottom-right { content:"Seite " counter(page) " von " counter(pages); font:9pt Arial, sans-serif; color:#555; } }
+  @media print {
+    :root:root:root { --bg:#fff; --panel:#fff; --panel2:#f6f6f4; --ink:#111; --muted:#444; --line:#ccc; --band:var(--haus-haupt); --band2:#243660; --onBand:#fff; --amberSoft:#fdf1dc; --amberInk:#6d4100; --rotSoft:#fbe9e7; --link:#123; --stufe1:#1F5F99; --stufe2:#C8322F; --stufe3:#1B2433; color-scheme:light; }
+    body { font-size:10.5pt; line-height:1.45; }
+    .side, .topbar, .schleier, .kopie, .skip { display:none !important; }
+    .shell { display:block; }
+    .breite { max-width:none; padding:0; }
+    .hero { background-image:none; padding:0 0 14px; }
+    .weg { box-shadow:none; }
+    .kapitel { padding-top:20px; }
+    a { color:inherit; text-decoration:none; }
+    h2, h3 { break-after:avoid; }
+    tr, .karte, .hinweis, .prompt, ol.schritte > li, ol.zeitleiste li, .balken, summary { break-inside:avoid; }
+    details.aelter { display:none; }
+    .prompt { padding-right:14px; }
+    table { box-shadow:none; border:1px solid var(--line); }
+    .knopf { box-shadow:none; }
+    body[data-zeige="start"] main [data-weg] { display:block !important; }
+    .wegwahl, .weg em, .auf-oben { display:none; }
+    details.mehr > summary { list-style:none; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#inhalt">Zum Inhalt springen</a>
+<div class="topbar"><button type="button" id="menue" aria-expanded="false" aria-controls="seite">Menü</button><b>Handbuch Lernpakete</b></div>
+<div class="schleier" id="schleier"></div>
+<div class="shell">
+  <aside class="side" id="seite" aria-label="Seitenleiste">
+    <a class="brand" href="#start"><!-- AUTO:logo --><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJ8AAADICAIAAAB58qT4AAAIq0lEQVR42u2de1BUVRzHdy+7y/IGeaQmBMhLdAM0REkRTcFQCc3S0vFZU0xOU5aTaWP5aHyUYenoUMOQSb4YiEhF1HyFqSEYEiCiIhIPWVh2gWWX1d3tD5rr2UWXCyzLLvf7+Ytz5tyzP86H3znnnnuZ5apUCg4YpFAYAtgFsAtgF8AugF0Au7ALYBdYFDxjdRQevxyjaSzys1ON0g+3jyeRkGrOmntvF17N3zEFteZPr0ebgtpBLJiC2kEsuGfrruEPMNZODxaNNcg9sPu0T4VUE2tmPuAU1FrcVpn5FE1B7SAWTA34eQrov3Gmepe4UDvggpmkL4WsHcQZjGdEHPY+AcTZhUWfb1CYlgfx5IyZGe9mANgFsAtgF8AugF3YBbALYBfALoBdALsAdmEXwC6AXQC7AHYB7ALYhV0AuwB2AewC2AWwC2AXdgHsAtgFsAtgF8Au7ALYBbALYBfALoBdALuwC2AXwC6AXQC7AHYB7MIugF0AuwB2AewC2AWwC7sAdgHsAtgFsAuYw+vvD8g6dfHLPY+/nnDF63MSF8/rS4fld6suXbuRX1TWIGlulrYoO1TOjvbOTg6jA3wnhI6JHCeyEVoz761Z1nom76/8G2WV1bViiVSh7BDwefa2tiOGuQf4eEVFhIU/P4qiqAGJzQLsGpGSW3eTUg4XlVXo1YslUrFEWlFZnZV7YYiT49L5s16bNY3P6+ZXk7crkg9mZeScVT18RNYrO1TKDlVjs/Tv0oqjx38fMdTjw7cWRo0PM2VsrJuZM0+eX/nJl12HTw+JrCUp5dA767ZLpC2Gk2zBqs8OZZ/SU9uVf+sbPtry3d4DGSaLjXV2D/92euve/Wq1hmH74pu3l3286WmDWFpR+fbarQ8aJcwDSE0/dvDXUyaIjXUzc35RaVLKYZ2grawSYqJioiJ8vZ61EQolUlnhP+VHjp0praik29Q1NK37at/ezWv0Vs1mWeuHm3YplB1k5eTxobOnvSgKHOns5NChelh+pyrr9MXcC1e0Wi3dZvePR6MnhA1/xr3/YmOd3Udq9dZ9P2k0jzPDfYjzt1+s9vf2pGuGurvGTY18OXpiypHs5INZdH1B8c30E2cXzJ5OdvhNyiGJ7HHe2Aqtt6xJnBweQtfwebxxoqBxoqDIsaLPk36gBT9Sq3/KzFmbuKT/YmPdzJx9+o/q2gd0UcDn7dn0MTl8NFwu962FryycM4OsTPvl5CO1mi5W1dTnXrhCXrJt7XukWpKXoyeueH02WXPuzwINkc3GjY2Ndn89fZEsLkqY6ev1rIH2q5bOd3a0p4v14qa8/CK6mJFzjpxsY6MiJo4VGejtjfgYd1eX8JDgZfNnbV/73o87N1Bcbj/FxrqZuaVNXnb7HlkzNzba8CXWAkHc1EhyB1RQfDN6wtjOny9cvU42nh83zXBvTg72J1K/MU1srMvdm3eqyFQbMdRjmIdrt1eNEwWRxcKS8v9vSKQttQ/EdL3QWjAmYKSZxMZGuzX1DWTR38eTyVV6K1+9uKnzh8rqWrLex3O4lRVlJrGx0a6sVa4zTxKLlgEc7e3IYltbe+dWSNrSRtY72NmaT2xsXHc7VA/Joo01o0NaoW4zjVbbrlDa29qoHur0JuDzu15bdvvektUbDXS+ftXyhJgoo8fGxty1sxGSRYVSyeQquUKhdzdiK7TuXGgNNBvY2Nho19HBTu+YiclVUt1mDna2nUdCri5OZH1js8x8YmOjXQ9XF47O0f99DqPHcDrNnnEbQm+jyPp/6xrk7QoziY2N6+7zQX4URdFHffXipsrqWj1JXfmrqIQshgT704ni7+1Zca+6s6jVai8XFk+fNJ5sPMrPOz87lazZkZyWfvz3/o6NjblrayMc5edN1qSfONvNAUirPPfi1afdYk7RPTo4+iRtAxUbG08i58ZOIYsZOecMP0bdkXyAfP7j5uJMPnhPiIki17nrJbcyT543k9jYaDduaqSH2+MVTqPRrN787fWSW11bqtWar7//WS85FiXECvg8cp2bp6tkR/IBveNiDvEI6MixM8fPXjJNbGx8Asjn8Ta8v/L9z3fSd/0tbfJ3122Lmxo566UX/b09bYTCpmZZ/o3Sn7Ny796vIa8VBY5cGD9Dr8PExa9eKiiua2ikx33L7tST56/MmxkdGuzv7OQgb1dW1dRdLizOPpMnbmo2ZWxGh6tSGdo3hscv16vR23RwevjWHBPCQ4L3bl5D1uzPOLFnf3qPOnFzcd6/cwOZWzQV96oT1++Qtbb1eK0VWu/ZvEYUOLL/YutmZHqowzLevFn6atz6Vct5VlYM2wf6Pmdg+Py9PX/Y9mm3+1s9IkJHp+3aqKfW6LGx9J3IhJioYD/vfWmZedeKDB/kLp47881XYqwFAgPNfDyHp+3aeCAz51D2KcNJbGVFTR4f9mb8jLDRgaaJjaVvvAb4eiVt+OBOVU3etaL8otKaerG0pVXZoXJ0sBvi5Bjk5x0ROnpyeIgds2NbAZ+3csGcRQmxfxbcuFxYXH73fl1Do7xdqdVq7e1shnm4Bfh4jR0TOOmFEL1jKRPEZjHrLjAig3PdBfg/IgC7sAtgF8AugF0AuwB2AezCLoBdALsAdgHsAtgFsAu7AHYB7ALYBbALYBd2AewC2AWwC2AXwC6AXdgFsAtgF8AugF0AuwB2YRfALoBdALsAdgHsAtiFXQC7AHYB7ALYBbALuwB2AewC2AWwC2AXwC7sAtgFsAtgF8AugF1gFLtdvwIWcAboy3f7ahffpWzOdGsHMzNmZkzOFjgtM7L7xPSH4AFXy2TRpEz81wRMOc5UX1ZvCB4otQx3u1Qft2cQbLZqORwOV6VSGGuWwO2TCabiHg1yz+wiWc38BrevuyokqKWo7eWeGYItQm3v74gg2PzV9mbdxTJsEV6NYxeazVCq8e0CDp7eA9gFsAtgF3YB7ALYBbALYBf0jf8Aj30wS8HPenwAAAAASUVORK5CYII=" alt="Logo der Schule"><!-- /AUTO:logo --><span><b>Handbuch</b><small>E-Learnings und Lernpakete</small></span></a>
+    <div class="suche">
+      <input id="suche" type="search" placeholder="Suchen (Strg+K)" aria-label="Im Handbuch suchen" autocomplete="off">
+      <div id="treffer" hidden></div>
+    </div>
+    <nav id="navi" aria-label="Inhalt"><!-- AUTO:navi -->
+<div class="navgruppe" data-weg="immer"><a class="navkopf" href="#warum">Warum wir so arbeiten</a>
+</div>
+<div class="navgruppe" data-weg="nutzen"><a class="navkopf" href="#weg-nutzen">Lernpaket nutzen</a>
+<a href="#einbinden"><span>1</span> Paket per Link einbinden</a>
+<a href="#ergebnisse"><span>2</span> Ergebnisse ansehen</a>
+<a href="#schueler"><span>3</span> Das erleben die Lernenden</a>
+<a href="#bepunktung"><span>4</span> So wird bepunktet</a>
+<a href="#zuruecknehmen"><span>5</span> Abgabe zurücknehmen</a>
+<a href="#passwort"><span>6</span> Lehrkraft-Passwort</a>
+<a href="#probleme"><span>7</span> Wenn etwas nicht klappt</a>
+<a href="#versionen"><span>8</span> Versionen</a>
+</div>
+<div class="navgruppe" data-weg="korrigieren"><a class="navkopf" href="#weg-korrigieren">Fehler korrigieren</a>
+<a href="#einrichten"><span>1</span> Einmal einrichten</a>
+<a href="#korrektur"><span>2</span> Erste Korrektur</a>
+<a href="#zusammenarbeit"><span>3</span> Drei Regeln</a>
+</div>
+<div class="navgruppe" data-weg="erstellen"><a class="navkopf" href="#weg-erstellen">Selbst erstellen</a>
+<a href="#erstellen"><span>1</span> Vom PDF zum Lernpaket</a>
+<a href="#skills"><span>2</span> Was die KI alles kann</a>
+</div>
+<div class="navgruppe" data-weg="immer"><a class="navkopf" href="#neu">Was ist neu</a>
+</div>
+<div class="navgruppe" data-weg="immer"><a class="navkopf" href="#datenschutz">Datenschutz</a>
+</div>
+<!-- /AUTO:navi --></nav>
+    <div class="werkzeug"><button type="button" class="auf" aria-pressed="false">Alles aufklappen</button><button type="button" id="thema">Hell / Dunkel</button><button type="button" id="drucken">Drucken / PDF</button></div>
+  </aside>
+
+  <main id="inhalt">
+    <header class="hero" id="start">
+      <div class="breite">
+        <p class="augenbraue"><!-- AUTO:kurzname -->BS Musterstadt<!-- /AUTO:kurzname --> · Handbuch fürs Kollegium</p>
+        <h1>Was willst du tun?</h1>
+        <div class="masslinie" aria-hidden="true"></div>
+        <p class="lead">Wähle einen Weg. Du siehst dann nur, was du dafür brauchst.</p>
+        <button type="button" class="auf auf-oben" aria-pressed="false">Alles aufklappen</button>
+        <div class="wege">
+          <a class="weg" href="#weg-nutzen" data-wahl="nutzen"><b>Lernpaket nutzen</b><span>Per Link in den Kurs einbinden, Ergebnisse lesen, Abgabe zurücknehmen.</span><em>Für alle, nur die ByCS nötig</em></a>
+          <a class="weg" href="#weg-korrigieren" data-wahl="korrigieren"><b>Fehler korrigieren</b><span>Ein Satz an die KI, und der Fehler im Lernpaket ist behoben.</span><em>Einmal einrichten, dann mit KI</em></a>
+          <a class="weg" href="#weg-erstellen" data-wahl="erstellen"><b>Selbst erstellen</b><span>Aus einem PDF wird ein E-Learning, ein Lernpaket, ein Test oder ein Kurs.</span><em>Für alle, die mehr wollen</em></a>
+        </div>
+        
+        <p class="kontakt">Du suchst etwas Bestimmtes? Nutze die Suche (Strg+K) oder <a href="#weg-nutzen" data-wahl="alle">zeige alles</a>. Neu hier? Wir fangen gemeinsam an: die Werkzeug-Verantwortlichen zeigen dir den ersten Schritt und geben dir Zugänge, Download-Links und das Passwort.</p>
+        <p class="kennzahlen"><!-- AUTO:zahlen --><b>3</b> Lernpakete · <b>13</b> Skills<!-- /AUTO:zahlen --> · Stand <!-- AUTO:stand -->24.11.2026<!-- /AUTO:stand --></p>
+      </div>
+    </header>
+
+    <section class="kapitel" data-weg="immer">
+      <div class="breite">
+        <span class="marke">Warum</span>
+        <h2 id="warum" data-nav="Warum wir so arbeiten">Warum wir so arbeiten</h2>
+        <p class="ziel">Jedes Lernpaket liegt genau einmal an einem Ort, und alle Kurse greifen per Link darauf zu. Das bringt dir:</p>
+        <div class="karten gruende">
+          <div class="karte"><b>Eine Fassung für alle</b><p>Alle Kurse zeigen auf dasselbe Paket. Es gibt keine parallelen Versionen und keine veralteten Kopien in einzelnen Kursen.</p></div>
+          <div class="karte"><b>Fehler nur einmal beheben</b><p>Eine Korrektur ist nach etwa einer Minute in allen Kursen. Niemand muss etwas neu hochladen.</p></div>
+          <div class="karte"><b>Lernstand ohne Korrekturstapel</b><p>Die ByCS zeigt dir die Punkte je Aufgabe und je Niveau. Du siehst sofort, wer wo Hilfe braucht.</p></div>
+          <div class="karte"><b>Einmal erstellt, von allen genutzt</b><p>Gutes Unterrichtsmaterial bleibt nicht auf einem Rechner liegen. Jede Verbesserung kommt allen Klassen zugute.</p></div>
+          <div class="karte"><b>Die KI nimmt dir die Technik ab</b><p>Du sagst in einem Satz, was du möchtest, und prüfst das Ergebnis. Fachlich entscheidest immer du.</p></div>
+          <div class="karte"><b>Nichts geht verloren</b><p>Jede frühere Fassung lässt sich wiederherstellen. Auf jeder Abgabe steht, mit welcher Version gearbeitet wurde.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="kapitel" data-weg="nutzen">
+      <div class="breite">
+        <span class="marke">Nutzen</span>
+        <h2 id="weg-nutzen" data-nav="Lernpaket nutzen">Lernpakete im Unterricht nutzen</h2>
+        <p class="ziel">Du brauchst nur die ByCS. Für den Anfang reichen die ersten zwei Abschnitte, den Rest liest du, wenn du ihn brauchst.</p>
+
+        <article>
+          <h3 id="einbinden" data-nav="Paket per Link einbinden"><span class="nr">1</span> Lernpaket per Link in den Kurs einbinden</h3>
+          <p>Jedes Lernpaket hat einen festen Download-Link. Alle Links stehen auf unserer Linkseite:</p>
+          <p>Den Download-Link eines Pakets gibt es je nach Zustellweg der Schule: bei Power Automate auf der Linkseite, sonst lädst du das Paket als ZIP aus dem Lauf auf GitHub herunter und lädst es in die Lernplattform hoch.</p>
+          
+          <ol class="schritte">
+            <li><b>Link kopieren:</b> Auf der Linkseite das Paket suchen und auf „Kopieren“ klicken.</li>
+            <li><b>Aktivität anlegen:</b> Im ByCS-Kurs <b>Bearbeiten einschalten</b>, <b>Aktivität hinzufügen</b> und <b>SCORM-Paket</b> wählen.</li>
+            <li><b>Link eintragen:</b> Im Abschnitt „Paket“ den Typ <b>Heruntergeladenes Paket</b> wählen, den Link bei <b>URL</b> einfügen und die <b>Auto-Update-Häufigkeit</b> auf <b>Alle Nutzungszeiten</b> stellen.</li>
+            <li><b>Einstellungen</b> aus der Tabelle setzen und speichern.</li>
+            <li><b>Ausprobieren:</b> einmal mit einem Testzugang durchspielen.</li>
+          </ol>
+          <div class="hinweis merke"><p><b>Warum mit Link und nicht als Datei?</b> Der Link zeigt immer auf die aktuelle Fassung, und die ByCS holt das Paket bei jedem Start neu (Auto-Update-Häufigkeit „Alle Nutzungszeiten“). So arbeiten alle Klassen mit derselben Fassung: Es gibt keine parallelen Versionen, und nach einer Korrektur muss niemand etwas neu hochladen.</p></div>
+          <table>
+            <tr><th>Einstellung</th><th>Wert</th></tr>
+            <tr><td>Anzahl der Versuche</td><td>1</td></tr>
+            <tr><td>Neuen Versuch erzwingen</td><td>Nein</td></tr>
+            <tr><td>Nach dem letzten Versuch sperren</td><td>Nein</td></tr>
+            <tr><td>Bewertungsmethode</td><td>Höchstnote</td></tr>
+            <tr><td>Maximale Bewertung</td><td>100</td></tr>
+            <tr><td>Note zum Bestehen</td><td>70</td></tr>
+            <tr><td>Abschlussbedingungen</td><td>„abgeschlossen“ (= abgegeben) und/oder „bestanden“ (= mindestens 70 %)</td></tr>
+          </table>
+          <div class="hinweis achtung"><p>Ohne diese Einstellungen gibt es mehrere Versuche, oder die Schülerinnen und Schüler sehen nach der Abgabe ihre Lösungen nicht mehr.</p></div>
+          <details class="mehr"><summary><span class="tag">Zusatzinfos</span> Notlösung: Paket als Datei hochladen</summary><div>
+            <p>Nur wenn der Link nicht geht: Lade die ZIP-Datei aus dem Teamordner hoch (Ordner <code>Pakete</code>, dann Klasse und Fach). Damit entsteht eine eigene Kopie in deinem Kurs, die keine Korrekturen mehr bekommt. Neue Fassungen musst du selbst wieder hochladen. Der Dateiname nennt Klasse, Fach, Abschnitt und Thema, zum Beispiel <code>MGF10_LF1_BW2_Toleranzen-1-Pruefen-Messen-Lehren_scorm.zip</code>.</p>
+          </div></details>
+        </article>
+
+        <article>
+          <h3 id="ergebnisse" data-nav="Ergebnisse ansehen"><span class="nr">2</span> Ergebnisse in der ByCS ansehen</h3>
+          <table>
+            <tr><th>Wo</th><th>Was du dort siehst</th></tr>
+            <tr><td><b>Bewertungen</b> (Notenübersicht des Kurses)</td><td>Die Gesamtpunkte je Paket.</td></tr>
+            <tr><td>SCORM-Aktivität &gt; Berichte &gt; <b>Ziele</b></td><td>Punkte je Niveau und je Aufgabe.</td></tr>
+            <tr><td>SCORM-Aktivität &gt; Berichte &gt; <b>Interaktionen</b></td><td>Die Antworten je Aufgabe. Hier liest du Freitexte.</td></tr>
+          </table>
+          <details class="mehr"><summary><span class="tag">Zusatzinfos</span> Berichte und Kennungen lesen</summary><div>
+            <ul>
+              <li>In der Notenübersicht stehen nur die Gesamtpunkte, weil Moodle eine Note je Aktivität kennt. Das lässt sich nicht ändern.</li>
+              <li>Im Bericht <b>Ziele</b> (englisch „Objectives“) erscheinen die Punkte erst, wenn du sie in den Optionen des Berichts einschaltest (englisch „Show objective score“).</li>
+              <li><b>Basisbericht</b> &gt; Versuch anklicken: alle Einzelheiten eines Versuchs, auch der volle Aufgabentitel.</li>
+              <li><code>Aufgabe-1.1_Einsteiger_10P</code> heißt: Aufgabe 1.1, Einsteigerniveau, höchstens 10 Punkte.</li>
+              <li><code>1-Einsteigerniveau_40P</code> heißt: das ganze Einsteigerniveau, höchstens 40 Punkte.</li>
+              <li>Status <code>completed</code> = bearbeitet, <code>incomplete</code> = offen.</li>
+              <li>Ergebnis <code>correct</code> = richtig, <code>incorrect</code> = falsch, eine Zahl wie <code>0.5</code> = zur Hälfte richtig, <code>neutral</code> = nur bearbeitet, nicht automatisch prüfbar.</li>
+              <li>Pakete aus älteren Vorlagen zeigen unter „Ziele“ nur die Niveaus, nicht die einzelnen Aufgaben.</li>
+            </ul>
+          </div></details>
+        </article>
+
+        <article>
+          <h3 id="schueler" data-nav="Das erleben die Lernenden"><span class="nr">3</span> Was die Schülerinnen und Schüler erleben</h3>
+          <ol class="schritte">
+            <li>Sie öffnen das Paket in der ByCS. Ihr Name steht automatisch im Kopf. Eine Aufgabe gilt als <b>bearbeitet</b>, sobald etwas eingetragen ist. Alles wird automatisch gespeichert, sie können später weitermachen.</li>
+            <li>Mit <b>Abgeben</b> ist der eine Versuch beendet. Vorher zeigt die Seite, was noch offen ist.</li>
+            <li>Danach sehen sie ihre Punkte und die Lösungsvorschläge. Mit <b>Als PDF speichern</b> bekommen sie alles als Datei.</li>
+          </ol>
+        </article>
+
+        <article>
+          <h3 id="bepunktung" data-nav="So wird bepunktet"><span class="nr">4</span> So wird bepunktet</h3>
+          <p>Ein Paket gibt <b>100 Punkte</b>, bestanden ist es ab <b>70 Punkten</b>. Das Profiniveau ist freiwillig. Unser Ziel für alle bleiben Einsteigerniveau und Prüfungsniveau, zusammen 80 Punkte.</p>
+          <div class="balken" role="img" aria-label="Einsteigerniveau 40 Punkte, Prüfungsniveau 40 Punkte, Profiniveau freiwillig 20 Punkte. Bestanden ab 70 Punkten.">
+            <div class="seg s1"><b>40</b><span>Einsteigerniveau</span></div>
+            <div class="seg s2"><b>40</b><span>Prüfungsniveau</span></div>
+            <div class="seg s3"><b>20</b><span>Profiniveau, freiwillig</span></div>
+            <div class="mass"><span>Bestanden ab 70 Punkten</span></div>
+          </div>
+          <p>Die Punkte laufen schon während der Bearbeitung mit: Du siehst den Stand in der ByCS in der Bewertung, die Schülerinnen und Schüler sehen rechts unten eine Ampel (rot „Es ist noch viel zu tun“ unter 40 %, gelb „Es ist nicht mehr weit“, grün „Bestehensgrenze erreicht“ ab der Bestehensgrenze, über 90 % ein Stern „Profilevel erreicht“). „Abgeschlossen“ und „bestanden“ gibt es erst mit der Abgabe. Meinungen und Skizzen zählen als bearbeitet: Vergleiche sie selbst mit dem Lösungsvorschlag.</p>
+          <details class="mehr"><summary><span class="tag">Zusatzinfos</span> Niveaus, Gewichtung und ältere Pakete</summary><div>
+            <ul>
+              <li><b>Fehlt ein Niveau,</b> werden die anderen hochgerechnet. Ohne Profiniveau zählen Einsteigerniveau und Prüfungsniveau je 50 Punkte.</li>
+              <li><b>Unterrichtsmaterial ohne Niveaus:</b> Die Punkte verteilen sich auf alle Aufgaben, bestanden ist es auch hier ab 70 Punkten.</li>
+              <li><b>Ausgleichen:</b> Es zählen die Punkte insgesamt. Wer im Prüfungsniveau etwas verliert, kann es im Profiniveau wieder holen.</li>
+              <li><b>Gewichtung:</b> Innerhalb eines Niveaus sind alle Aufgaben gleich viel wert. Soll eine Aufgabe mehr zählen, sag es der KI. Das Niveau behält seinen Anteil, er wird nur anders verteilt (bei doppeltem Gewicht für Aufgabe 1.3 von drei Aufgaben: 10, 10 und 20 von 40 Punkten).</li>
+              <li><b>Ältere Pakete:</b> Bis zum 11.11.2026 lag die Grenze bei 80 Punkten. Ein Paket bekommt die neue Grenze, sobald es neu gebaut wird.</li>
+            </ul>
+            <p class="prompt">Aufgabe 1.3 soll doppelt zählen.</p>
+          </div></details>
+          <details class="mehr"><summary><span class="tag">Zusatzinfos</span> So zählen die Antworten (Teilpunkte)</summary><div>
+            <table>
+              <tr><th>Antwortart</th><th>So zählt sie</th></tr>
+              <tr><td>Auswahl (ein Kreuz, Auswahlliste)</td><td>richtig = volle Punkte, sonst 0</td></tr>
+              <tr><td>Mehrfachauswahl</td><td>(richtige Kreuze minus falsche Kreuze) geteilt durch die Zahl der richtigen, mindestens 0</td></tr>
+              <tr><td>Kurzantwort</td><td>richtig, wenn sie einer hinterlegten Antwort entspricht. Groß- und Kleinschreibung sind egal.</td></tr>
+              <tr><td>Zahl</td><td>richtig innerhalb der Toleranz, eine Einheit dahinter ist erlaubt</td></tr>
+              <tr><td>Freitext</td><td>Anteil der gefundenen Schlüsselbegriffe, zum Beispiel 3 von 4 = 75 %</td></tr>
+              <tr><td>Spiel oder Simulation</td><td>Ergebnis „6 von 8“ = 75 %</td></tr>
+              <tr><td>Ohne hinterlegte Lösung (Meinung, Skizze)</td><td>bearbeitet = volle Punkte</td></tr>
+            </table>
+            <p>Hat eine Aufgabe mehrere Felder, zählt der Durchschnitt. Oben rechts an jeder Aufgabe stehen ihre Punkte, nach der Abgabe das Ergebnis, zum Beispiel „6 von 8 P.“. Es gibt nur ganze Punkte, zusammen sind es immer 100: Geht die Verteilung nicht auf, bekommen die letzten Aufgaben eines Niveaus einen Punkt mehr (drei gleiche Aufgaben im Einsteigerniveau = 13, 13 und 14 Punkte).</p>
+            <div class="hinweis achtung"><p><b>Grenzen:</b> Schlüsselbegriffe sind ein grober Maßstab, ein Begriff im falschen Zusammenhang zählt trotzdem. Lies Freitexte deshalb im Bericht „Interaktionen“. Die hinterlegten Lösungen stehen im Quelltext der Seite. Für bewertete Prüfungen nimm einen ByCS-Test.</p></div>
+          </div></details>
+        </article>
+
+        <article>
+          <h3 id="zuruecknehmen" data-nav="Abgabe zurücknehmen"><span class="nr">5</span> Aus Versehen abgegeben</h3>
+          <ol class="schritte">
+            <li>Die Schülerin oder der Schüler öffnet das Paket.</li>
+            <li>Du klickst auf <b>Abgabe zurücknehmen</b> und gibst das Lehrkraft-Passwort ein.</li>
+            <li>Die Eingaben bleiben erhalten, es kann weitergearbeitet und neu abgegeben werden.</li>
+          </ol>
+          <details class="mehr"><summary><span class="tag">Zusatzinfos</span> Wenn das nicht geht</summary><div>
+            <p>Die Punkte der ersten Abgabe bleiben stehen, bis neu abgegeben wird. Notlösung: den Versuch in der SCORM-Aktivität unter Berichte löschen. Dann beginnt die Person mit einer leeren Seite.</p>
+          </div></details>
+        </article>
+
+        <article>
+          <h3 id="passwort" data-nav="Lehrkraft-Passwort"><span class="nr">6</span> Lehrkraft-Modus und Passwort</h3>
+          <p>Der Button <b>Lehrkraft-Modus</b> zeigt Lösungen, Bewertung und Hinweise. Alle E-Learnings haben <b>ein gemeinsames Passwort</b>, du bekommst es bei den Werkzeug-Verantwortlichen. Es steht bewusst nirgends im Klartext.</p>
+          <div class="hinweis achtung"><p><b>Nicht selbst ein neues Passwort festlegen.</b> Es gilt für alle E-Learnings, eine Änderung entscheiden wir gemeinsam.</p></div>
+          <details class="mehr"><summary><span class="tag">Zusatzinfos</span> Leeres Arbeitsblatt auf Papier drucken</summary><div>
+            <p><b>Leeres Arbeitsblatt drucken</b> (nur im Lehrkraft-Modus) druckt eine unausgefüllte Fassung: mit einer Zeile für Name, Klasse und Datum, Kästchen zum Ankreuzen und Schreiblinien. Interaktive Aufgaben (Sortieren, 3D, Spiele) erscheinen in einer Papierfassung, sofern das E-Learning eine hat. Im Druckdialog kannst du auch „Als PDF speichern“ wählen.</p>
+          </div></details>
+        </article>
+
+        <article>
+          <h3 id="probleme" data-nav="Wenn etwas nicht klappt"><span class="nr">7</span> Wenn etwas nicht klappt</h3>
+          <table>
+            <tr><th>Meldung</th><th>Was tun</th></tr>
+            <tr><td>„Nicht gespeichert!“</td><td>Die Anmeldung ist abgelaufen oder die Verbindung weg. Als PDF speichern, Paket schließen, neu anmelden und am selben Rechner wieder öffnen. Die Eingaben kommen meist zurück.</td></tr>
+            <tr><td>„Gespeicherter Stand passt nicht ganz zu dieser Version“</td><td>Das Paket wurde während der Bearbeitung geändert. Nichts weiter eintragen lassen und den Werkzeug-Verantwortlichen Bescheid sagen.</td></tr>
+            <tr><td>Eine Seite sieht außerhalb des Projektordners kaputt aus (kein Aussehen, keine Bilder)</td><td>Die Seite im Projektordner ist nur die Quelle und holt Aussehen und Bilder aus Nachbarordnern. Sag der KI: „Erzeuge mir diese Seite als einzelne Datei.“ Sie legt eine vollständige Datei im Temp-Ordner ab, die du überall öffnen kannst.</td></tr>
+            <tr><td>Roter Fehlerkasten oder leere Seite</td><td>Die rote Meldung kopieren und an die KI oder an die Werkzeug-Verantwortlichen weitergeben.</td></tr>
+            <tr><td>Es gibt mehrere Versuche</td><td>Einstellungen aus <a href="#einbinden">Paket einbinden</a> prüfen.</td></tr>
+            <tr><td>0 Punkte, obwohl abgegeben</td><td>Im Basisbericht den Status prüfen: Das Paket wurde nicht abgegeben, oder es stammt aus einer alten Fassung.</td></tr>
+          </table>
+        </article>
+
+        <article>
+          <h3 id="versionen" data-nav="Versionen"><span class="nr">8</span> Versionen</h3>
+          <p>Oben rechts in jedem E-Learning steht die Version, zum Beispiel <b>V1.3</b>. So siehst du bei jeder Abgabe, mit welcher Fassung gearbeitet wurde.</p>
+          <details class="mehr"><summary><span class="tag">Zusatzinfos</span> Was die Nummern bedeuten</summary><div>
+            <ul>
+              <li><b>Nebennummer</b> (V1.3 auf V1.4): Korrektur, zum Beispiel ein Tippfehler. Unkritisch.</li>
+              <li><b>Hauptnummer</b> (V1.4 auf V2.0): Aufgaben, Punkte oder Aufbau haben sich geändert. Laufende Versuche können durcheinanderkommen. Solche Änderungen deshalb nicht mitten in einer Bearbeitungsphase freigeben.</li>
+            </ul>
+          </div></details>
+        </article>
+      </div>
+    </section>
+
+    <section class="kapitel" data-weg="korrigieren">
+      <div class="breite">
+        <span class="marke">Korrigieren</span>
+        <h2 id="weg-korrigieren" data-nav="Fehler korrigieren">Fehler korrigieren mit der KI</h2>
+        <p class="ziel">Du sagst die KI in einem Satz, was nicht stimmt. Die KI ändert, prüft und zeigt dir das Ergebnis. Programmieren musst du nicht. Die Einrichtung machen wir beim ersten Mal gemeinsam.</p>
+
+        <article>
+          <h3 id="einrichten" data-nav="Einmal einrichten"><span class="nr">1</span> Einmal einrichten</h3>
+          <ol class="schritte">
+            <li><b>Zugang:</b> GitHub-Konto anlegen und bei den Werkzeug-Verantwortlichen den Zugang zum Projekt anfragen.</li>
+            <li><b>KI-Abo abschließen:</b> Du brauchst unbedingt ein bezahltes Abo deines Anbieters (zum Beispiel <b>Pro</b> oder <b>Plus</b>). Mit einem kostenlosen Zugang geht es nicht.</li>
+            <li><b>Drei Programme installieren</b> (Windows: im <b>Microsoft Store</b>, auf Dienstgeräten im <b>Unternehmensportal</b>): „Python 3“, „Visual Studio Code“ und Git (von <a href="https://git-scm.com">git-scm.com</a>, Standardeinstellungen).</li>
+            <li><b>KI-Erweiterung installieren:</b> In VS Code links bei den Erweiterungen die KI-Erweiterung deines Anbieters suchen (Anthropic, OpenAI, GitHub Copilot oder Google), installieren und mit dem Abo anmelden.</li>
+            <li><b>Projekt holen:</b> In VS Code links die Quellcodeverwaltung öffnen, <b>Repository klonen</b> wählen und <code>https://github.com/&lt;Organisation&gt;/&lt;Repo&gt;.git</code> einfügen. Als Ziel einen eigenen Ordner wählen, zum Beispiel <code>C:\git</code>, nicht den OneDrive-Ordner. Danach den Ordner öffnen und ihm vertrauen.</li>
+            <li><b>Automatisch aktualisieren:</b> <b>Strg+Shift+P</b> drücken, „Tasks: Manage Automatic Tasks“ wählen, <b>Allow</b> anklicken und VS Code neu starten. Dann holt VS Code beim Öffnen immer die neueste Fassung.</li>
+            <li><b>Teamordner synchronisieren</b> (nur bei Zustellung über Power Automate): den Ordner im Browser öffnen, oben auf „…“ klicken und <b>Synchronisieren</b> wählen.</li>
+            <li><b>Prüfen:</b> Das KI-Fenster öffnen und sagen:
+              <p class="prompt">Prüfe, ob alles eingerichtet ist: Teamordner, Python, Browser.</p>
+            </li>
+          </ol>
+          <div class="hinweis achtung"><p><b>Ohne bezahltes Abo geht es nicht.</b> Die KI muss im Projekt Dateien lesen, ändern und prüfen. Das können die kostenlosen Zugänge nicht, und ihr Kontingent reicht nicht einmal für eine Korrektur.</p></div>
+          <div class="hinweis merke"><p><b>Mehrere KIs nutzen:</b> Jede Kollegin und jeder Kollege nutzt die KI-Erweiterung des eigenen Abos (Anthropic, OpenAI, GitHub Copilot oder Google). Im Team dürfen alle eine andere nutzen. Alle KIs arbeiten nach denselben Regeln, prüfen gleich und liefern dieselben Seiten. Nach einem Wechsel der KI oder nach dem Aktualisieren startest du am besten eine neue Sitzung.</p></div>
+          <details class="mehr"><summary><span class="tag">Zusatzinfos</span> Am Mac einrichten</summary><div>
+            <ul>
+              <li>Git und Python: im Terminal <code>xcode-select --install</code> eingeben.</li>
+              <li>VS Code: von <a href="https://code.visualstudio.com">code.visualstudio.com</a>. Statt Strg drückst du Cmd.</li>
+              <li>Zugriff erlauben: Systemeinstellungen → Datenschutz &amp; Sicherheit → <b>Festplattenvollzugriff</b>, dort <b>Visual Studio Code</b> einschalten (fehlt es, über „+“ aus dem Ordner Programme hinzufügen). Dann VS Code ganz beenden (Cmd+Q) und neu öffnen. Ohne diese Freigabe findet die KI den Teamordner nicht.</li>
+            </ul>
+          </div></details>
+          <details class="mehr"><summary><span class="tag">Zusatzinfos</span> Wenn bei der Einrichtung etwas hakt</summary><div>
+            <ul>
+              <li>Fehlt beim Teamordner „Synchronisieren“, geht auch „Verknüpfung zu Meine Dateien hinzufügen“. Sag der KI dann Bescheid, der Ordner liegt woanders.</li>
+              <li>Hast du Änderungen, die noch nicht hochgeladen sind, bricht das automatische Aktualisieren ab, statt etwas zu überschreiben.</li>
+            </ul>
+          </div></details>
+        </article>
+
+        <article>
+          <h3 id="korrektur" data-nav="Erste Korrektur"><span class="nr">2</span> Deine erste Korrektur</h3>
+          <ol class="schritte">
+            <li>VS Code mit dem Projektordner öffnen, das KI-Fenster öffnen.</li>
+            <li>Der KI sagen, was nicht stimmt. Nenne das E-Learning und die Aufgabe:
+              <p class="prompt">Im E-Learning Toleranzen 4 steht in Aufgabe 2.3 ‚Passfder‘. Korrigiere das zu ‚Passfeder‘.</p>
+            </li>
+            <li>Die KI ändert die Stelle, prüft die Seite und öffnet sie für dich. <b>Schau sie dir an.</b></li>
+            <li>Die KI fragt: „Committen und pushen?“ Das heißt: für alle freigeben. Antworte mit <b>Ja</b>, wenn alles stimmt. Etwa eine Minute später liegt das neue Paket im Teamordner.</li>
+          </ol>
+          <div class="hinweis merke"><p>Du kannst nichts kaputt machen: Solange du nicht freigibst, bleibt alles bei dir am Rechner, und jede frühere Fassung lässt sich wiederherstellen. Bist du unsicher, frag zuerst: „Was würdest du ändern?“</p></div>
+          <p><b>Weitere Beispiele:</b></p>
+          <p class="prompt">In Aufgabe 4.2 ist der Lösungsvorschlag falsch, richtig sind 12,5 mm.</p>
+          <p class="prompt">Bei Aufgabe 3.1 soll auch ‚Passfedern‘ als richtig zählen.</p>
+          <details class="mehr"><summary><span class="tag">Zusatzinfos</span> Praktische Tasten und Befehle im KI-Fenster</summary><div>
+            <table>
+              <tr><th>Taste oder Befehl</th><th>Wirkung</th></tr>
+              <tr><td><code>Esc</code></td><td>Die KI anhalten</td></tr>
+              <tr><td><code>/clear</code></td><td>Ein neues Gespräch beginnen (spart Guthaben)</td></tr>
+              <tr><td><code>/usage</code></td><td>Zeigt, wie viel deines Guthabens verbraucht ist</td></tr>
+              <tr><td><code>Shift + Tab</code></td><td>Weniger „Darf ich?“-Fragen, während die KI Dateien bearbeitet</td></tr>
+            </table>
+          </div></details>
+        </article>
+
+        <article>
+          <h3 id="zusammenarbeit" data-nav="Drei Regeln"><span class="nr">3</span> Drei Regeln fürs Miteinander</h3>
+          <ul>
+            <li><b>Nur über die KI ändern,</b> nie direkt im Teamordner. Dort wird alles bei der nächsten Änderung überschrieben.</li>
+            <li><b>Aufgaben oder Punkte ändern:</b> vorher kurz mit denen klären, die das Paket gerade einsetzen.</li>
+            <li><b>Meldet die KI einen Konflikt,</b> hat jemand dieselbe Stelle geändert. Dann anhalten und nachfragen, nicht raten.</li>
+          </ul>
+          <details class="mehr"><summary><span class="tag">Zusatzinfos</span> Was die KI und GitHub von selbst tun</summary><div>
+            <ul>
+              <li>Die KI holt zu Beginn die neueste Fassung, bevor etwas geändert wird.</li>
+              <li>Ändert sich ein Lernpaket, fragt die KI vor dem Freigeben, denn danach ist die Änderung sofort bei den Schülerinnen und Schülern. Alles andere (Kurse, Tests, Notizen, Werkzeug) gibt die KI nach der Prüfung selbst frei.</li>
+              <li>Nach jedem Freigeben prüft GitHub noch einmal und stellt nur Geprüftes in den Teamordner. Bei einem Fehler kommt eine Mail, und es wird nichts zugestellt.</li>
+            </ul>
+          </div></details>
+        </article>
+      </div>
+    </section>
+
+    <section class="kapitel" data-weg="erstellen">
+      <div class="breite">
+        <span class="marke">Erstellen</span>
+        <h2 id="weg-erstellen" data-nav="Selbst erstellen">Neues Unterrichtsmaterial erstellen mit der KI</h2>
+        <p class="ziel">Aus deinen Unterlagen wird ein E-Learning und daraus ein Lernpaket. Voraussetzung ist die <a href="#einrichten">Einrichtung</a>.</p>
+
+        <article>
+          <h3 id="erstellen" data-nav="Vom PDF zum Lernpaket"><span class="nr">1</span> Vom PDF zum Lernpaket</h3>
+          <ol class="schritte">
+            <li><b>E-Learning bauen:</b> Aufgaben-PDF und Musterlösung in den Projektordner legen. Die KI fragt Klasse, Fach und Abschnitt ab und legt alles richtig ab.
+              <p class="prompt">Mach aus diesem PDF ein E-Learning.</p>
+            </li>
+            <li><b>Kontrollieren:</b> Die Seite im Browser durchgehen: Aufgaben, Lösungsvorschläge, Punkte.</li>
+            <li><b>Lernpaket bauen:</b>
+              <p class="prompt">Erstelle ein Lernpaket aus diesem E-Learning.</p>
+            </li>
+            <li><b>Freigeben:</b> Auf „Committen und pushen?“ mit Ja antworten. Das Paket bekommt von selbst einen Link auf der <a href="#einbinden">Linkseite</a>.</li>
+            <li><b>In die ByCS:</b> wie unter <a href="#einbinden">Paket einbinden</a>.</li>
+          </ol>
+          <details class="mehr"><summary><span class="tag">Zusatzinfos</span> Sprachsensibel schreiben und Sprachhilfen</summary><div>
+            <ul>
+              <li><b>Sprachhilfen wählen:</b> Beim Bauen fragt die KI, welche Sprachhilfen das Unterrichtsmaterial bekommt: Wortliste vor dem Text, Satzanfänge für Antworten, Glossar zum Nachschlagen oder keine. Sie hängen nicht an den Niveaus.</li>
+              <li><b>BVJ, BIK und BFS:</b> Hier schreibt die KI immer sprachsensibel: bekannte Wörter, ein Begriff bleibt ein Begriff, kurze Hauptsätze im Aktiv, ein Absatz je Gedanke. Fachbegriffe bleiben und werden vorher erklärt. In BFS stehen Aufgaben im Prüfungsniveau und Profiniveau so, wie sie in der Prüfung stehen.</li>
+              <li><b>Alle anderen Klassen:</b> Dieselben Regeln sind eine Richtschnur. Fachsprache und Prüfungssprache gehen vor.</li>
+              <li><b>Deine Texte bleiben wörtlich.</b> Die KI nennt in BVJ, BIK und BFS nur die Stellen, die schwer zu verstehen sind, und bietet das Umschreiben an.</li>
+              <li><b>Bestehende Seiten</b> ändert die KI erst, wenn sie ohnehin überarbeitet werden.</li>
+            </ul>
+            <p>Grundlage sind die Checklisten „Besser verstehen!“ des ISB (Berufssprache Deutsch).</p>
+          </div></details>
+          <details class="mehr"><summary><span class="tag">Zusatzinfos</span> Einen ByCS-Test bauen</summary><div>
+            <p class="prompt">Erstelle einen ByCS-Test zum Kurbeltrieb.</p>
+            <ul>
+              <li><b>Ansehen, ohne hochzuladen:</b> Im Test-Ordner liegt eine <code>Vorschau.html</code>. Per Doppelklick siehst du den Test wie in der ByCS, in der Schülersicht oder mit allen Lösungen und Hinweisen auf typische Fehler.</li>
+              <li><b>In die ByCS bringen:</b> Die KI baut aus den geprüften Fragen eine Datei <code>.mbz</code> und eine Anleitung. Du stellst die Datei im Kurs wieder her („Mehr“ → „Kurs wiederverwenden“ → „Wiederherstellen“). Arbeitszeit, ein Versuch, Punkte, Notenstufen und Safe Exam Browser sind schon eingestellt. Du vergibst nur noch Kennwort und Zeitraum. Probier es zuerst in einem Testkurs aus.</li>
+              <li><b>Im Teamordner:</b> Etwa eine Minute nach dem Freigeben liegt der Test-Ordner unter <code>BYCS-SYNC/Tests</code>.</li>
+              <li>Fragen einer Kollegin oder eines Kollegen ansehen: <code>.agents/skills/moodle-fragenersteller/templates/quiz-vorschau.html</code> öffnen und die <code>.xml</code> hineinziehen. Nichts wird hochgeladen.</li>
+            </ul>
+          </div></details>
+          <details class="mehr"><summary><span class="tag">Zusatzinfos</span> Einen ganzen Kurs bauen</summary><div>
+            <p class="prompt">Erstelle einen Kurs für die ByCS.</p>
+            <p>Die Kurssicherung (<code>.mbz</code>) liegt etwa eine Minute nach dem Freigeben im Teamordner unter <code>BYCS-SYNC/Kurse</code>, dann Klasse und Fach (wie bei den Lernpaketen). Du stellst sie in der ByCS wieder her. Die Download-Links der Lernpakete trägt die KI selbst ein.</p>
+          </div></details>
+          <details class="mehr"><summary><span class="tag">Zusatzinfos</span> Einen vorhandenen ByCS-Kurs umgestalten</summary><div>
+            <p class="prompt">Gestalte meinen ByCS-Kurs um (Sicherung liegt in Ressourcen/Kurssicherungen-ByCS).</p>
+            <ul>
+              <li><b>Sicherung:</b> Kurs in der ByCS ohne Nutzerdaten sichern und die <code>.mbz</code> nach <code>Ressourcen/Kurssicherungen-ByCS/</code> legen. Sie bleibt auf deinem Rechner.</li>
+              <li><b>Farben:</b> Die KI öffnet einen Farbschema-Baukasten mit deinem echten Kurs. Du wählst Farben und Stil und gibst der KI den Gestaltungscode.</li>
+              <li><b>Kursbeginn:</b> Die KI fragt nach dem Kursbeginn, der im Zielkurs unter Einstellungen steht. Du kannst ihn in der ByCS nicht ändern. Passt er nicht zur Sicherung, verschieben sich alle Termine.</li>
+              <li><b>Wiederherstellen:</b> Du bekommst die neue Fassung und eine farbige Anleitung mit den Terminen zum Nachsehen.</li>
+            </ul>
+          </div></details>
+        </article>
+
+        <article>
+          <h3 id="skills" data-nav="Was die KI alles kann"><span class="nr">2</span> Was die KI alles kann</h3>
+          <p>Sprich die KI in normalen Sätzen an, oder rufe ein fertiges Rezept (Skill) mit <code>/Name</code> auf.</p>
+          <!-- AUTO:skills -->
+<div class="karten">
+<div class="karte"><code class="name">/baue-e-learning</code><p>Macht aus Aufgaben-PDF und Musterlösung ein E-Learning, baut eine vorhandene HTML-Seite auf die Vorlage um oder arbeitet ein neueres Skript (z. B. fürs Technische Zeichnen) in vorhandene E-Learnings ein, mit Papierfassung für das leere Arbeitsblatt</p><p class="prompt">Mach aus diesem PDF ein E-Learning (PDFs dazulegen)</p></div>
+<div class="karte"><code class="name">/baue-testvorbereitung</code><p>Testvorbereitung zu einem Thema aus deinen Unterlagen: Lernskript, Übungen mit immer neuen Aufgaben, Prüfungssimulation mit Note und Papierversion mit Lösungsblatt</p><p class="prompt">/baue-testvorbereitung Toleranzen (Unterlagen in Ressourcen/Quellen/Toleranzen)</p></div>
+<div class="karte"><code class="name">/baue-lernpaket</code><p>Packt ein E-Learning als SCORM-Paket (ZIP) für die ByCS, mit Punkten, Version und Berichten</p><p class="prompt">Erstelle ein Lernpaket aus Unterricht/MGF10/LF1/BW2/Mein-Thema</p></div>
+<div class="karte"><code class="name">/baue-kurs</code><p>Baut aus fertigem Unterrichtsmaterial (Lernpakete, Tests, Dateien) eine gestaltete Kurssicherung (.mbz), die du in der ByCS wiederherstellst</p><p class="prompt">Erstelle einen Kurs für die ByCS aus BW1 und BW2</p></div>
+<div class="karte"><code class="name">/kurs-umgestalten</code><p>Gestaltet einen vorhandenen ByCS-Kurs neu: Reiter je Klasse nach Blockplan, Farben aus dem Farbschema-Baukasten, Kursbild, mit farbiger Anleitung zum Wiederherstellen</p><p class="prompt">/kurs-umgestalten MGF10 Fachunterricht</p></div>
+<div class="karte"><code class="name">/baue-arbeitsblatt</code><p>Arbeitsblatt in drei Niveaus mit Lösung für die Lehrkraft</p><p class="prompt">/baue-arbeitsblatt Kurbeltrieb, Grundbildung Metall</p></div>
+<div class="karte"><code class="name">/moodle-fragenersteller</code><p>Fragen für einen ByCS-Test (Moodle-XML), mit Vorschau ohne Hochladen; baut danach gleich den Test</p><p class="prompt">/moodle-fragenersteller Kurbeltrieb</p></div>
+<div class="karte"><code class="name">/moodle-test</code><p>Fertiger Test als Aktivität: in der ByCS nur noch wiederherstellen, Zeit, Punkte und Notenstufen sind schon eingestellt</p><p class="prompt">/moodle-test Praxismodul 3D-Druck</p></div>
+<div class="karte"><code class="name">/uebungs-app</code><p>Kleines Lernspiel als eine Seite: Quiz, Lernkarten, Sortieren, Zuordnen</p><p class="prompt">/uebungs-app Lernkarten zum Kurbeltrieb</p></div>
+<div class="karte"><code class="name">/einheit-planen</code><p>Ganze Unterrichtsreihe mit echten Terminen und Kalenderdatei</p><p class="prompt">/einheit-planen</p></div>
+<div class="karte"><code class="name">/raster-feedback</code><p>Freundliches, konkretes Feedback zu anonymisierten Schülerarbeiten nach deinem Bewertungsraster</p><p class="prompt">/raster-feedback (Schülerarbeit einfügen)</p></div>
+<div class="karte"><code class="name">/notizen</code><p>Notizbücher je Team und eines für alle: Stichwort eintragen, Offenes zeigen, Einträge abhaken</p><p class="prompt">Notier: Handbuch mit dem Kollegium testen</p></div>
+<div class="karte"><code class="name">/kursbanner</code><p>Erstellt ein einheitliches Kursbanner (16:9) für einen ByCS-Kurs mit Fach, Stufe, Bild und Schullogo in den Hausfarben</p><p class="prompt">/kursbanner Ethik, 10. Klasse</p></div>
+</div>
+<!-- /AUTO:skills -->
+          <details class="mehr" id="eigene-skills"><summary><span class="tag">Zusatzinfos</span> Eigene Skills und Wünsche ans Werkzeug</summary><div>
+            <ul>
+              <li><b>Das Werkzeug ändern nur die Werkzeug-Verantwortlichen:</b> Skills, Vorlagen, Regeln, Skripte und dieses Handbuch, damit sie für alle gleich und heil bleiben. Dein Unterrichtsmaterial, deine Kurse und deine Tests änderst du wie bisher.</li>
+              <li><b>Du hast einen Wunsch oder einen Fehler im Werkzeug gefunden?</b> Sag es den Werkzeug-Verantwortlichen. Die KI ändert das Werkzeug an deinem Rechner nicht.</li>
+              <li><b>Eigene Skills sind erlaubt.</b> Sag der KI: „Lege mir einen eigenen Skill an, nur für mich.“ Er liegt dann auf deinem Rechner, nicht im Projekt. Hat er sich bewährt, übernehmen ihn die Werkzeug-Verantwortlichen für alle.</li>
+              <li><b>Falls doch jemand etwas am Werkzeug ändert,</b> nimmt GitHub das Hochladen gar nicht erst an. Die KI sagt dir dann, welche Datei gesperrt ist. Erzwingen lässt sich das nicht: Gib den Wunsch an die Werkzeug-Verantwortlichen weiter.</li>
+              <li><b>Unterricht ändert die zuständige Abteilung oder der Fachbereich.</b> Jede Klasse gehört zu einer Abteilung (z. B. MGF10 zur Grundstufe), Fächer wie PuG oder Ethik gehören in allen Klassen zu ihrem Fachbereich. Ändert jemand anderes dort etwas, nimmt GitHub das Hochladen nicht an: Bitte dann jemanden aus dem zuständigen Team oder die Werkzeug-Verantwortlichen. In welchen Teams du bist, siehst du auf GitHub in der Organisation eurer Schule unter „Teams“. Fehlst du in einem Team, sag es den Werkzeug-Verantwortlichen.</li>
+            </ul>
+          </div></details>
+        </article>
+      </div>
+    </section>
+
+    <section class="kapitel" data-weg="immer">
+      <div class="breite">
+        <span class="marke">Aktuell</span>
+        <h2 id="neu" data-nav="Was ist neu">Was ist neu</h2>
+        <p class="ziel">Die neuesten Fassungen der Lernpakete. Diese Liste entsteht automatisch.</p>
+        <!-- AUTO:neu -->
+<ol class="zeitleiste">
+<li class="neu-paket"><time>24.11.2026</time><span class="art">Lernpaket</span><p><b>3 Lernpakete:</b> Erste Fassung (Beispielseite)</p></li>
+</ol>
+<details class="aelter"><summary>Ältere Änderungen und Neues am Werkzeug</summary><ol class="zeitleiste">
+<li class="neu-system"><time>01.12.2026</time><span class="art">System</span><p>Erste öffentliche Fassung des Werkzeugs.</p></li>
+</ol></details>
+<!-- /AUTO:neu -->
+      </div>
+    </section>
+
+    <section class="kapitel" data-weg="immer">
+      <div class="breite">
+        <span class="marke">Immer</span>
+        <h2 id="datenschutz" data-nav="Datenschutz">Datenschutz</h2>
+        <div class="hinweis achtung"><p>Keine Schülernamen, Noten oder andere personenbezogenen Daten in die KI eingeben. Verwende „Schülerin oder Schüler A“. Ergebnisse bleiben in der ByCS. Die KI entwirft, du entscheidest.</p></div>
+        <p id="melden"><b>Frage offen oder Fehler gefunden?</b> Sag es den Werkzeug-Verantwortlichen oder der KI:</p>
+        <p class="prompt">Nimm diese Frage ins Handbuch auf: …</p>
+        <p>Die KI antwortet dir sofort. Steht die Antwort noch nicht im Handbuch, notiert die KI deine Frage im Notizbuch für alle, und die Werkzeug-Verantwortlichen ergänzen das Handbuch. Du musst sonst nichts tun.</p>
+        <div hidden>
+        <!-- AUTO:fragen -->
+<ul class="fragen">
+<li><a href="#einbinden">Wie binde ich ein Lernpaket in meinen ByCS-Kurs ein?</a></li>
+<li><a href="#einbinden">Wo finde ich den Download-Link zu einem Lernpaket (Linkseite)?</a></li>
+<li><a href="#einbinden">Warum soll ich den Link eintragen und nicht die Datei hochladen?</a></li>
+<li><a href="#einbinden">Wie vermeide ich verschiedene Versionen eines Lernpakets in den Kursen?</a></li>
+<li><a href="#einbinden">Welche Lernpakete gibt es?</a></li>
+<li><a href="#warum">Warum arbeiten wir so? Was bringt mir das?</a></li>
+<li><a href="#einrichten">Welches KI-Abo brauche ich (Pro, Plus)? Reicht der kostenlose Zugang?</a></li>
+<li><a href="#einbinden">Welche Einstellungen braucht die SCORM-Aktivität, damit es nur einen Versuch gibt?</a></li>
+<li><a href="#einbinden">Wie bekommt mein Kurs automatisch die neue Fassung eines Pakets?</a></li>
+<li><a href="#schueler">Was sehen die Schülerinnen und Schüler, und wann gilt eine Aufgabe als bearbeitet?</a></li>
+<li><a href="#bepunktung">Wie werden die Punkte berechnet (40/40/20, bestanden ab 70 %)?</a></li>
+<li><a href="#bepunktung">Wie zählen Teilpunkte bei Mehrfachauswahl, Zahlen und Freitext?</a></li>
+<li><a href="#bepunktung">Kann eine Aufgabe mehr Punkte geben als eine andere?</a></li>
+<li><a href="#ergebnisse">Wo sehe ich die Punkte je Aufgabe und je Niveau?</a></li>
+<li><a href="#ergebnisse">Was bedeutet eine Kennung wie Aufgabe-1.1_Einsteiger_10P?</a></li>
+<li><a href="#ergebnisse">Warum stehen in der Notenübersicht nur die Gesamtpunkte?</a></li>
+<li><a href="#zuruecknehmen">Eine Schülerin oder ein Schüler hat aus Versehen abgegeben. Was tun?</a></li>
+<li><a href="#passwort">Wie lautet das Lehrkraft-Passwort, und darf ich es ändern?</a></li>
+<li><a href="#probleme">Was bedeutet &quot;Nicht gespeichert!&quot; oder &quot;Gespeicherter Stand passt nicht ganz&quot;?</a></li>
+<li><a href="#probleme">Die Seite zeigt einen roten Fehlerkasten. Was tun?</a></li>
+<li><a href="#versionen">Was bedeutet die Versionsnummer oben rechts?</a></li>
+<li><a href="#einrichten">Was muss ich einmal einrichten, um selbst zu korrigieren?</a></li>
+<li><a href="#zusammenarbeit">Was muss ich beachten, wenn mehrere gleichzeitig ändern?</a></li>
+<li><a href="#korrektur">Wie korrigiere ich einen Fehler in einem E-Learning?</a></li>
+<li><a href="#korrektur">Wie kommt meine Korrektur zu den Schülerinnen und Schülern?</a></li>
+<li><a href="#erstellen">Wie erstelle ich aus einem PDF ein neues E-Learning?</a></li>
+<li><a href="#erstellen">Wie bekomme ich Sprachhilfen (Wortliste, Satzanfänge, Glossar) oder einfache Sprache für BVJ, BIK und BFS?</a></li>
+<li><a href="#einbinden">Wie heißt die Datei eines Lernpakets, und wo liegt sie?</a></li>
+<li><a href="#erstellen">Wie sehe ich einen ByCS-Test an, ohne ihn hochzuladen?</a></li>
+<li><a href="#erstellen">Wie bekomme ich einen fertigen Test in die ByCS?</a></li>
+<li><a href="#erstellen">Wo liegen die Tests im Teamordner?</a></li>
+<li><a href="#skills">Welche Skills gibt es, und was sage ich zur KI?</a></li>
+<li><a href="#eigene-skills">Darf ich Skills, Vorlagen oder Regeln selbst ändern, und kann ich mir einen eigenen Skill bauen?</a></li>
+<li><a href="#melden">Wie ergänze ich dieses Handbuch oder melde eine Frage?</a></li>
+<li><a href="#einrichten">Kann ich ohne eigenen Rechner im Browser arbeiten?</a></li>
+<li><a href="#zusammenarbeit">Wann fragt die KI vor dem Pushen, und wann pusht die KI selbst?</a></li>
+<li><a href="#eigene-skills">Mein Hochladen (Push) wird von GitHub abgewiesen, was nun?</a></li>
+<li><a href="#probleme">Warum sieht eine Seite außerhalb des Projektordners kaputt aus?</a></li>
+<li><a href="#einrichten">Kann ich statt einer KI eine andere nutzen (ChatGPT/Codex, Copilot, Gemini)?</a></li>
+</ul>
+<!-- /AUTO:fragen -->
+        </div>
+        <footer>Dieses Handbuch liegt als <code>#Handbuch.html</code> im Projekt, eine Kopie im Teamordner.</footer>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+(function () {
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
+  var root = document.documentElement, body = document.body;
+
+  /* Hell / Dunkel: Standard hell, Wahl bleibt in diesem Browser */
+  try { var gemerkt = localStorage.getItem('handbuch-thema'); if (gemerkt === 'dark' || gemerkt === 'light') root.setAttribute('data-theme', gemerkt); } catch (e) { /* ohne Speicher weiter */ }
+  $('#thema').addEventListener('click', function () {
+    var neu = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', neu);
+    try { localStorage.setItem('handbuch-thema', neu); } catch (e) { /* still */ }
+  });
+  $('#drucken').addEventListener('click', function () { window.print(); });
+
+  /* Seitenleiste auf kleinen Bildschirmen */
+  function menue(auf) { body.classList.toggle('menue', auf); $('#menue').setAttribute('aria-expanded', auf ? 'true' : 'false'); }
+  $('#menue').addEventListener('click', function () { menue(!body.classList.contains('menue')); });
+  $('#schleier').addEventListener('click', function () { menue(false); });
+  $('#seite').addEventListener('click', function (e) { if (e.target.closest('a')) menue(false); });
+
+  /* Beispielsätze kopieren */
+  function kopieren(text, fertig) {
+    function ersatz() {
+      var t = document.createElement('textarea'); t.value = text; t.style.position = 'fixed'; t.style.opacity = '0';
+      body.appendChild(t); t.select();
+      try { document.execCommand('copy'); fertig(); } catch (e) { /* still */ }
+      t.remove();
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(fertig, ersatz); else ersatz();
+  }
+  $$('.prompt').forEach(function (p) {
+    var text = p.textContent.trim(), b = document.createElement('button');
+    b.type = 'button'; b.className = 'kopie'; b.textContent = 'Kopieren'; b.setAttribute('aria-label', 'Beispielsatz kopieren');
+    b.addEventListener('click', function () {
+      kopieren(text, function () { b.textContent = 'Kopiert'; b.classList.add('ok'); setTimeout(function () { b.textContent = 'Kopieren'; b.classList.remove('ok'); }, 1400); });
+    });
+    p.appendChild(b);
+  });
+
+  /* Seitenleiste: aktueller Abschnitt */
+  var ziele = $$('main h2[id], main h3[id]'), links = {}, leiste = $('#seite'), aktiv = null, wartet = false;
+  $$('#navi a').forEach(function (a) { links[a.getAttribute('href').slice(1)] = a; });
+  function spy() {
+    wartet = false;
+    var grenze = window.innerHeight * 0.3, h = null;
+    ziele.forEach(function (z) { if (links[z.id] && z.getClientRects().length && z.getBoundingClientRect().top <= grenze) h = z; });
+    var a = h ? links[h.id] : null;
+    if (a === aktiv) return;
+    if (aktiv) aktiv.classList.remove('aktiv');
+    aktiv = a;
+    if (!a) return;
+    a.classList.add('aktiv');
+    var o = a.getBoundingClientRect(), l = leiste.getBoundingClientRect();
+    if (o.top < l.top + 120) leiste.scrollTop -= l.top + 120 - o.top; else if (o.bottom > l.bottom - 70) leiste.scrollTop += o.bottom - l.bottom + 70;
+  }
+  window.addEventListener('scroll', function () { if (!wartet) { wartet = true; requestAnimationFrame(spy); } }, { passive: true });
+
+  /* Drei Wege: Die Wahl bleibt in diesem Browser. 'erstellen' zeigt auch 'korrigieren', 'alle' zeigt alles. */
+  var WEGE = ['start', 'nutzen', 'korrigieren', 'erstellen', 'alle'];
+  function weg(w, merken) {
+    if (WEGE.indexOf(w) < 0) w = 'start';
+    body.setAttribute('data-zeige', w);
+    $$('.weg[data-wahl]').forEach(function (a) {
+      var an = a.getAttribute('data-wahl') === w;
+      a.classList.toggle('gewaehlt', an);
+      if (an) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+    });
+    if (merken) { try { localStorage.setItem('handbuch-weg', w); } catch (e) { /* still */ } }
+    spy();
+  }
+  /* Ziel eines Sprungs sichtbar machen: Weg einschalten, Kästen um das Ziel öffnen */
+  function zeigeZiel(id) {
+    var el = id ? document.getElementById(id) : null;
+    if (!el) return null;
+    var teil = el.closest('[data-weg]');
+    if (teil && getComputedStyle(teil).display === 'none') weg(body.getAttribute('data-zeige') === 'start' ? teil.getAttribute('data-weg') : 'alle', false);
+    for (var d = el.closest('details'); d; d = d.parentElement.closest('details')) d.open = true;
+    return el;
+  }
+  var gemerkterWeg = 'start';
+  try { gemerkterWeg = localStorage.getItem('handbuch-weg') || 'start'; } catch (e) { /* ohne Speicher weiter */ }
+  weg(gemerkterWeg, false);
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    if (a.hasAttribute('data-wahl')) weg(a.getAttribute('data-wahl'), true); else zeigeZiel(a.getAttribute('href').slice(1));
+  });
+  window.addEventListener('hashchange', function () { zeigeZiel(location.hash.slice(1)); });
+  var erstes = zeigeZiel(location.hash.slice(1));
+  if (erstes && erstes.id !== 'start') erstes.scrollIntoView();
+
+  /* Zusatzinfos: alle Kästen auf einmal, beim Drucken ist alles offen */
+  /* Alles aufklappen: öffnet alle Zusatzinfos und zeigt alle Wege, in Text und linkem Menü. Zuklappen stellt den gewählten Weg wieder her. */
+  var aufKnoepfe = $$('.auf'), offen = false, wegVorher = 'start';
+  function aufKnoepfeZeigen() {
+    aufKnoepfe.forEach(function (b) {
+      b.textContent = offen ? 'Alles zuklappen' : 'Alles aufklappen';
+      b.setAttribute('aria-pressed', offen ? 'true' : 'false');
+    });
+  }
+  aufKnoepfe.forEach(function (k) {
+    k.addEventListener('click', function () {
+      offen = !offen;
+      if (offen) { wegVorher = body.getAttribute('data-zeige'); weg('alle', false); } else { weg(wegVorher, false); }
+      $$('main details.mehr').forEach(function (d) { d.open = offen; });
+      aufKnoepfeZeigen();
+    });
+  });
+  /* Wählt jemand einen Weg, endet "alles aufklappen" (sonst passen Knopf und Anzeige nicht zusammen) */
+  $$('a[data-wahl]').forEach(function (a) {
+    a.addEventListener('click', function () {
+      if (!offen) return;
+      offen = false; aufKnoepfeZeigen();
+      $$('main details.mehr').forEach(function (d) { d.open = false; });
+    });
+  });
+  var vorDruck = [];
+  window.addEventListener('beforeprint', function () {
+    vorDruck = $$('main details').filter(function (d) { return !d.open; });
+    vorDruck.forEach(function (d) { d.open = true; });
+  });
+  window.addEventListener('afterprint', function () { vorDruck.forEach(function (d) { d.open = false; }); vorDruck = []; });
+
+  /* Suche: Abschnitte und Häufige Fragen */
+  var stellen = ziele.map(function (h) {
+    var el = h.closest('article') || h.closest('section');
+    var text = (h.tagName === 'H2' && el.querySelector('article')) ? (($('.ziel', el) || {}).textContent || '') : el.textContent;
+    return { titel: (h.getAttribute('data-nav') || h.textContent).trim(), ziel: '#' + h.id, text: text.replace(/\s+/g, ' ').trim() };
+  });
+  $$('.fragen a').forEach(function (a) { stellen.push({ titel: a.textContent.trim(), ziel: a.getAttribute('href'), text: '' }); });
+  var feld = $('#suche'), liste = $('#treffer');
+  function ausschnitt(text, wort) {
+    var i = text.toLowerCase().indexOf(wort), s = document.createElement('span');
+    if (i < 0) return null;
+    var von = Math.max(0, i - 40), m = document.createElement('mark');
+    s.appendChild(document.createTextNode((von ? '… ' : '') + text.slice(von, i)));
+    m.textContent = text.substr(i, wort.length); s.appendChild(m);
+    s.appendChild(document.createTextNode(text.slice(i + wort.length, i + wort.length + 60) + ' …'));
+    return s;
+  }
+  function oeffneKasten(id, wort) {   /* Treffer steht in einem zugeklappten Kasten: aufmachen */
+    var h = document.getElementById(id), el = h ? (h.closest('article') || (h.tagName === 'H2' ? null : h.closest('section'))) : null;
+    if (el) $$('details.mehr', el).forEach(function (d) { if (d.textContent.toLowerCase().indexOf(wort) > -1) d.open = true; });
+  }
+  function suchen() {
+    var worte = feld.value.toLowerCase().split(/\s+/).filter(function (w) { return w.length > 1; });
+    liste.textContent = '';
+    if (!worte.length) { liste.hidden = true; return; }
+    var funde = [];
+    stellen.forEach(function (st) {
+      var t = st.titel.toLowerCase(), g = (t + ' ' + st.text.toLowerCase()), wert = 0;
+      if (!worte.every(function (w) { return g.indexOf(w) > -1; })) return;
+      worte.forEach(function (w) { if (t.indexOf(w) > -1) wert += 5; });
+      funde.push({ st: st, wert: wert });
+    });
+    funde.sort(function (a, b) { return b.wert - a.wert; });
+    funde.slice(0, 8).forEach(function (f) {
+      var a = document.createElement('a'), b = document.createElement('b');
+      a.href = f.st.ziel; b.textContent = f.st.titel; a.appendChild(b);
+      var x = f.st.text ? ausschnitt(f.st.text, worte[0]) : null; if (x) a.appendChild(x);
+      a.addEventListener('click', function () { oeffneKasten(f.st.ziel.slice(1), worte[0]); feld.value = ''; liste.hidden = true; });
+      liste.appendChild(a);
+    });
+    if (!funde.length) { var p = document.createElement('p'); p.textContent = 'Nichts gefunden.'; liste.appendChild(p); }
+    liste.hidden = false;
+  }
+  feld.addEventListener('input', suchen);
+  feld.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { feld.value = ''; suchen(); feld.blur(); }
+    if (e.key === 'Enter') { var a = $('a', liste); if (a) a.click(); }
+  });
+  document.addEventListener('keydown', function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); menue(true); feld.focus(); feld.select(); }
+  });
+  document.addEventListener('click', function (e) { if (!e.target.closest('.suche')) liste.hidden = true; });
+
+})();
+</script>
+</body>
+</html>

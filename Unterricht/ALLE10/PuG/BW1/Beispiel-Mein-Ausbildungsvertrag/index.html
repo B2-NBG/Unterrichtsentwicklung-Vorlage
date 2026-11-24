@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="loesung-salt" content="bs-lernpaket|">
+<meta name="loesung-hash" content="e26ae84e4e2c4406a0a66b73cc3fe30bf68538433b167c16a008ff074ba825c5">
+<meta name="klasse" content="ALLE10">
+<meta name="fach" content="PuG">
+<meta name="abschnitt" content="BW1">
+<meta name="thema" content="Beispiel-Mein-Ausbildungsvertrag">
+<title>Mein Ausbildungsvertrag</title>
+<!-- VERSIONEN: neueste oben. Nur im Quelltext, unsichtbar im Dokument. Pflegt build-scorm.py (Skill baue-lernpaket), nicht von Hand ändern.
+V1.0 | 24.11.2026 | Commit folgt | Erste Fassung (Beispielseite)
+-->
+<!-- Fachunterricht.html:head -->
+<script>
+  window.addEventListener('error', function (e) {
+    var b = document.getElementById('page-error');
+    if (b) { b.style.display = 'block'; b.textContent = 'Etwas ist schiefgelaufen. Kopiere diese Meldung für die KI: ' + e.message; }
+  });
+</script>
+<link rel="stylesheet" href="../../../../../.agents/gemeinsam/templates/kern/Fachunterricht.head.css">
+<style id="zeichen-schriften"></style>
+<!-- /Fachunterricht.html:head -->
+<!-- Allgemeinbildung.html:stil -->
+<link rel="stylesheet" href="../../../../../.agents/gemeinsam/templates/kern/Allgemeinbildung.stil.css">
+<!-- /Allgemeinbildung.html:stil -->
+</head>
+<body>
+<div id="page-error"></div>
+
+<header class="titleblock">
+  <div class="tb kurz">
+    <div class="name"><img class="logo" src="bilder/bild-01.png" alt="Logo der Schule"><small>PuG · 10. Klasse · BS Musterstadt<span class="ver" data-datum="24.11.2026">V1.0</span></small><h1>Mein Ausbildungsvertrag</h1><p>Beispielseite: Probezeit, Berufsschule, Rat für Lea</p></div>
+    <div class="who"><small>Name</small><b id="nameOut">–</b></div>
+  </div>
+  <!-- Fachunterricht.html:tools -->
+<div class="tools">
+    <button type="button" id="subBtn" hidden>Abgeben</button>
+    <button type="button" id="unsubBtn" hidden>Abgabe zurücknehmen</button>
+    <button type="button" id="pdfBtn">Als PDF speichern</button>
+    <button type="button" id="tglTheme">Hell / Dunkel</button>
+    <button type="button" id="tglSol" aria-pressed="false">Lehrkraft-Modus: Lösungen zeigen</button>
+    <button type="button" id="blankBtn" class="sol-only">Leeres Arbeitsblatt drucken</button>
+    <span class="info" id="doneInfo"></span>
+    <span class="info res" id="resultInfo"></span>
+    <span class="info" id="saveInfo" role="status"></span>
+  </div>
+<!-- /Fachunterricht.html:tools -->
+</header>
+<nav id="stepnav" aria-label="Schritte"></nav>
+
+<main class="wrap">
+  <section class="step" data-lesson="Überblick">
+    <h2>1 · Überblick</h2>
+    <p class="lead">Lea beginnt ihre Ausbildung und hat den Ausbildungsvertrag vor sich. Du prüfst mit ihr, was darin stehen muss
+      und welche Rechte und Pflichten sie hat (eine Unterrichtsstunde).</p>
+    <div class="card">
+      <span class="tag">Arbeitsformen</span>
+      <div class="lg"><span class="pf pfx-einzel">Einzelarbeit</span><span>Ruhig lesen, denken, selbst aufschreiben.</span></div>
+      <div class="lg"><span class="pf pfx-partner">Partnerarbeit</span><span>Zu zweit vergleichen und eine gemeinsame Antwort finden.</span></div>
+    </div>
+  </section>
+
+  <section class="step" data-lesson="Stunde 1">
+    <h2>2 · Leas Vertrag</h2>
+    <p class="lead">Lea (16) soll morgen unterschreiben. Ihr Betrieb hat eine Probezeit von sechs Monaten eingetragen.</p>
+    <div class="phasebar" data-form="einzel" data-min="10">Vertrag prüfen</div>
+    <div class="card"><span class="tag">Einzelarbeit · Auswahl</span>
+      <div class="task"><span class="tt">Aufgabe 2.1 – Probezeit</span>
+        <p>Wie lange darf die Probezeit in einer Ausbildung höchstens dauern?</p>
+        <label class="opt"><input type="radio" name="a21" data-k="a21-1"><span>sechs Monate</span></label>
+        <label class="opt"><input type="radio" name="a21" data-k="a21-2" data-ok><span>vier Monate</span></label>
+        <label class="opt"><input type="radio" name="a21" data-k="a21-3"><span>zwei Wochen</span></label>
+        <details class="sol"><summary>Lösungsvorschlag</summary><p>Höchstens vier Monate, mindestens einen Monat
+          (Berufsbildungsgesetz, § 20). Die sechs Monate in Leas Vertrag sind nicht zulässig.</p></details>
+      </div>
+      <div class="task"><span class="tt">Aufgabe 2.2 – Berufsschule</span>
+        <p>Der Betrieb muss Lea für den Unterricht in der Berufsschule <select data-k="a22-1"><option value="">-</option>
+          <option data-ok>freistellen</option><option>nur in den Ferien freistellen</option><option>nicht freistellen</option></select>.</p>
+        <details class="sol"><summary>Lösungsvorschlag</summary><p>Freistellen (Berufsbildungsgesetz, § 15).</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-lesson="Stunde 1">
+    <h2>3 · Rat für Lea</h2>
+    <p class="lead">Lea fragt euch, was sie jetzt tun soll.</p>
+    <div class="phasebar" data-form="partner" data-min="10">Gemeinsam antworten</div>
+    <div class="card"><span class="tag">Partnerarbeit · Freitext</span>
+      <div class="task"><span class="tt">Aufgabe 3.1 – Nachricht an Lea</span>
+        <p>Schreibt Lea eine kurze Nachricht: Was ist an der Probezeit falsch, und was soll sie vor der Unterschrift tun?</p>
+        <textarea data-k="a31-1" data-zeilen="5" data-keys="vier Monate|4 Monate; Probezeit; Betrieb|Ausbilder|Kammer"></textarea>
+        <details class="sol"><summary>Lösungsvorschlag</summary><p>Die Probezeit darf höchstens vier Monate dauern. Lea spricht vor
+          der Unterschrift mit dem Betrieb und lässt die Probezeit ändern; bei Fragen hilft die zuständige Kammer.</p></details>
+      </div>
+    </div>
+    <div class="teacher sol-only"><b>Lehrkraft: Hinweise</b> Einige Nachrichten vorlesen lassen. Quelle: Berufsbildungsgesetz
+      (BBiG) §§ 15 und 20, Stand der Beispielseite.</div>
+  </section>
+
+  <section class="step result">
+    <div class="h2" role="heading" aria-level="2">4 · Ergebnis</div>
+    <div class="card" id="stepResult"></div>
+  </section>
+</main>
+
+<!-- Fachunterricht.html:modals -->
+<!-- Passwort für Lösungen -->
+<div class="modal" id="pwModal" role="dialog" aria-modal="true" aria-labelledby="pwT" hidden>
+  <form class="modalBox" id="pwForm" autocomplete="off">
+    <h2 id="pwT">Lösungen – nur für Lehrkräfte</h2>
+    <p>Die Lösungen sind durch ein Passwort geschützt.</p>
+    <label for="pwIn">Passwort</label>
+    <input id="pwIn" type="password" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <div class="err" id="pwErr" role="alert"></div>
+    <div class="btnrow"><button class="btn" type="submit">Lösungen freischalten</button><button class="btn alt" type="button" id="pwCancel">Abbrechen</button></div>
+  </form>
+</div>
+
+<!-- Abgabe -->
+<div class="modal" id="subModal" role="dialog" aria-modal="true" aria-labelledby="subT" hidden>
+  <div class="modalBox">
+    <h2 id="subT">Jetzt abgeben?</h2>
+    <p>Nach dem Abgeben kannst du <b>nichts mehr ändern</b>. Danach siehst du deine Bewertung und die Lösungsvorschläge. Du hast nur einen Versuch.</p>
+    <div class="err" id="subOpen"></div>
+    <p class="hint" id="subOpt"></p>
+    <div class="btnrow"><button class="btn" type="button" id="subOk">Endgültig abgeben</button><button class="btn alt" type="button" id="subCancel">Zurück zur Bearbeitung</button></div>
+  </div>
+</div>
+<!-- /Fachunterricht.html:modals -->
+
+<!-- Fachunterricht.html:scripts -->
+<script src="../../../../../.agents/gemeinsam/templates/kern/Fachunterricht.scripts-1.js"></script>
+<script src="../../../../../.agents/gemeinsam/templates/kern/Fachunterricht.scripts-2.js"></script>
+<!-- /Fachunterricht.html:scripts -->
+<!-- Allgemeinbildung.html:script -->
+<script src="../../../../../.agents/gemeinsam/templates/kern/Allgemeinbildung.script.js"></script>
+<!-- /Allgemeinbildung.html:script -->
+</body>
+</html>

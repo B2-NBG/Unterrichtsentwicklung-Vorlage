@@ -1,0 +1,33 @@
+{
+  "kurs": {
+    "vollname": "MUSTER10 Lernfeld 1 (Beispielkurs) SJ 2026/2027",
+    "kurzname": "MUSTER10 LF1 26/27",
+    "startdatum": "2026-09-14",
+    "zusammenfassung": "<p>Beispielkurs aus dem öffentlichen Spiegel: zwei Lernpakete, eine Übungs-App und ein Test.</p>"
+  },
+  "abschnitte": [
+    {
+      "name": "BW1-Messen und Einheiten",
+      "zusammenfassung": "<p>Erste Blockwoche: Messschieber, Einheiten, Test.</p>",
+      "dateien": [
+        {
+          "typ": "scorm",
+          "datei": "BYCS-SYNC/Pakete/MUSTER10/LF1/MUSTER10_LF1_BW1_Beispiel-Messen-mit-dem-Messschieber_scorm.zip",
+          "titel": "Messen mit dem Messschieber",
+          "abschluss": "abgeschlossen"
+        },
+        {
+          "typ": "scorm",
+          "datei": "BYCS-SYNC/Pakete/MUSTER10/LF1/MUSTER10_LF1_BW1_Beispiel-Einheiten-umrechnen-Uebung_scorm.zip",
+          "titel": "Übung: Einheiten umrechnen",
+          "abschluss": "abgeschlossen"
+        },
+        {
+          "typ": "test",
+          "datei": "Unterricht/MUSTER10/LF1/BW1/Test-Beispiel-Messen/Test-Beispiel-Messen.mbz",
+          "beschreibung": "<p>4 Fragen, 15 Minuten, ein Versuch.</p>"
+        }
+      ]
+    }
+  ]
+}

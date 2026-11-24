@@ -1,0 +1,18 @@
+# Skill-Liste im Handbuch (#Handbuch.html): Skill | Wofür, in einfachen Worten | Beispiel, was man zur KI sagt
+# Die Reihenfolge hier ist die Reihenfolge im Handbuch. Ein Skill ohne Zeile erscheint trotzdem:
+# handbuch.py nimmt dann Beschreibung und Auslöser aus seiner SKILL.md (und erinnert daran, ihn hier einzutragen).
+# Zeilen mit # werden ignoriert.
+
+baue-e-learning | Macht aus Aufgaben-PDF und Musterlösung ein E-Learning, baut eine vorhandene HTML-Seite auf die Vorlage um oder arbeitet ein neueres Skript (z. B. fürs Technische Zeichnen) in vorhandene E-Learnings ein, mit Papierfassung für das leere Arbeitsblatt | Mach aus diesem PDF ein E-Learning (PDFs dazulegen)
+baue-testvorbereitung | Testvorbereitung zu einem Thema aus deinen Unterlagen: Lernskript, Übungen mit immer neuen Aufgaben, Prüfungssimulation mit Note und Papierversion mit Lösungsblatt | /baue-testvorbereitung Toleranzen (Unterlagen in Ressourcen/Quellen/Toleranzen)
+baue-lernpaket | Packt ein E-Learning als SCORM-Paket (ZIP) für die ByCS, mit Punkten, Version und Berichten | Erstelle ein Lernpaket aus Unterricht/MGF10/LF1/BW2/Mein-Thema
+baue-kurs | Baut aus fertigem Unterrichtsmaterial (Lernpakete, Tests, Dateien) eine gestaltete Kurssicherung (.mbz), die du in der ByCS wiederherstellst | Erstelle einen Kurs für die ByCS aus BW1 und BW2
+kurs-umgestalten | Gestaltet einen vorhandenen ByCS-Kurs neu: Reiter je Klasse nach Blockplan, Farben aus dem Farbschema-Baukasten, Kursbild, mit farbiger Anleitung zum Wiederherstellen | /kurs-umgestalten MGF10 Fachunterricht
+baue-arbeitsblatt | Arbeitsblatt in drei Niveaus mit Lösung für die Lehrkraft | /baue-arbeitsblatt Kurbeltrieb, Grundbildung Metall
+moodle-fragenersteller | Fragen für einen ByCS-Test (Moodle-XML), mit Vorschau ohne Hochladen; baut danach gleich den Test | /moodle-fragenersteller Kurbeltrieb
+moodle-test | Fertiger Test als Aktivität: in der ByCS nur noch wiederherstellen, Zeit, Punkte und Notenstufen sind schon eingestellt | /moodle-test Praxismodul 3D-Druck
+uebungs-app | Kleines Lernspiel als eine Seite: Quiz, Lernkarten, Sortieren, Zuordnen | /uebungs-app Lernkarten zum Kurbeltrieb
+einheit-planen | Ganze Unterrichtsreihe mit echten Terminen und Kalenderdatei | /einheit-planen
+raster-feedback | Freundliches, konkretes Feedback zu anonymisierten Schülerarbeiten nach deinem Bewertungsraster | /raster-feedback (Schülerarbeit einfügen)
+notizen | Notizbücher je Team und eines für alle: Stichwort eintragen, Offenes zeigen, Einträge abhaken | Notier: Handbuch mit dem Kollegium testen
+kursbanner | Erstellt ein einheitliches Kursbanner (16:9) für einen ByCS-Kurs mit Fach, Stufe, Bild und Schullogo in den Hausfarben | /kursbanner Ethik, 10. Klasse

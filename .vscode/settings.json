@@ -1,0 +1,6 @@
+{
+    "workbench.editorAssociations": {
+        "*.html": "workbench.editor.browser",
+        "*.md": "vscode.markdown.editor"
+    }
+}
