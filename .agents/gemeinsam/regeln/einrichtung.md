@@ -40,9 +40,9 @@ noch nicht fertig.
 ## Lehrkraft-Passwort
 - Der Hash steht in `.agents/gemeinsam/data/solution-password.txt` (Zeile `hash=`). Die Datei liegt im Repo, damit alle
   Rechner und GitHub denselben Hash nutzen; das Passwort selbst steht nirgends.
-- Fehlt die Datei oder ist `hash=` leer: die Lehrkraft bitten, `python .agents/gemeinsam/scripts/pw-hash.py` (am Mac
-  `python3`) selbst auszuführen, ohne Argument (das Passwort wird verdeckt abgefragt; als Argument lehnt das Skript es
-  ab), und die Datei zu committen. Das Passwort wird nie im Chat eingegeben und steht nie im Handbuch. Bis dahin bleibt
+- Fehlt die Datei oder ist `hash=` leer: `python .agents/gemeinsam/scripts/pw-hash.py` (am Mac `python3`) starten,
+  ohne Argument. Es fragt in einem verdeckten Fenster, auch wenn die KI es startet (Skill schule-einrichten); als
+  Argument lehnt es das Passwort ab. Die Datei danach committen. Das Passwort wird nie im Chat eingegeben und steht nie im Handbuch. Bis dahin bleibt
   die Meta-Angabe leer, die Lösungen bleiben gesperrt.
 
 ## Im Browser arbeiten (Cloud-Sitzung)

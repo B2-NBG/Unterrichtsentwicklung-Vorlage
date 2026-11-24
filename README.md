@@ -25,12 +25,12 @@ Notizbücher und eine Zustellung aller Pakete nach jedem Push.
 1. **Eigenes Repo anlegen:** oben auf „Use this template“ → „Create a new repository“, Sichtbarkeit **Private**.
 2. **Holen und öffnen:** In VS Code „Repository klonen“, einen Ordner außerhalb von OneDrive wählen, öffnen und ihm
    vertrauen.
-3. **Schulprofil ausfüllen:** `.agents/gemeinsam/data/schule.txt` (Schule, Kurzname, Hausfarben, Logo, Klassen,
-   Lernplattform, Lehrplan). Für eine Lehrkraft allein: `Schutz | aus` und `Zustellung | download` (so voreingestellt).
-   Beispiele für andere Schularten liegen in `Beispiele/Profile/`. Danach im Terminal:
-   `python .agents/gemeinsam/scripts/sync-vorlage.py --vorlagen` und `python .agents/gemeinsam/scripts/pruefen.py --erneuern`.
-4. **Lehrkraft-Passwort setzen:** `python .agents/gemeinsam/scripts/pw-hash.py` (fragt verdeckt, speichert nur einen Hash
-   in `.agents/gemeinsam/data/solution-password.txt`, der mit committet wird). Damit sperrt jede Seite ihre Lösungen.
+3. **Schulprofil einrichten:** Der KI sagen: „Richte mein Schulprofil ein.“ Sie fragt im Dialog nach Schulart
+   (Beispiele in `Beispiele/Profile/`), Name, Hausfarben, Logo, Lernplattform und ob ihr allein oder im Kollegium
+   arbeitet, schreibt `.agents/gemeinsam/data/schule.txt` und setzt alles in Vorlagen und Handbuch ein.
+4. **Lehrkraft-Passwort setzen:** gehört zum selben Gespräch. Die KI öffnet ein verdecktes Fenster, das Passwort kommt
+   nie in den Chat. Gespeichert wird nur ein Hash in `.agents/gemeinsam/data/solution-password.txt`, der mit committet
+   wird. Damit sperrt jede Seite ihre Lösungen. (Von Hand: `python .agents/gemeinsam/scripts/pw-hash.py`.)
 5. **Erste Seite bauen:** Die KI bitten, z. B. „Erstelle ein Arbeitsblatt zu …“ oder „Baue ein E-Learning aus diesen
    PDFs“. Fragt sie „Committen und pushen?“, mit Ja antworten. Etwa eine Minute später liegen die Lernpakete auf GitHub
    unter Actions → Lauf → Artifacts zum Herunterladen.

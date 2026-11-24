@@ -1,7 +1,9 @@
 """
 pw-hash.py - erzeugt den Hash für das Lehrkraft-Passwort (Lösungssperre in .agents/gemeinsam/templates/Fachunterricht.html).
 Aufruf (im Projektordner, am Mac python3 statt python):  python .agents/gemeinsam/scripts/pw-hash.py
-Das Passwort wird verdeckt abgefragt und NICHT gespeichert. Nie als Argument (stünde in der Befehlsgeschichte). Gespeichert wird nur der Hash in .agents/gemeinsam/data/solution-password.txt.
+Das Passwort wird verdeckt abgefragt (Fenster, sonst Terminal) und NICHT gespeichert. Nie als Argument (stünde in der
+Befehlsgeschichte). Gespeichert wird nur der Hash in .agents/gemeinsam/data/solution-password.txt (wird mit committet).
+Das Fenster erscheint auch, wenn die KI das Skript startet (Skill schule-einrichten): Das Passwort kommt nie in den Chat.
 Groß-/Kleinschreibung ist egal, nur ASCII-Zeichen (keine Umlaute).
 Nur Python-Standardbibliothek (Windows und Mac).
 """
@@ -23,12 +25,40 @@ def make_hash(password):
     return hashlib.sha256((SALT + p).encode('ascii')).hexdigest()
 
 
+def fragen(text):
+    """Verdeckt fragen: Fenster (tkinter), sonst Terminal. None: Fragen geht hier nicht oder abgebrochen."""
+    try:
+        import tkinter
+        from tkinter import simpledialog
+        w = tkinter.Tk()
+        w.withdraw()
+        w.attributes('-topmost', True)
+        try:
+            return simpledialog.askstring('Lehrkraft-Passwort', text, show='*', parent=w)
+        finally:
+            w.destroy()
+    except Exception:   # kein tkinter oder kein Bildschirm
+        pass
+    if sys.stdin and sys.stdin.isatty():
+        try:
+            return getpass.getpass(text + ' ')
+        except (EOFError, KeyboardInterrupt):
+            return None
+    return None
+
+
 def main():
     if len(sys.argv) > 1:
         print('FEHLER: Das Passwort nie als Argument angeben, es stünde sonst in der Befehlsgeschichte. Ohne Argument '
               'aufrufen, es wird verdeckt abgefragt.')
         return 1
-    password = getpass.getpass('Lehrkraft-Passwort: ')
+    password = fragen('Lehrkraft-Passwort für die Lösungen (mindestens 4 Zeichen, keine Umlaute):')
+    if password is None:
+        print('FEHLER: Kein Passwort eingegeben (abgebrochen, oder hier geht weder ein Fenster noch eine Eingabe im Terminal).')
+        return 1
+    if fragen('Zur Kontrolle das Passwort noch einmal:') != password:
+        print('FEHLER: Die beiden Eingaben sind verschieden. Nichts gespeichert, bitte noch einmal.')
+        return 1
     try:
         h = make_hash(password)
     except ValueError as e:

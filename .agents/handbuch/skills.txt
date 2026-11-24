@@ -14,5 +14,6 @@ moodle-test | Fertiger Test als Aktivität: in der ByCS nur noch wiederherstelle
 uebungs-app | Kleines Lernspiel als eine Seite: Quiz, Lernkarten, Sortieren, Zuordnen | /uebungs-app Lernkarten zum Kurbeltrieb
 einheit-planen | Ganze Unterrichtsreihe mit echten Terminen und Kalenderdatei | /einheit-planen
 raster-feedback | Freundliches, konkretes Feedback zu anonymisierten Schülerarbeiten nach deinem Bewertungsraster | /raster-feedback (Schülerarbeit einfügen)
+schule-einrichten | Richtet die Schule im Gespräch ein: Schulprofil (Name, Schulart, Hausfarben, Logo, Lernplattform, allein oder Kollegium) und Lehrkraft-Passwort über ein verdecktes Fenster (nur Werkzeug-Verantwortliche) | Richte mein Schulprofil ein
 notizen | Notizbücher je Team und eines für alle: Stichwort eintragen, Offenes zeigen, Einträge abhaken | Notier: Handbuch mit dem Kollegium testen
 kursbanner | Erstellt ein einheitliches Kursbanner (16:9) für einen ByCS-Kurs mit Fach, Stufe, Bild und Schullogo in den Hausfarben | /kursbanner Ethik, 10. Klasse
