@@ -17,7 +17,7 @@ Geprüft wird (Regeln in unterrichtsmaterial.py):
   4. Kursplan: Unterricht/<Klasse>[/<Fach>]/Kurs-<Klasse>[-<Fach>][-<Zusatz>].json nennt nur Dateien, die es gibt, heißt nach seinem Ort
      und enthält kein Kennwort (Tests im Kurs behalten den Platzhalter "Bitte_neu_vergeben").
   5. In Git liegen weder Lernpakete noch Kurssicherungen: Beides baut GitHub.
-     Am Rechner gibt es kein BYCS-SYNC/ im Projektordner (lokale Bauten landen im Temp-Ordner).
+     Am Rechner gibt es kein FREIGABE-SYNC/ im Projektordner (lokale Bauten landen im Temp-Ordner).
 Nur Python-Standardbibliothek (Windows und Mac).
 """
 import importlib.util
@@ -180,7 +180,7 @@ def pruefe_zugestellt(ordner=None):
     linkseite = _modul('linkseite', os.path.join(HERE, 'linkseite.py'))
     team = linkseite.teamordner()
     if not team:
-        return ['Teamordner BYCS-SYNC nicht gefunden (Einrichtung: .agents/gemeinsam/regeln/einrichtung.md).'], []
+        return ['Teamordner FREIGABE-SYNC nicht gefunden (Einrichtung: .agents/gemeinsam/regeln/einrichtung.md).'], []
     fehler, hinweise = [], []
     for rel in ordner or unterrichtsmaterial.lernpakete():
         paket = unterrichtsmaterial.paketpfad(unterrichtsmaterial.aus_pfad(_abs(rel)))
@@ -232,15 +232,15 @@ def pruefe_kursplan(rel):
     dateien = [e.get('datei', '') for e in eintraege] + ([kurs['banner']] if kurs.get('banner') else [])
     for d in dateien:
         if not d or re.match(r'^([A-Za-z]:|/|\\)', d):
-            fehler.append('%s: "%s" ist kein Pfad ab dem Projektordner (z. B. BYCS-SYNC/... oder Unterricht/...).' % (rel, d))
+            fehler.append('%s: "%s" ist kein Pfad ab dem Projektordner (z. B. FREIGABE-SYNC/... oder Unterricht/...).' % (rel, d))
         elif not os.path.isfile(_abs(d.replace('\\', '/'))):
-            quelle = unterrichtsmaterial.paket_quelle(d) if d.replace('\\', '/').startswith('BYCS-SYNC/Pakete/') else None
+            quelle = unterrichtsmaterial.paket_quelle(d) if d.replace('\\', '/').startswith('FREIGABE-SYNC/Pakete/') else None
             if quelle and ist_lernpaket(quelle) and d.replace('\\', '/') == unterrichtsmaterial.paketpfad(unterrichtsmaterial.aus_pfad(_abs(quelle))):
                 continue   # Lernpakete liegen nicht in Git: Der Kursbau baut sie aus der Quelle
             fehler.append('%s: Die Datei %s gibt es nicht%s.' % (rel, d, ' (kein Lernpaket unter %s)' % quelle if quelle else ''))
     if any(e.get('passwort') for e in eintraege):
         fehler.append('%s: Ein Kennwort steht im Kursplan. Das Feld "passwort" gibt es nicht mehr: Tests im Kurs behalten den '
-                      'Platzhalter "Bitte_neu_vergeben", das echte Kennwort vergibt die Lehrkraft nach dem Wiederherstellen in der ByCS.' % rel)
+                      'Platzhalter "Bitte_neu_vergeben", das echte Kennwort vergibt die Lehrkraft nach dem Wiederherstellen in der Lernplattform.' % rel)
     return fehler
 
 
@@ -276,9 +276,9 @@ def pruefe(ordner=None, plaene=None):
 def in_git_verboten():
     """Lernpakete und Kurssicherungen liegen nie in Git (GitHub baut sie). Rückgabe: Fehler."""
     fehler = ['%s: gehört nicht in Git (GitHub baut es aus der Quelle). Herausnehmen: git rm --cached "%s"' % (p, p)
-              for p in _git('ls-files', '-z', '--', 'BYCS-SYNC')]
-    if os.environ.get('GITHUB_ACTIONS') != 'true' and os.path.isdir(os.path.join(unterrichtsmaterial.ROOT, 'BYCS-SYNC')):
-        fehler.append('BYCS-SYNC/ liegt im Projektordner: Pakete und Kurse entstehen nur über GitHub. Den Ordner löschen '
+              for p in _git('ls-files', '-z', '--', 'FREIGABE-SYNC')]
+    if os.environ.get('GITHUB_ACTIONS') != 'true' and os.path.isdir(os.path.join(unterrichtsmaterial.ROOT, 'FREIGABE-SYNC')):
+        fehler.append('FREIGABE-SYNC/ liegt im Projektordner: Pakete und Kurse entstehen nur über GitHub. Den Ordner löschen '
                       '(alter Rest; lokale Bauten landen im Temp-Ordner).')
     return fehler
 

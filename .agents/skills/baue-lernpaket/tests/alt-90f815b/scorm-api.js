@@ -1,5 +1,5 @@
 /*
-  scorm-api.js - SCORM-2004-Anbindung fuer ByCS Lernplattform (Moodle). Offline-tauglich, keine Abhaengigkeiten.
+  scorm-api.js - SCORM-2004-Anbindung fuer Moodle. Offline-tauglich, keine Abhaengigkeiten.
   Nicht veraendern. Das E-Learning ruft nur ScormReport auf:
 
     ScormReport.init({ total: 10 });            // einmal beim Start: Anzahl der bewerteten Aufgaben

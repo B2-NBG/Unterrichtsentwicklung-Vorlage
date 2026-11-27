@@ -19,7 +19,7 @@ Die Regeln aus `seite.md`, `sprache.md` (Sprachhilfen stehen im Plan, Dialog 2),
 ## Schritt 1 – Thema und Unterlagen (im Chat, zuerst)
 Fehlt etwas davon in der Nachricht, im Chat fragen (eine Nachricht, nummeriert):
 1. **Thema** der Testvorbereitung (z. B. „Toleranzen“, „Satz des Pythagoras“).
-2. **Wo liegen die Unterlagen?** Ordner oder Dateien, z. B. `Ressourcen/Quellen/<Thema>/` (PDFs, Skripte, Musterlösungen), vorhandene E-Learnings in `Unterricht/…`, Skripte anderer in `Ressourcen/` (Fachregel). Gibt es noch keinen Ordner, `ToDo/<Thema>/` anlegen und die Lehrkraft bitten, die Unterlagen hineinzulegen (Ordner im Finder/Explorer öffnen: `open` bzw. `explorer`).
+2. **Wo liegen die Unterlagen?** Ordner oder Dateien, z. B. vorhandene E-Learnings in `Unterricht/…`, Bausteine und Skripte anderer in `Ressourcen/` (Fachregel). Originale der Lehrkraft (PDFs, Skripte, Musterlösungen) kommen nach `tmp/<Thema>/` und werden nicht aufgehoben (`ablage.md`). Gibt es noch keinen Ordner, `tmp/<Thema>/` anlegen und die Lehrkraft bitten, die Unterlagen hineinzulegen (Ordner im Finder/Explorer öffnen: `open` bzw. `explorer`).
 3. **Welche Teilthemen kommen im Test vor?** (Was nicht drankommt, wird nicht geübt.)
 4. **Gibt es den echten Test schon?** (z. B. `Test-<Thema>/Fragen-*.xml` aus moodle-fragenersteller oder ein Test-PDF) Dann übernimmt die Testvorbereitung Aufgabenarten, Schwierigkeit, Hilfsmittel und Zeit, aber **keine Aufgabe des Tests** (keine gleiche Frage, keine gleichen Zahlen).
 

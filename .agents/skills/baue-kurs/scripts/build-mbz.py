@@ -3,16 +3,16 @@
 
   python .agents/skills/baue-kurs/scripts/build-mbz.py --plan <Kursname oder Pfad zum Kursplan> [--out <datei.mbz>]
   python .agents/skills/baue-kurs/scripts/build-mbz.py --pruefen <datei.mbz>
-  python .agents/skills/baue-kurs/scripts/build-mbz.py --links <ByCS-Sicherung.mbz>
+  python .agents/skills/baue-kurs/scripts/build-mbz.py --links <Moodle-Sicherung.mbz>
 
-Aufbau wie die Beispielsicherung (ByCS, Moodle 5.2.4): Abschnitt 0 für Allgemeines,
+Aufbau wie die Beispielsicherung (Moodle 5.2.4): Abschnitt 0 für Allgemeines,
 danach je ein Abschnitt pro Blockwoche. Aktivitäten: Datei (Ressource), SCORM-Paket (mitgeliefert
 oder über einen Download-Link, in Moodle "localsync"; "link": "linkseite" im Plan holt ihn von der Linkseite) und Test (Test-Aktivität aus dem Skill moodle-test).
 Der Kursplan liegt unter Unterricht/<Klasse>[/<Fach>]/Kurs-<Klasse>[-<Fach>][-<Zusatz>].json (die Quelle, in Git), die Sicherung
-entsteht als BYCS-SYNC/Kurse/<Klasse>[/<Fach>]/<gleicher Name>.mbz (ohne Datum, nicht in Git: GitHub baut sie nach dem Push und stellt sie in den
-Teamordner zu; lokal gebaut nur zum Ansehen, im Temp-Ordner statt im Repo, unterrichtsmaterial.gebaut). Pfade im Plan gelten ab dem Projektordner (BYCS-SYNC/..., Unterricht/...).
+entsteht als FREIGABE-SYNC/Kurse/<Klasse>[/<Fach>]/<gleicher Name>.mbz (ohne Datum, nicht in Git: GitHub baut sie nach dem Push und stellt sie in den
+Teamordner zu; lokal gebaut nur zum Ansehen, im Temp-Ordner statt im Repo, unterrichtsmaterial.gebaut). Pfade im Plan gelten ab dem Projektordner (FREIGABE-SYNC/..., Unterricht/...).
 Tests behalten das Kennwort aus ihrer Test-.mbz (Platzhalter "Bitte_neu_vergeben"): Das echte Kennwort vergibt die
-Lehrkraft nach dem Wiederherstellen in der ByCS. Ein Kennwort im Plan gibt es nicht.
+Lehrkraft nach dem Wiederherstellen in der Lernplattform. Ein Kennwort im Plan gibt es nicht.
 Nur Standardbibliothek. Benutzerdaten, Einschreibungen und Kurspasswörter werden nie übernommen.
 """
 
@@ -87,7 +87,7 @@ VORLAGE = {
 
 # SCORM-Einstellungen wie im Skill baue-lernpaket verlangt: 1 Versuch, kein neuer Versuch erzwungen, nicht sperren,
 # Höchstnote, maximal 100, bestanden ab 70, Anzeige in neuem Fenster. Abschluss: 4 = abgeschlossen, 2 = bestanden.
-# Anzeige und Navigation wie im Ethikkurs der Lehrkraft (ByCS-Sicherung "MGF10 Eth 26/27").
+# Anzeige und Navigation wie im Ethikkurs der Lehrkraft (Moodle-Sicherung "MGF10 Eth 26/27").
 # Mit Link: Moodle lädt das Paket bei jedem Start neu vom Link (updatefreq 3). Korrekturen kommen so ohne
 # neue Wiederherstellung im Kurs an.
 SCORM_ABSCHLUSS = {"abgeschlossen": 4, "bestanden": 2}
@@ -145,10 +145,10 @@ def fehler(text: str):
 
 
 def finde(text: str) -> Path:
-    """Pfad aus dem Kursplan: ab dem Projektordner (BYCS-SYNC/..., Unterricht/...), sonst wie angegeben."""
+    """Pfad aus dem Kursplan: ab dem Projektordner (FREIGABE-SYNC/..., Unterricht/...), sonst wie angegeben."""
     text = re.sub(r"^/([a-zA-Z])/", r"\1:/", text)  # Git-Bash-Schreibweise /c/Ordner in C:/Ordner umwandeln
     pfad = Path(text)
-    if not pfad.is_absolute() and text.replace("\\", "/").startswith("BYCS-SYNC/"):
+    if not pfad.is_absolute() and text.replace("\\", "/").startswith("FREIGABE-SYNC/"):
         return Path(unterrichtsmaterial.gebaut(text))   # Gebautes liegt nur auf GitHub im Projektordner, sonst im Temp-Ordner
     if not pfad.is_absolute() and (ROOT / pfad).exists():
         return ROOT / pfad
@@ -177,7 +177,7 @@ def baue_lernpaket(text: str) -> None:
     """Lernpakete liegen nicht in Git: vor dem Kursbau frisch aus dem Themenordner bauen (ohne etwas in die Quelle zu schreiben)."""
     global _BAU
     rel = text.replace("\\", "/")
-    quelle = unterrichtsmaterial.paket_quelle(rel) if rel.startswith("BYCS-SYNC/Pakete/") else None
+    quelle = unterrichtsmaterial.paket_quelle(rel) if rel.startswith("FREIGABE-SYNC/Pakete/") else None
     if not quelle or not (ROOT / quelle / "index.html").is_file():
         return
     if _BAU is None:
@@ -274,13 +274,13 @@ def lies_scorm(daten: bytes, quelle: str) -> dict:
 
 
 def paket_name(link: str) -> str:
-    """Dateiname, unter dem Moodle ein Paket von einem Link ablegt (wie in der ByCS-Sicherung)."""
+    """Dateiname, unter dem Moodle ein Paket von einem Link ablegt (wie in der Moodle-Sicherung)."""
     name = link.split("://", 1)[-1].rsplit("/", 1)[-1]
     return re.sub(r"[\x00-\x1f&<>\"`|':\\/]", "", name) or "paket.zip"
 
 
 def lies_test(text: str) -> dict:
-    """Liest eine Test-Aktivität (.mbz aus dem Skill moodle-test oder eine Aktivitätssicherung der ByCS)."""
+    """Liest eine Test-Aktivität (.mbz aus dem Skill moodle-test oder eine Aktivitätssicherung der Lernplattform)."""
     pfad = finde(text)
     if not pfad.is_file():
         fehler(f"Test nicht gefunden: {text}")
@@ -349,7 +349,7 @@ def lade_plan(pfad: Path) -> dict:
             fehler(f"Kursplan: 'link' gibt es nur bei SCORM: {e.get('titel')}")
         if e.get("passwort") is not None:
             fehler(f"Kursplan: 'passwort' gibt es nicht mehr ({e.get('titel')}). Der Test behält den Platzhalter "
-                   "\"Bitte_neu_vergeben\", das echte Kennwort nach dem Wiederherstellen in der ByCS vergeben.")
+                   "\"Bitte_neu_vergeben\", das echte Kennwort nach dem Wiederherstellen in der Lernplattform vergeben.")
         if typ == "test":
             test = lies_test(e["datei"])
             return {
@@ -1102,7 +1102,7 @@ def baue_scorm(arch, ids, saetze, e, modul_id, sektion_id, nummer, jetzt, besitz
     inst_id, ctx = ids.neu(), ids.neu()
     s = e["scorm"]
     # Paket (ZIP) und entpackter Inhalt: Moodle spielt das Paket aus dem Bereich "content" ab.
-    # Mit Link legt Moodle das Paket unter einem Namen aus dem Link ab, Quelle ist der Link (wie in der ByCS).
+    # Mit Link legt Moodle das Paket unter einem Namen aus dem Link ab, Quelle ist der Link (wie in der Lernplattform).
     paket = dict(e, name=paket_name(e["link"])) if e.get("link") else e
     refs = lege_datei_an(arch, ids, saetze, paket, ctx, "mod_scorm", "package", 0, besitzer, jetzt,
                          quelle=e.get("link"))
@@ -1513,8 +1513,8 @@ def _ausgabe(fehler_liste: list[str], ok: list[str]) -> int:
 
 
 def links_auslesen(pfad: Path, ordner: Path | None = None) -> int:
-    """Listet die SCORM-Links einer ByCS-Sicherung und ordnet sie über den SHA-1 den ZIPs im Teamordner zu (dort liegen die zugestellten Pakete)."""
-    ordner = ordner or Path(linkseite.teamordner() or unterrichtsmaterial.gebaut("BYCS-SYNC"))
+    """Listet die SCORM-Links einer Moodle-Sicherung und ordnet sie über den SHA-1 den ZIPs im Teamordner zu (dort liegen die zugestellten Pakete)."""
+    ordner = ordner or Path(linkseite.teamordner() or unterrichtsmaterial.gebaut("FREIGABE-SYNC"))
     zips = {hashlib.sha1(z.read_bytes()).hexdigest(): z.relative_to(ordner).as_posix() for z in ordner.rglob("*_scorm.zip")}
     with tarfile.open(pfad, "r:gz") as tar:
         dateien = {m.name: tar.extractfile(m).read() for m in tar.getmembers() if m.isfile()}
@@ -1540,9 +1540,9 @@ def links_auslesen(pfad: Path, ordner: Path | None = None) -> int:
 def main():
     parser = argparse.ArgumentParser(description="Moodle-Kurssicherung (.mbz) bauen oder prüfen.")
     parser.add_argument("--plan", help="Kursplan: Name (z. B. Kurs-ALLE10-PuG) oder Pfad zur Datei")
-    parser.add_argument("--out", help="Zieldatei (.mbz); Standard: BYCS-SYNC/Kurse/<Klasse>[/<Fach>]/<Name des Kursplans>.mbz, außer auf GitHub im Temp-Ordner")
+    parser.add_argument("--out", help="Zieldatei (.mbz); Standard: FREIGABE-SYNC/Kurse/<Klasse>[/<Fach>]/<Name des Kursplans>.mbz, außer auf GitHub im Temp-Ordner")
     parser.add_argument("--pruefen", help="vorhandene .mbz nur prüfen")
-    parser.add_argument("--links", help="SCORM-Links einer ByCS-Sicherung auflisten und den ZIPs in BYCS-SYNC zuordnen")
+    parser.add_argument("--links", help="SCORM-Links einer Moodle-Sicherung auflisten und den ZIPs in FREIGABE-SYNC zuordnen")
     args = parser.parse_args()
 
     if args.pruefen:

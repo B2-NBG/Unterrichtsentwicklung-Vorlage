@@ -23,7 +23,7 @@ sys.path.insert(0, str(PROJEKT / ".agents" / "gemeinsam" / "scripts"))
 from mbz import Archiv  # noqa: E402
 import profil  # noqa: E402  (Schulprofil schule.txt: Schulfarben)
 
-ABLAGE = PROJEKT / "Ressourcen" / "Kurssicherungen-ByCS"   # nur lokal (.gitignore)
+ABLAGE = PROJEKT / "Ressourcen" / "Kurssicherungen-Moodle"   # nur lokal (.gitignore)
 WADA = SKILL / "daten" / "wada-colors.json"                # Sanzo Wada, digitalisiert von mattdesl
 
 
@@ -101,7 +101,7 @@ class Sicherung:
                 if m.isfile() and m.name != ".ARCHIVE_INDEX":
                     self.dateien[m.name] = tar.extractfile(m).read()
         if re.search(rb"<name>users</name>\s*<value>1</value>", self.dateien.get("moodle_backup.xml", b"")):
-            fehler("Die Sicherung enthält Nutzerdaten. Bitte in der ByCS ohne Nutzerdaten sichern.")
+            fehler("Die Sicherung enthält Nutzerdaten. Bitte in der Lernplattform ohne Nutzerdaten sichern.")
 
     def text(self, n: str) -> str:
         return self.dateien[n].decode("utf-8")

@@ -73,11 +73,11 @@ Note | 6 | 0
 # Werte der eigenen Moodle-Instanz, aus einer frischen Kurssicherung abzulesen (Datei moodle_backup.xml):
 # Adresse (wwwroot), Version (moodle_version, moodle_release), Kategorie (Name und Nummer), Eigentümer der Dateien
 # (Nummer des Lehrkraft-Kontos). Bei einer neuen Moodle-Version mit einer frischen Sicherung vergleichen.
-Plattform | ByCS Lernplattform
-Plattform-Kurz | ByCS
+Plattform | Moodle der Schule
+Plattform-Kurz | Moodle
 Plattform-Art | Moodle
-Plattform-Beschreibung | BayernCloud Schule, läuft auf Moodle, früher mebis
-Moodle-Adresse | https://lernplattform.bycs.de
+Plattform-Beschreibung | eigene Moodle-Instanz der Schule
+Moodle-Adresse | https://moodle.musterschule.example
 Moodle-Site-Hash |
 Moodle-Version | 2026042004 | 5.2.4 (Build: 20261005)
 Moodle-Sicherung | 2026042000 | 5.2

@@ -1,12 +1,12 @@
 """
-build-scorm.py - baut aus einem E-Learning-Ordner ein SCORM-2004-Paket (ZIP) für die ByCS Lernplattform.
+build-scorm.py - baut aus einem E-Learning-Ordner ein SCORM-2004-Paket (ZIP) für die Lernplattform.
 Aufruf (im Projektordner, am Mac python3 statt python):
   python .agents/skills/baue-lernpaket/scripts/build-scorm.py --source "Unterricht/MGF10/LF1/BW2/<Thema>" --aenderung "Erste Fassung"
 Name, Ablageort und Titel des Pakets werden nie eingetippt: Klasse, Fach, Abschnitt und Thema kommen aus dem Ablageort
 (Unterricht/<Klasse>/<Fach>/<Abschnitt>/<Thema>/, Regeln in .agents/gemeinsam/scripts/unterrichtsmaterial.py), der Titel aus <title> der Startdatei.
-Ergebnis: BYCS-SYNC/Pakete/<Klasse>/<Fach>/<Klasse>_<Fach>_<Abschnitt>_<Thema>_scorm.zip, im Projektordner NUR auf GitHub.
+Ergebnis: FREIGABE-SYNC/Pakete/<Klasse>/<Fach>/<Klasse>_<Fach>_<Abschnitt>_<Thema>_scorm.zip, im Projektordner NUR auf GitHub.
 Auf jedem anderen Rechner landet das ZIP im Temp-Ordner (unterrichtsmaterial.gebaut), nie im Repo: Lernpakete entstehen nur über GitHub
-(nach dem Push bauen und in den Teamordner zustellen, der ByCS-Link bleibt gleich). Lokal zählen nur Prüfung, Version und Änderungsliste.
+(nach dem Push bauen und in den Teamordner zustellen, der Link in der Lernplattform bleibt gleich). Lokal zählen nur Prüfung, Version und Änderungsliste.
 Der Quellordner wird nicht verändert, außer Steckbrief (<meta name="klasse|fach|abschnitt|thema">), Version und Änderungsliste
 in der Startdatei (unterrichtsmaterial.py, version.py, vor dem Kopieren):
 --aenderung "Tippfehler in Aufgabe 2 korrigiert" beschreibt die neue Version (Pflicht, sobald sich das E-Learning seit der
@@ -133,7 +133,7 @@ def bauen(source, start='index.html', aenderung='', major=False, nur_packen=Fals
             raise BauFehler(str(e))
     title = unterrichtsmaterial.titel(lesen(start_quelle))
     if not title or re.match(r'\[.*\]$', title):
-        raise BauFehler('Die Startdatei hat keinen Titel (<title>): Er wird der Name des Pakets in der ByCS.')
+        raise BauFehler('Die Startdatei hat keinen Titel (<title>): Er wird der Name des Pakets in der Lernplattform.')
     ident = 'SCORM-' + '-'.join(sb[f] for f in unterrichtsmaterial.FELDER)
     zip_rel = unterrichtsmaterial.paketpfad(sb)
 
@@ -284,7 +284,7 @@ def main(argv=None):
             s.reconfigure(encoding='utf-8', errors='replace')
         except Exception:
             pass
-    ap = argparse.ArgumentParser(description='SCORM-2004-Paket für die ByCS Lernplattform bauen.')
+    ap = argparse.ArgumentParser(description='SCORM-2004-Paket für die Lernplattform bauen.')
     ap.add_argument('--source', required=True, help='Themenordner mit dem E-Learning (Unterricht/<Klasse>/<Fach>/<Abschnitt>/<Thema>)')
     ap.add_argument('--start', default='index.html', help='Startdatei (Standard: index.html)')
     ap.add_argument('--aenderung', default='', help='was sich geändert hat (für die Änderungsliste)')

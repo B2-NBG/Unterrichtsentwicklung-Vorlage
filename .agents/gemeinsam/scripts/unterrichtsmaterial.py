@@ -3,9 +3,9 @@ unterrichtsmaterial.py - Steckbrief und Namensregel für alles Unterrichtsmateri
 Kurse heißen. Alle Skripte (Paketbau, Handbuch, Kursbau, Testbau, Prüfskript) lesen von hier, niemand tippt Namen ab.
 
 Ablage:   Unterricht/<Klasse>/<Fach>/<Abschnitt>/<Thema>/
-Paket:    BYCS-SYNC/Pakete/<Klasse>/<Fach>/<Klasse>_<Fach>_<Abschnitt>_<Thema>_scorm.zip (nicht in Git: GitHub baut es nach dem Push
+Paket:    FREIGABE-SYNC/Pakete/<Klasse>/<Fach>/<Klasse>_<Fach>_<Abschnitt>_<Thema>_scorm.zip (nicht in Git: GitHub baut es nach dem Push
           aus dem Themenordner und stellt es in den Teamordner zu; am Rechner nur im Temp-Ordner, gebaut(); ein Lernpaket ist jeder Themenordner, dessen index.html eine Version trägt)
-Kurs:     Unterricht/<Klasse>[/<Fach>]/Kurs-<Klasse>[-<Fach>][-<Zusatz>].json  ->  BYCS-SYNC/Kurse/<Klasse>[/<Fach>]/<gleicher Name>.mbz
+Kurs:     Unterricht/<Klasse>[/<Fach>]/Kurs-<Klasse>[-<Fach>][-<Zusatz>].json  ->  FREIGABE-SYNC/Kurse/<Klasse>[/<Fach>]/<gleicher Name>.mbz
 
   Klasse     Klassenkürzel oder Sammelname in Großbuchstaben: MGF10, BFS11, ALLE10, ALLE
   Fach       Kürzel aus .agents/gemeinsam/data/faecher.txt: LF1, Eth, PuG
@@ -277,7 +277,7 @@ def paketname(sb):
 
 def paketpfad(sb):
     """Ort des Pakets ab Projektordner: im Unterordner je Klasse und Fach, der volle Name bleibt (ein heruntergeladenes Paket ist allein erkennbar)."""
-    return 'BYCS-SYNC/Pakete/%s/%s/%s' % (sb['klasse'], sb['fach'], paketname(sb))
+    return 'FREIGABE-SYNC/Pakete/%s/%s/%s' % (sb['klasse'], sb['fach'], paketname(sb))
 
 
 def aus_paketname(name):
@@ -302,7 +302,7 @@ def stand(seite):
 
 
 def gebaut(rel):
-    """Ort für Gebautes (Lernpaket, Kurssicherung) zu einem Pfad wie BYCS-SYNC/Pakete/…: Nur auf GitHub im Projektordner.
+    """Ort für Gebautes (Lernpaket, Kurssicherung) zu einem Pfad wie FREIGABE-SYNC/Pakete/…: Nur auf GitHub im Projektordner.
     Auf jedem anderen Rechner im Temp-Ordner, nie im Repo: Pakete und Kurse entstehen nur über GitHub."""
     basis = ROOT if os.environ.get('GITHUB_ACTIONS') == 'true' else os.path.join(tempfile.gettempdir(), 'Unterricht-gebaut')
     return os.path.join(basis, *rel.replace('\\', '/').split('/'))
@@ -365,7 +365,7 @@ def kursdatei(plan):
     und Tests. Ein Kursplan an einem anderen Ort (nur zum Ausprobieren) landet direkt in Kurse/."""
     rel = plan.replace('\\', '/')
     ordner = rel.split('/')[1:-1] if ist_kursplan(rel) else []
-    return '/'.join(['BYCS-SYNC', 'Kurse'] + ordner + [kursname(rel) + '.mbz'])
+    return '/'.join(['FREIGABE-SYNC', 'Kurse'] + ordner + [kursname(rel) + '.mbz'])
 
 
 # ---------------------------------------------------------------------------

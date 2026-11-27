@@ -1,6 +1,6 @@
 ---
 name: moodle-fragenersteller
-description: Schreibt Fragen für einen bewerteten Test in der Lernplattform als Moodle-XML mit Rückmeldung zu jeder Antwort und Vorschau; danach baut ByCS-Test die Test-Aktivität. Verwenden bei ByCS-, mebis- oder Moodle-Quiz, Testfragen, Fragensammlung, Moodle-XML, Lernpfad.
+description: Schreibt Fragen für einen bewerteten Test in der Lernplattform als Moodle-XML mit Rückmeldung zu jeder Antwort und Vorschau; danach baut Moodle-Test die Test-Aktivität. Verwenden bei Moodle-Quiz, Testfragen, Fragensammlung, Moodle-XML, Lernpfad.
 ---
 
 # moodle-fragenersteller: Fragen für den Test
@@ -67,4 +67,4 @@ Das legt `<Ablageort>/Vorschau.html` an: das Quiz im Moodle-Look, offline, ohne 
 - Allgemeiner Viewer für jede andere Moodle-XML: `.agents/skills/moodle-fragenersteller/templates/quiz-vorschau.html` per Doppelklick öffnen und die Datei hineinziehen.
 
 ## Schritt 4 – Abschluss (Test bauen)
-Nicht von Hand anlegen und keine eigene Anleitung schreiben: nach dem Review gleich den Skill **moodle-test** aufrufen (Arbeitszeit abfragen). Er baut `Test-<Thema>.mbz` und die Anleitung `index.html`. GitHub archiviert den Ordner nach dem Push unter `BYCS-SYNC/Tests/` (Teamordner oder Download).
+Nicht von Hand anlegen und keine eigene Anleitung schreiben: nach dem Review gleich den Skill **moodle-test** aufrufen (Arbeitszeit abfragen). Er baut `Test-<Thema>.mbz` und die Anleitung `index.html`. GitHub archiviert den Ordner nach dem Push unter `FREIGABE-SYNC/Tests/` (Teamordner oder Download).

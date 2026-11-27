@@ -58,7 +58,7 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;padding:0 16px 32px
 </head>
 <body>
 <header><div class="wrap">
-  <small>ByCS Lernplattform · {{VOLLNAME}}</small>
+  <small>Lernplattform · {{VOLLNAME}}</small>
   <h1>Kurs wiederherstellen</h1>
   <p>Wiederherstellen der Sicherung <code style="background:rgba(255,255,255,.15);color:#fff">{{DATEI}}</code>{{BLOCKPLAN_SATZ}}</p>
 </div></header>
@@ -66,13 +66,13 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;padding:0 16px 32px
 <main class="wrap">
 
 <div class="alert"><span class="ico">⚠️</span><div>
-  <b>Kursbeginn in Sicherung und Kurs müssen gleich sein.</b> Moodle verschiebt beim Wiederherstellen alle Termine um den Abstand zwischen dem Kursbeginn der Sicherung und dem Kursbeginn des Kurses. Lehrkräfte können den Kursbeginn in der ByCS <b>nicht ändern</b> (Schloss-Symbol). Diese Sicherung hat den Kursbeginn <b>{{KURSBEGINN}}, 00:00</b>.
+  <b>Kursbeginn in Sicherung und Kurs müssen gleich sein.</b> Moodle verschiebt beim Wiederherstellen alle Termine um den Abstand zwischen dem Kursbeginn der Sicherung und dem Kursbeginn des Kurses. Lehrkräfte können den Kursbeginn in der Lernplattform <b>nicht ändern</b> (Schloss-Symbol). Diese Sicherung hat den Kursbeginn <b>{{KURSBEGINN}}, 00:00</b>.
 </div></div>
 
 <section class="step s1">
   <div class="step-head"><span class="num">1</span><h2>Kurs vorbereiten</h2></div>
   <div class="step-body"><ol>
-    <li>Neuer, leerer Kurs: alle Klassen einschreiben, dann <span class="ui">Weitere Funktionen → ByCS-Gruppen</span>: ☑ Automatisiert Kursgruppen aus ByCS-Gruppen erstellen · ☑ Kursgruppen für Klassen · speichern.</li>
+    <li>Neuer, leerer Kurs: alle Klassen einschreiben und je Klasse eine Kursgruppe mit ihren Mitgliedern anlegen (von Hand unter <span class="ui">Teilnehmer/innen → Gruppen</span> oder automatisch, wenn eure Lernplattform Gruppen aus Klassen bildet).</li>
     <li><span class="ui">Teilnehmer/innen → Gruppen</span>: Jede Klasse gibt es <b>genau einmal</b>, mit Mitgliedern{{GRUPPEN_SATZ}}</li>
     <li><span class="ui">Einstellungen</span>: <b>Kursbeginn ablesen</b> (er ist gesperrt). Dort muss <span class="key">{{KURSBEGINN}}, 00:00</span> stehen. Steht ein anderer Tag dort, nicht wiederherstellen, sondern der KI den Tag nennen: Die KI baut eine Sicherung mit diesem Kursbeginn.</li>
   </ol></div>
@@ -99,12 +99,12 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;padding:0 16px 32px
         <ul>
           <li>Kurseinstellungen überschreiben: <b>Ja</b> (sonst fehlen Reiter-Format und Kursbild)</li>
           <li>Kursname, z. B. „{{VOLLNAME}}“ (die Fassungsnummer „{{FASSUNG}}“ darf weg)</li>
-          <li>Kurzer Kursname: muss in der ByCS einmalig sein</li>
+          <li>Kurzer Kursname: muss in der Lernplattform einmalig sein</li>
           <li><span class="key">Kursbeginn: so lassen</span> (gesperrt, muss {{KURSBEGINN}} sein) ⚠️</li>
         </ul></td></tr>
       <tr><th>Prüfen und Abschluss</th><td><b>Wiederherstellung durchführen</b>.</td></tr>
     </table>
-    <div class="hint">💡 Der genaue Wortlaut der „behalten“-Optionen kann in der ByCS abweichen. Wichtig ist nur: Die Klassengruppen dürfen beim Löschen <b>nicht</b> mitgelöscht werden.</div>
+    <div class="hint">💡 Der genaue Wortlaut der „behalten“-Optionen kann in der Lernplattform abweichen. Wichtig ist nur: Die Klassengruppen dürfen beim Löschen <b>nicht</b> mitgelöscht werden.</div>
   </div>
 </section>
 
@@ -129,7 +129,7 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;padding:0 16px 32px
   <div class="step-body">
     <table class="prob">
       <tr><td>Alle Termine um Wochen verschoben</td><td>Kursbeginn der Sicherung und des Kurses waren verschieden. der KI den Kursbeginn des Kurses nennen, neue Sicherung bauen lassen und erneut wiederherstellen.</td></tr>
-      <tr><td>Gruppen doppelt</td><td>Die Gruppen wurden nicht behalten oder die ByCS-Gruppen erst danach eingeschaltet. Die doppelten, leeren Gruppen löschen.</td></tr>
+      <tr><td>Gruppen doppelt</td><td>Die Gruppen wurden nicht behalten oder die Klassengruppen erst danach angelegt. Die doppelten, leeren Gruppen löschen.</td></tr>
       <tr><td>Reiter doppelt</td><td>Es wurde „verschmelzen“ in einen Kurs mit Inhalt gewählt. Erneut mit „Inhalt löschen und dann wiederherstellen“.</td></tr>
       <tr><td>„Kurzer Kursname wird bereits verwendet“</td><td>Einen anderen Kurznamen eintragen oder die KI eine neue Fassung bauen lassen.</td></tr>
       <tr><td>Reiter-Format oder Kursbild fehlen</td><td>„Kurseinstellungen überschreiben“ stand auf Nein. Erneut wiederherstellen.</td></tr>

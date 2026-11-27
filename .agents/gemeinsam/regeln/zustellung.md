@@ -14,10 +14,10 @@ Zustellweg laut Schulprofil (`schule.txt`, `Zustellung`): **<!-- AUTO:zustellung
     "alle".
 - **In Git liegen nur die Quellen.** Ein Lernpaket ist jeder Themenordner, dessen `index.html` eine Version trägt
   (einmal mit dem Skill baue-lernpaket gebaut). ZIP und `.mbz` kommen nie ins Repo und nie von Hand in den Teamordner.
-  Im Projektordner gibt es kein `BYCS-SYNC/` (liegt doch einer da, stoppt `pruefen.py`: Ordner löschen). Die Pfade
-  `BYCS-SYNC/…` in Kursplänen und Regeln meinen den Ort im Teamordner bzw. im Download.
+  Im Projektordner gibt es kein `FREIGABE-SYNC/` (liegt doch einer da, stoppt `pruefen.py`: Ordner löschen). Die Pfade
+  `FREIGABE-SYNC/…` in Kursplänen und Regeln meinen den Ort im Teamordner bzw. im Download. Der Teamordner kann jeder Ordner sein, der öffentliche Freigabelinks erlaubt (z. B. in OneDrive, SharePoint oder Nextcloud).
 - **Lokal gebaut ist nur zum Ansehen:** `build-scorm.py` und `build-mbz.py` legen im Temp-Ordner ab
-  (`unterrichtsmaterial.gebaut()`, `<Temp>/Unterricht-gebaut/BYCS-SYNC/…`).
+  (`unterrichtsmaterial.gebaut()`, `<Temp>/Unterricht-gebaut/FREIGABE-SYNC/…`).
 - **Gleicher Name wird ersetzt,** der Download-Link bleibt. Der volle Paketname bleibt auch im Unterordner (ein
   heruntergeladenes Paket ist allein erkennbar).
 - **Kurse und Tests haben keinen Link:** Die Lehrkraft lädt die `.mbz` aus dem Teamordner bzw. dem Download in die
@@ -30,16 +30,16 @@ Zustellweg laut Schulprofil (`schule.txt`, `Zustellung`): **<!-- AUTO:zustellung
 - **Der Flow nimmt nur** `.html`, `.mbz`, `.xml` und `_scorm.zip` an: Andere Dateien in einem Test-Ordner (z. B.
   Bilder) kommen nicht in den Teamordner.
 - **Download-Links gibt es nur für Lernpakete.** Jedes Paket im Teamordner bekommt von selbst einen geteilten Link, der
-  bei jeder neuen Fassung gleich bleibt. Alle Links stehen auf der Linkseite "ByCS-Links" (Verknüpfung `# ByCS-Links`
+  bei jeder neuen Fassung gleich bleibt. Alle Links stehen auf der Linkseite "Paket-Links" (Verknüpfung `# Paket-Links`
   im Teamordner). Die KI holt sie mit `python .agents/gemeinsam/scripts/linkseite.py`, nie abtippen, nie im Repo
   speichern (die Adresse der Linkseite enthält einen Schlüssel). Lernpakete mit Link holt Moodle selbst.
 - **Angekommen?** `python .agents/gemeinsam/scripts/kette-pruefen.py --zugestellt`.
 - Bei `download` gibt es keine Links und keine Linkseite: Ein Kurs bringt seine Lernpakete mit (Skill baue-kurs), ein
   einzelnes Lernpaket lädt die Lehrkraft als ZIP in die Lernplattform hoch.
 
-## Namen und Orte unter `BYCS-SYNC/` (nur über GitHub, nie im Projektordner, nie in `Unterricht/`)
-- Lernpaket: `BYCS-SYNC/Pakete/<Klasse>/<Fach>/<Klasse>_<Fach>_<Abschnitt>_<Thema>_scorm.zip`.
-- Kurssicherung: `BYCS-SYNC/Kurse/<Klasse>[/<Fach>]/<Name des Kursplans>.mbz` (ohne Datum, im selben Unterordner wie der
+## Namen und Orte unter `FREIGABE-SYNC/` (nur über GitHub, nie im Projektordner, nie in `Unterricht/`)
+- Lernpaket: `FREIGABE-SYNC/Pakete/<Klasse>/<Fach>/<Klasse>_<Fach>_<Abschnitt>_<Thema>_scorm.zip`.
+- Kurssicherung: `FREIGABE-SYNC/Kurse/<Klasse>[/<Fach>]/<Name des Kursplans>.mbz` (ohne Datum, im selben Unterordner wie der
   Kursplan). Tests bleiben in `Unterricht/…/Test-<Thema>/` (in Git).
 - `tmp/` im Projektordner ist der lokale Arbeitsordner (Entwürfe, Auszüge), in Git ausgenommen (nur `tmp/.gitkeep`).
   Lokal Gebautes landet im Temp-Ordner und ist nur zum Ansehen.

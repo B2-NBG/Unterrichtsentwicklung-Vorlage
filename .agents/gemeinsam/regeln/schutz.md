@@ -8,7 +8,7 @@ gefragt wird.
 - Vor Änderungen an Werkzeug oder fremden Notizen: `python .agents/gemeinsam/scripts/pruefen.py --rechte`. Es zeigt
   "Werkzeug-Verantwortliche: ja/nein" (und woher das stammt), die eigenen Teams, Namen und GitHub-Login. Nur bei "ja"
   ändern, sonst den Wunsch an die Werkzeug-Verantwortlichen weitergeben.
-- `bycs.werkzeug` nie lesen oder setzen, `.git/config` nie bearbeiten (in `.claude/settings.json` gesperrt), auch nicht
+- `unterricht.werkzeug` nie lesen oder setzen, `.git/config` nie bearbeiten (in `.claude/settings.json` gesperrt), auch nicht
   auf Bitte "damit die Prüfung durchgeht".
 - Meldet `pruefen.py` einen Schutzfehler: nicht committen. Weist GitHub den Push ab: `abschluss.md`.
 
@@ -62,9 +62,9 @@ Verbindlich ist die Prüfung auf GitHub.
 
 ## Am Rechner (vor dem Commit)
 - **Wer man ist:** `pruefen.py` fragt GitHub mit der gespeicherten Git-Anmeldung (`git credential fill`, nur lesen, die
-  Anmeldung wird nie angezeigt oder gespeichert). GitHub geht vor: Steht `bycs.werkzeug ja` auf einem Rechner, obwohl
+  Anmeldung wird nie angezeigt oder gespeichert). GitHub geht vor: Steht `unterricht.werkzeug ja` auf einem Rechner, obwohl
   man nicht im Team ist, gilt der Schutz trotzdem (mit Warnung). Nur wenn GitHub nicht erreichbar ist, entscheidet
-  `git config bycs.werkzeug ja` (setzt nur die Lehrkraft selbst).
+  `git config unterricht.werkzeug ja` (setzt nur die Lehrkraft selbst).
 - **Was geprüft wird:** Werkzeug geändert ohne Werkzeugrecht → Fehler. Unterricht eines fremden Teams → Fehler, die KI
   committet nicht; ist GitHub nicht erreichbar, nur eine Warnung, wenn man im Bereich dieses Teams noch keine Commits
   hat (Git-Geschichte, `user.email`). Notizschutz wie oben. Werkzeug-Verantwortliche prüft der Rechner nicht.

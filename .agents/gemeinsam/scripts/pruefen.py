@@ -20,15 +20,15 @@ Ersetzt den früheren Git-Hook pre-commit. Läuft an zwei Stellen mit denselben 
 Geprüft wird:
   1. Ablage, Steckbrief, Kursplan; ein geändertes Lernpaket hat eine neue Version; in Git liegen keine Lernpakete und
      keine Kurssicherungen (kette-pruefen.py, pruefe_dateien).
-  2. Jede geänderte Test-XML ist lesbares Moodle-XML (sonst scheitert auch der Import in die ByCS).
+  2. Jede geänderte Test-XML ist lesbares Moodle-XML (sonst scheitert auch der Import in die Lernplattform).
   3. Das Handbuch: Fragen, Links, ids, Format der Neuigkeiten, Kurztext je Skill (handbuch.py).
   4. Mitdokumentieren: Ändern sich Regeln oder Werkzeuge (Muster PFLICHT in handbuch.py), muss auch die Dokumentation
      dabei sein (neuigkeiten.txt, Handbuch, fragen.txt, skills.txt). Vor dem Commit ist das ein Fehler, auf GitHub nur eine
      Warnung (und nur für Commits einer KI, erkennbar an der Zeile "Co-Authored-By", KI_COMMIT).
   5.-7. Werkzeug-, Abteilungs- und Notizschutz: schutz.py (geschuetzt, rechte, von_hand). Was erlaubt ist, steht in
      .agents/gemeinsam/regeln/schutz.md und schutz-admin.md.
-  7b. Größe (dateigroessen): neue oder geänderte Datei über 5 MB, .h5p, .zip und .mbz außerhalb von Test-Ordnern und der
-     Test-Vorlage (Skill moodle-test) sind Fehler.
+  7b. Größe (dateigroessen): neue oder geänderte Datei über 5 MB (in Ressourcen/ über 1 MB), Office-Dateien, .stl und Archive in
+     Ressourcen/ (außer RESSOURCEN_AUSNAHMEN), .h5p, .zip und .mbz außerhalb von Test-Ordnern und der Test-Vorlage (Skill moodle-test) sind Fehler.
   8. Selbsttest des Werkzeugs (selbsttest), nur wenn sich AGENTS.md, CLAUDE.md oder etwas in .agents/, .claude/ oder .gemini/ geändert hat: Kopf jedes
      Skills und Helfers (name, description), Verweise auf Dateien in .agents/ und auf Regeldateien, Vorlagen
      unverändert (VORLAGEN_HASH; gewollte Änderung bestätigt --vorlage-bestaetigen).
@@ -156,12 +156,19 @@ def textregeln(dateien):
     return fehler
 
 
-GROESSE_MAX = 5 * 1024 * 1024   # größer gehört in den Teamordner, nicht in Git
+GROESSE_MAX = 5 * 1024 * 1024   # größer gehört nicht in Git
+RESSOURCEN_MAX = 1 * 1024 * 1024   # Ressourcen/ ist ein Baukasten, kein Archiv (ablage.md)
+RESSOURCEN_VERBOTEN = ('.doc', '.docx', '.docm', '.ppt', '.pptx', '.pptm', '.odt', '.odp', '.ods', '.xls', '.xlsx', '.xlsm',
+                       '.stl', '.7z', '.rar', '.tar', '.gz', '.tgz')
+# gebaute Arbeitsvorlagen für Lernende (drehbuch_docx.py, kurs_film_bauen.py packt sie in den Kurs), keine Originale
+RESSOURCEN_AUSNAHMEN = ('Ressourcen/Quellen/Film/Drehbuch-Vorlage-Kurzfilm.docx',
+                        'Ressourcen/Quellen/Film/Drehbuch-Musterbeispiel-Kurzfilm.docx')
 MBZ_ERLAUBT = re.compile(r'^(\.agents/skills/moodle-test/templates/|Unterricht/.+/Test-[^/]+/)[^/]+\.mbz$')
 
 
 def dateigroessen(dateien):
-    """Repo klein halten: Eine neue oder geänderte Datei über 5 MB ist ein Fehler; .h5p und .zip gehören nie in Git,
+    """Repo klein halten: Eine neue oder geänderte Datei über 5 MB ist ein Fehler, in Ressourcen/ schon über 1 MB, dazu
+    Office-Dateien, 3D-Modelle und Archive in Ressourcen/ (Originale werden nicht aufgehoben); .h5p und .zip gehören nie in Git,
     .mbz nur als Test-Aktivität (Test-Ordner) oder als Vorlage des Skills moodle-test."""
     fehler = []
     for p in sorted(dateien):
@@ -169,12 +176,20 @@ def dateigroessen(dateien):
         if not os.path.isfile(voll):
             continue
         endung = os.path.splitext(p)[1].lower()
+        groesse = os.path.getsize(voll)
+        ressource = p.lower().startswith('ressourcen/')
         if endung in ('.h5p', '.zip') or (endung == '.mbz' and not MBZ_ERLAUBT.match(p)):
             fehler.append('%s: %s-Dateien gehören nicht in Git (nur die Quelle, Lernpakete und Kurse baut GitHub; '
-                          'Test-Sicherungen nur im Test-Ordner). Große Dateien in den Teamordner.' % (p, endung))
-        elif os.path.getsize(voll) > GROESSE_MAX:
-            fehler.append('%s: %.1f MB, über %d MB. Das Repo bleibt klein: Die Datei gehört in den Teamordner '
-                          '(Fotos vorher verkleinern, lange Kante 2000 Pixel genügt).' % (p, os.path.getsize(voll) / 1048576, GROESSE_MAX // 1048576))
+                          'Test-Sicherungen nur im Test-Ordner).' % (p, endung))
+        elif ressource and endung in RESSOURCEN_VERBOTEN and p not in RESSOURCEN_AUSNAHMEN:
+            fehler.append('%s: %s-Originale werden in Ressourcen/ nicht aufgehoben (ablage.md): beim Bauen nur in tmp/, '
+                          'in Ressourcen/Inhalt.md eine Zeile zur Herkunft.' % (p, endung))
+        elif ressource and groesse > RESSOURCEN_MAX:
+            fehler.append('%s: %.1f MB, in Ressourcen/ höchstens 1 MB (ablage.md). Fotos verkleinern (JPG, lange Kante '
+                          '1600 Pixel, Qualität 80), aus PDFs nur die nötigen Seiten, Originale nicht aufheben.' % (p, groesse / 1048576))
+        elif groesse > GROESSE_MAX:
+            fehler.append('%s: %.1f MB, über %d MB. Das Repo bleibt klein: Die Datei gehört nicht in Git '
+                          '(Fotos verkleinern, lange Kante 1600 Pixel genügt).' % (p, groesse / 1048576, GROESSE_MAX // 1048576))
     return fehler
 
 

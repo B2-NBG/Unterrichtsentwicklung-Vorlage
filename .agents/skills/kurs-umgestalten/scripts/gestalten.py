@@ -1,5 +1,5 @@
 """
-gestalten.py - gestaltet eine ByCS-Kurssicherung (Format Onetopic) nach Gestaltungscode und Kursplan.
+gestalten.py - gestaltet eine Moodle-Kurssicherung (Format Onetopic) nach Gestaltungscode und Kursplan.
 
 Ändert nur Abschnittsnamen (Icons), Abschnittstexte (Kopfband, Stilblock), Reiterstile (Onetopic "tabstyles"),
 Abschnittsfläche und Kursbild. Aktivitäten und Freigaben (Blockplan) bleiben unverändert.
@@ -184,7 +184,7 @@ def gestalten(s: Sicherung, plan: dict, png: bytes | None) -> list[str]:
 
     # ---------- Stilblock im Abschnittstext: Unterabschnitte und Reiterleiste ----------
     # Moodle zeigt Abschnittstexte ungefiltert an (noclean). Onetopic zeigt nur den geöffneten Abschnitt, die Regeln
-    # treffen also dessen Unterabschnitte. Keine IDs (die vergibt die ByCS bei der Wiederherstellung neu).
+    # treffen also dessen Unterabschnitte. Keine IDs (die vergibt die Lernplattform bei der Wiederherstellung neu).
     def rahmen(nr, c):
         regeln = []
         lin = LINIE if schwach(c) else c
@@ -284,7 +284,7 @@ def gestalten(s: Sicherung, plan: dict, png: bytes | None) -> list[str]:
         blk = re.search(r'<file id="(\d+)">\s*<contenthash>(\w+)</contenthash>\s*<contextid>\d+</contextid>\s*<component>course</component>'
                         r'\s*<filearea>overviewfiles</filearea>(?:(?!</file>).)*?<filename>(?!\.<)[^<]+</filename>.*?</file>', t, re.S)
         if not blk:
-            fehler("Die Sicherung hat noch kein Kursbild. Bitte in der ByCS erst irgendein Kursbild setzen und neu sichern.")
+            fehler("Die Sicherung hat noch kein Kursbild. Bitte in der Lernplattform erst irgendein Kursbild setzen und neu sichern.")
         alt_hash, b = blk.group(2), blk.group(0)
         b2 = re.sub(r"<contenthash>\w+</contenthash>", f"<contenthash>{sha}</contenthash>", b)
         for tag, wert in [("filename", name), ("source", name), ("filesize", str(len(png))), ("mimetype", "image/png"),

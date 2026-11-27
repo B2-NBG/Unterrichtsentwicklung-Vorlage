@@ -12,13 +12,13 @@
       "dateien": [
         {
           "typ": "scorm",
-          "datei": "BYCS-SYNC/Pakete/MUSTER10/LF1/MUSTER10_LF1_BW1_Beispiel-Messen-mit-dem-Messschieber_scorm.zip",
+          "datei": "FREIGABE-SYNC/Pakete/MUSTER10/LF1/MUSTER10_LF1_BW1_Beispiel-Messen-mit-dem-Messschieber_scorm.zip",
           "titel": "Messen mit dem Messschieber",
           "abschluss": "abgeschlossen"
         },
         {
           "typ": "scorm",
-          "datei": "BYCS-SYNC/Pakete/MUSTER10/LF1/MUSTER10_LF1_BW1_Beispiel-Einheiten-umrechnen-Uebung_scorm.zip",
+          "datei": "FREIGABE-SYNC/Pakete/MUSTER10/LF1/MUSTER10_LF1_BW1_Beispiel-Einheiten-umrechnen-Uebung_scorm.zip",
           "titel": "Übung: Einheiten umrechnen",
           "abschluss": "abgeschlossen"
         },

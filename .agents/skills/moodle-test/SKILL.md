@@ -1,6 +1,6 @@
 ---
 name: moodle-test
-description: Baut aus geprüften Testfragen (Moodle-XML aus moodle-fragenersteller) eine fertige Test-Aktivität (.mbz) für Moodle samt Anleitung; Arbeitszeit, Punkte, Noten und Safe Exam Browser sind eingestellt. Verwenden bei "Test für die ByCS", "fertiger Test", "Test zum Wiederherstellen", "mbz für den Test".
+description: Baut aus geprüften Testfragen (Moodle-XML aus moodle-fragenersteller) eine fertige Test-Aktivität (.mbz) samt Anleitung; Arbeitszeit, Punkte, Noten und Safe Exam Browser sind eingestellt. Verwenden bei "Test für die Lernplattform", "fertiger Test", "Test zum Wiederherstellen", "mbz für den Test".
 ---
 
 # moodle-test: fertige Test-Aktivität zum Wiederherstellen
@@ -10,7 +10,7 @@ Ziel: eine `.mbz` (Aktivitätssicherung), die in der Lernplattform als fertiger 
 **Ausnahmen beim Dateiformat:** Die `.mbz` ist zum Hochladen da, nicht zum Lesen. Die Anleitung `index.html` beginnt nicht mit `Fachunterricht.html`, sondern wird aus `templates/test-anleitung.html` erzeugt (Look der Moodle-Testseite, kein Namensfeld, kein Lehrkraft-Modus, nur für die Lehrkraft).
 
 ## Woher die Einstellungen kommen
-`templates/Test-Vorlage.mbz` ist eine Sicherung eines fertig eingerichteten Tests aus der ByCS (Moodle 5.2.4). Alles kommt unverändert daraus:
+`templates/Test-Vorlage.mbz` ist eine Sicherung eines fertig eingerichteten Tests aus der Lernplattform (Moodle 5.2.4). Alles kommt unverändert daraus:
 1 Versuch, Verhalten "Spätere Auswertung", Überprüfung nur mit Punkten, 6 Fragen pro Seite, freie Navigation, Antworten mischen, Kennwort "Bitte_neu_vergeben", Safe Exam Browser Pflicht, Notenstufen als Gesamtfeedback "Note 1" bis "Note 6" (ab 92/81/67/50/30 % der Höchstpunktzahl, wie die Notenskala im Kurs).
 Je Test neu gesetzt werden nur:
 - Name "Test - <Thema>",
@@ -48,8 +48,8 @@ Die `index.html` entsteht automatisch: Infobox wie beim Teststart, Schritte zum 
 Prüfen: `python .agents/gemeinsam/scripts/seite-pruefen.py <Ordner>/index.html`. Die Prüfung erkennt die Anleitung (Test-Ordner neben der `.mbz`) und lässt Leerdruck und PDF-Export weg (die Seite hat keinen PDF-Knopf, gedruckt wird mit "Drucken"). Sie muss bestehen. Den Screenshot ansehen, dann `code -r "<Ordner>/index.html"` zur Kontrolle.
 
 ## Schritt 5 – Abschluss
-Der Lehrkraft nennen: `Test-<Thema>.mbz` zum Wiederherstellen in der Lernplattform, `index.html` (Anleitung) und `Vorschau.html` (Fragen ohne Upload ansehen) per Doppelklick. Dann nach `abschluss.md` prüfen und selbst committen und pushen (ein Test erreicht die Schülerinnen und Schüler erst nach der Wiederherstellung, keine Rückfrage nötig). Etwa eine Minute nach dem Push archiviert GitHub den ganzen Ordner unter `BYCS-SYNC/Tests/` (Teamordner oder Download).
+Der Lehrkraft nennen: `Test-<Thema>.mbz` zum Wiederherstellen in der Lernplattform, `index.html` (Anleitung) und `Vorschau.html` (Fragen ohne Upload ansehen) per Doppelklick. Dann nach `abschluss.md` prüfen und selbst committen und pushen (ein Test erreicht die Schülerinnen und Schüler erst nach der Wiederherstellung, keine Rückfrage nötig). Etwa eine Minute nach dem Push archiviert GitHub den ganzen Ordner unter `FREIGABE-SYNC/Tests/` (Teamordner oder Download).
 
 ## Grenzen (offen sagen)
-- Die Sicherung folgt genau der Vorlage aus der ByCS, der Rundlauf-Test ergibt für den Beispieltest dieselben Fragen und Einstellungen. Ob jede neue Sicherung fehlerfrei einspielt, zeigt erst die Wiederherstellung im Testkurs.
+- Die Sicherung folgt genau der Vorlage aus der Lernplattform, der Rundlauf-Test ergibt für den Beispieltest dieselben Fragen und Einstellungen. Ob jede neue Sicherung fehlerfrei einspielt, zeigt erst die Wiederherstellung im Testkurs.
 - Die Test-`.mbz` kann einzeln wiederhergestellt werden oder mit dem Skill baue-kurs gleich in eine Kurssicherung kommen (`"typ": "test"`).

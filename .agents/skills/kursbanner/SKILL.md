@@ -45,7 +45,7 @@ aussehen, nur Text und Bild wechseln.
    fremden Hintergrundreste), nichts abgeschnitten. Bei Bedarf anpassen und neu rendern.
 5. PNG nach `Ressourcen/Bilder/<Thema>/<Titel>-Kursbanner.png` legen, in `Ressourcen/Inhalt.md` eintragen (`ablage.md`,
    Ressourcen) und kurz sagen, wo es liegt. Im Kursplan steht dieser Pfad unter `kurs.banner` (Skill baue-kurs). Ältere
-   Banner heißen `<Titel>-Banner-ByCS.png` und bleiben so.
+   Banner heißen `<Titel>-Banner.png` und bleiben so.
 
 ## HTML-Vorlage
 ```html

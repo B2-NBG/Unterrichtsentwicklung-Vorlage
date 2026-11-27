@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Legt neben eine Moodle-XML-Quizdatei eine Vorschau.html (ByCS-Look, offline, per Doppelklick).
+"""Legt neben eine Moodle-XML-Quizdatei eine Vorschau.html (Moodle-Look, offline, per Doppelklick).
 
 Die Vorschau zeigt das Quiz ohne Upload: Schülersicht (beantworten, "Prüfen", Rückmeldung, Punkte)
 und Review-Sicht (alle Lösungen, Rückmeldungen, Hinweise auf typische Fehler).
@@ -53,7 +53,7 @@ def bauen(xml_datei: Path) -> str:
         wurzel = ET.fromstring(daten)
     except ET.ParseError as e:
         zeile = e.position[0] if hasattr(e, "position") else "?"
-        raise QuizFehler(f"{xml_datei}: XML fehlerhaft (Zeile {zeile}): {e}. So scheitert auch der Import in die ByCS.")
+        raise QuizFehler(f"{xml_datei}: XML fehlerhaft (Zeile {zeile}): {e}. So scheitert auch der Import in die Lernplattform.")
     if wurzel.tag != "quiz":
         raise QuizFehler(f"{xml_datei}: keine Moodle-XML-Quizdatei (Wurzelelement <{wurzel.tag}> statt <quiz>).")
     vorlage = VORLAGE.read_text(encoding="utf-8")

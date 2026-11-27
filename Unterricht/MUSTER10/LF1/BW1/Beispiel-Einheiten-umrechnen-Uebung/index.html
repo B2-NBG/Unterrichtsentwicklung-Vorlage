@@ -9,7 +9,7 @@
   JSON-Regeln: doppelte Anführungszeichen um jeden Text, kein Komma nach dem letzten Eintrag, ein Anführungszeichen im Text wird als \" geschrieben.
   Schriftfeld (Kopf): "title", "subtitle", "beruf", "jahr" (Ausbildungsjahr), "lernfeld" (Lernfeld · Blockwoche), "hilfsmittel".
     Klasse, Beruf, Lernfeld und Blockwoche per Auswahldialog (Skill baue-e-learning, Schritt 1, nur was fehlt); das Ausbildungsjahr folgt aus der Klasse.
-    Der Schülername wird NICHT eingetippt: Er wird aus der ByCS Lernplattform gelesen, wenn die App im SCORM-Paket läuft.
+    Der Schülername wird NICHT eingetippt: Er wird aus der Lernplattform gelesen, wenn die App im SCORM-Paket läuft.
   Version: <span class="ver"></span> im Benennungsfeld leer lassen. build-scorm.py (Skill baue-lernpaket) trägt "V1.3" und die
     unsichtbare Änderungsliste (Kommentar VERSIONEN nach <title>) ein.
   Lehrkraft-Modus: Knopf "Lehrkraft-Modus: Lösungen zeigen", nach dem Passwort (gleicher Hash wie Fachunterricht.html) erscheint eine Lösungsübersicht aller Einträge.
@@ -19,7 +19,7 @@
     flashcards: "items": [ { "front", "back" } ]
     sort:       "groups": ["Gruppe A","Gruppe B"], "items": [ { "text", "group": Index ab 0, "hint" (optional) } ]
     match:      "items": [ { "left", "right" } ]   (3 bis 8 Paare)
-  Punkte für die ByCS Lernplattform (nur im SCORM-Paket, gebaut mit dem Skill baue-lernpaket): Quiz, Sortieren und Zuordnen melden jeden Eintrag
+  Punkte für die Lernplattform (nur im SCORM-Paket, gebaut mit dem Skill baue-lernpaket): Quiz, Sortieren und Zuordnen melden jeden Eintrag
   (richtig im ersten Versuch = Punkt). Optional bei jedem Eintrag: "level": "foundation" | "core" | "challenge" (Standard core) = 40 / 40 / 20 % der
   Punkte (Einsteigerniveau / Prüfungsniveau / Profiniveau), Bestehen ab 70 %. Lernkarten: "abgeschlossen" (100 Punkte, bestanden), wenn alle Karten gewusst sind.
 -->
@@ -35,7 +35,8 @@
 <meta name="thema" content="Beispiel-Einheiten-umrechnen-Uebung">
 <title>Einheiten umrechnen</title>
 <!-- VERSIONEN: neueste oben. Nur im Quelltext, unsichtbar im Dokument. Pflegt build-scorm.py (Skill baue-lernpaket), nicht von Hand ändern.
-V1.0 | 24.11.2026 | Commit folgt | Erste Fassung (Beispielseite)
+V1.1 | 24.11.2026 | Commit folgt | Technischer Umbau: neue Fassung des Werkzeugs, Inhalt unverändert.
+V1.0 | 24.11.2026 | Commit d19950d | Erste Fassung (Beispielseite)
 -->
 <script>
   window.addEventListener('error', function (e) {
@@ -149,7 +150,7 @@ V1.0 | 24.11.2026 | Commit folgt | Erste Fassung (Beispielseite)
 
 <header class="titleblock">
   <div class="tb">
-    <div class="name"><small>Benennung<span class="ver" data-datum="24.11.2026">V1.0</span></small><h1 id="title"></h1><p id="subtitle"></p></div>
+    <div class="name"><small>Benennung<span class="ver" data-datum="24.11.2026">V1.1</span></small><h1 id="title"></h1><p id="subtitle"></p></div>
     <div><small>Beruf</small><span id="tbBeruf">–</span></div>
     <div><small>Ausbildungsjahr</small><span id="tbJahr">–</span></div>
     <div><small>Lernfeld · Blockwoche</small><span id="tbLf">–</span></div>

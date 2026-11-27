@@ -5,7 +5,7 @@ Die KI liest diese Datei in jeder Sitzung. Hier steht nur, was immer gilt. Alles
 
 ## Über mich <!-- AUTO:ich (aus schule.txt, nicht von Hand ändern: pruefen.py --erneuern) -->
 - Ich unterrichte an einer Berufsschule in Bayern (Lehrplan: Bayerischer LehrplanPLUS, https://www.lehrplanplus.bayern.de).
-- Klasse, Beruf, Fach und Abschnitt (Blockwoche, Lernsituation, Modul, Themenreihe) wechseln: Sie kommen jedes Mal aus dem Auswahldialog, nie raten. Unsere Lernplattform: ByCS Lernplattform (BayernCloud Schule, läuft auf Moodle, früher mebis).<!-- /AUTO:ich -->
+- Klasse, Beruf, Fach und Abschnitt (Blockwoche, Lernsituation, Modul, Themenreihe) wechseln: Sie kommen jedes Mal aus dem Auswahldialog, nie raten. Unsere Lernplattform: Moodle der Schule (eigene Moodle-Instanz der Schule).<!-- /AUTO:ich -->
 
 ## Wegweiser: erst lesen, dann arbeiten
 Alle Regeldateien liegen in `.agents/gemeinsam/regeln/` und werden überall nur mit ihrem Namen genannt (`seite.md`). Die Skills nennen, welche sie brauchen. Fragen zu Rulesets, Secrets, Flow, Workflow-Einrichtung oder Freigabe beantworten `schutz-admin.md` und `einrichtung-admin.md` (nur auf Nachfrage lesen). Ohne Skill gilt:
@@ -21,7 +21,7 @@ Alle Regeldateien liegen in `.agents/gemeinsam/regeln/` und werden überall nur 
 | Skills, Vorlagen, Skripte, Regeln, Einstellungen, diese Datei oder das Handbuch änderst | `handbuch.md` |
 | wissen musst, wer was ändern darf (Werkzeug, Unterricht und Notizbücher anderer Teams, Notizen), oder GitHub einen Push abweist | `schutz.md` |
 | Auswahldialog, Helfer, PDFs, Arbeitsordner oder einen Commit mit Co-Authored-By brauchst | `werkzeuge.md` |
-| mit `BYCS-SYNC/`, Teamordner, Download-Links oder Zustellung zu tun hast | `zustellung.md` |
+| mit `FREIGABE-SYNC/`, Teamordner, Download-Links oder Zustellung zu tun hast | `zustellung.md` |
 | "Teamordner … nicht gefunden" siehst, die Passwortdatei fehlt, ein Rechner neu ist oder du in einer Cloud-Sitzung im Browser arbeitest | `einrichtung.md` |
 
 ## Wie ich Unterrichtsmaterialien möchte
@@ -38,7 +38,7 @@ Alle Regeldateien liegen in `.agents/gemeinsam/regeln/` und werden überall nur 
 - **Lösungen bleiben gesperrt:** nur in `<details class="sol">` oder `<section class="answers">`, mit dem einen Passwort-Hash aus `.agents/gemeinsam/data/solution-password.txt`. Nie ein Passwort im Klartext in eine Seite, nie im Chat, nie im Handbuch. **Der Schülername wird nie eingetippt:** Er kommt aus der Lernplattform, wenn die Seite im SCORM-Paket läuft.
 - **Fertig heißt geprüft:** `python .agents/gemeinsam/scripts/seite-pruefen.py <Seite>` besteht, danach öffnen und berichten nach `abschluss.md`. Vor jedem Commit besteht `python .agents/gemeinsam/scripts/pruefen.py --erneuern` (dieselbe Prüfung macht GitHub nach dem Push).
 - **Mitdokumentieren:** Änderungen am Werkzeug brauchen im selben Commit eine Zeile in `.agents/handbuch/neuigkeiten.txt` (nur intern: `--intern` und "[intern]" in der Commit-Nachricht).
-- **Werkzeug ändern nur Werkzeug-Verantwortliche** (Skills, Vorlagen, Skripte, Regeln, Einstellungen, Workflow, diese Datei, alles außerhalb von `Unterricht/`, `ToDo/`, `Ressourcen/` und `Vorlagen/<Teamname>/`; Liste: `.agents/gemeinsam/data/schutz.txt`), und nur, wenn `python .agents/gemeinsam/scripts/pruefen.py --rechte` "Werkzeug-Verantwortliche: ja" meldet. Sonst den Wunsch weitergeben; eigene Skills im eigenen Skill-Ordner deines Werkzeugs, nie im Projekt. `bycs.werkzeug` setzt nie die KI. Einzelheiten: `schutz.md`.
+- **Werkzeug ändern nur Werkzeug-Verantwortliche** (Skills, Vorlagen, Skripte, Regeln, Einstellungen, Workflow, diese Datei, alles außerhalb von `Unterricht/`, `ToDo/`, `Ressourcen/` und `Vorlagen/<Teamname>/`; Liste: `.agents/gemeinsam/data/schutz.txt`), und nur, wenn `python .agents/gemeinsam/scripts/pruefen.py --rechte` "Werkzeug-Verantwortliche: ja" meldet. Sonst den Wunsch weitergeben; eigene Skills im eigenen Skill-Ordner deines Werkzeugs, nie im Projekt. `unterricht.werkzeug` setzt nie die KI. Einzelheiten: `schutz.md`.
 - **Kein PowerShell** (in `.claude/settings.json` gesperrt): keine `.ps1`-Dateien, keine PowerShell-Befehle in Skills oder Anleitungen, Skripte sind Python 3 oder `sh`. Am Mac in jedem Befehl `python3` statt `python`.
 
 ## Git: direkt auf `main` arbeiten

@@ -13,6 +13,10 @@ Nachschlagewerk für Werkzeug-Verantwortliche und Admins (Teil von `schutz.md`).
     Notizbuch (`ToDo/<team>-NOTIZEN.md`) und seine Vorlagen (`Vorlagen/<team>/`), ausgenommen die Frei-Muster und in den eigenen Klassen die Fächer anderer Teams. Vorbei dürfen das Team und
     `werkzeug-verantwortliche`.
   - „Schutz: main“: kein Force-Push, kein Löschen von `main`, für alle.
+  - „Schutz: Dateigröße“: Dateien über 5 MB und `.h5p`/`.zip` (wie `pruefen.py`, steht im Skript, nicht in
+    `schutz.txt`). Vorbei dürfen nur Owner der Organisation. Hält auch eine alte Historie mit großen Dateien
+    draußen, wenn jemand nach einer Bereinigung der Historie nicht neu klont („File size limit exceeded“ bzw.
+    „File extension is restricted“).
 - **Wie es wirkt:** auf allen Branches, auch für Commits über die GitHub-Webseite und für
   den Commit von GitHub selbst (der ändert nur Handbuch und Vorschau, beides ist frei). Groß- und Kleinschreibung
   der Pfade spielt keine Rolle. Ein Push wird **als Ganzes** abgewiesen, auch das Erlaubte darin
@@ -32,7 +36,7 @@ Nachschlagewerk für Werkzeug-Verantwortliche und Admins (Teil von `schutz.md`).
   jetzt verlässlich, weil Workflow und `pruefen.py` selbst gesperrt sind.
 - **Jeder Push zählt für sich:** GitHub prüft alles seit dem letzten grünen Lauf, aber jeden Push einzeln: Was er
   geändert hat, muss die Person dürfen, die ihn gepusht hat. Der Workflow liefert dafür Commit und Person jedes Laufs
-  seit dem letzten grünen (`BYCS_PUSHES`). Liefert GitHub diese Liste nicht vollständig (Fehler der API, kein grüner
+  seit dem letzten grünen (`UNTERRICHT_PUSHES`). Liefert GitHub diese Liste nicht vollständig (Fehler der API, kein grüner
   Lauf unter den 100 neuesten), wird der Lauf rot, statt alles dem letzten Push zuzuordnen. Es zählt nur, was sich wirklich geändert hat: Wurde eine Änderung
   zurückgenommen, ist sie erledigt. Ein späterer Push gibt nichts frei, auch nicht von Werkzeug-Verantwortlichen.
 - **Was dann angehalten wird:** Werkzeug ohne Werkzeugrecht, unlesbare Teams und alle übrigen Fehler (Steckbrief,
@@ -64,7 +68,7 @@ Nachschlagewerk für Werkzeug-Verantwortliche und Admins (Teil von `schutz.md`).
   --anwenden`, dann pushen (so ist der Lauf gleich grün). `--anwenden` braucht Admin-Recht am Repo und zeigt, was es
   anlegt, ersetzt oder löscht; andere Rulesets fasst es nicht an. `--zeigen` gibt die Rulesets nur aus.
 - **Neue Werkzeug-Verantwortliche:** ins Team `werkzeug-verantwortliche` aufnehmen. Jeden ihrer Rechner richten sie
-  einmal selbst ein (`git config bycs.werkzeug ja`), damit sie auch ohne Verbindung zu GitHub arbeiten können.
+  einmal selbst ein (`git config unterricht.werkzeug ja`), damit sie auch ohne Verbindung zu GitHub arbeiten können.
 
 ## Grenzen
 - Rulesets sperren Pfade, keinen Inhalt: Notizschutz und das von Hand Geschriebene im Handbuch bleiben eine

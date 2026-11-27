@@ -80,7 +80,7 @@ def main():
     env = {k: v for k, v in os.environ.items()
            if k not in ('CLAUDECODE', 'CI', 'TEAM_TOKEN', 'SCHUTZ_TOKEN')
            and not k.startswith(('GIT_', 'GITHUB_', 'RUNNER_', 'ACTIONS_'))}
-    env['BYCS_ICH'] = '-'   # nie die echte Git-Anmeldung fragen (meine_teams in pruefen.py): "GitHub nicht erreichbar"
+    env['UNTERRICHT_ICH'] = '-'   # nie die echte Git-Anmeldung fragen (meine_teams in pruefen.py): "GitHub nicht erreichbar"
 
     def git(*args):
         r = subprocess.run(['git', '-c', 'core.safecrlf=false'] + list(args), cwd=repo, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -114,7 +114,7 @@ def main():
         subprocess.run(['git', 'clone', '-q', '--no-hardlinks', ROOT, repo], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
         git('config', 'user.name', 'Test')
         git('config', 'user.email', 'test@example.org')
-        git('config', 'bycs.werkzeug', 'ja')   # der Test ändert Werkzeug: wie am Rechner von Werkzeug-Verantwortlichen
+        git('config', 'unterricht.werkzeug', 'ja')   # der Test ändert Werkzeug: wie am Rechner von Werkzeug-Verantwortlichen
         arbeitsstand(repo)
         # Ausgangslage unabhängig von der Schule: Schutz mit Teams und Testteams in schutz.txt (die öffentliche Fassung
         # kommt für eine Lehrkraft allein, ohne Teams). In einem Repo, das das schon hat, ändert sich nichts.
@@ -161,9 +161,14 @@ def main():
                              'Fach | Werken | grundstufe\n')
         soll = sg.soll_rulesets(regeln)
         nach = {r['name']: r for r in soll}
-        pruefe(sorted(nach) == ['Schutz: Werkzeug', 'Schutz: Werkzeug in Arbeitsordnern', 'Schutz: ethik', 'Schutz: grundstufe',
-                                'Schutz: main', 'Schutz: pug'],
-               'ein Ruleset für das Werkzeug (und eines für Werkzeug in Arbeitsordnern), eines je Team, eines für main', sorted(nach))
+        pruefe(sorted(nach) == ['Schutz: Dateigröße', 'Schutz: Werkzeug', 'Schutz: Werkzeug in Arbeitsordnern', 'Schutz: ethik',
+                                'Schutz: grundstufe', 'Schutz: main', 'Schutz: pug'],
+               'ein Ruleset für das Werkzeug (und eines für Werkzeug in Arbeitsordnern), eines je Team, eines für main, eines für die Dateigröße', sorted(nach))
+        d = sg.fuer_github(nach['Schutz: Dateigröße'], {})
+        pruefe(d['rules'] == [{'type': 'file_extension_restriction', 'parameters': {'restricted_file_extensions': ['*.h5p', '*.zip']}},
+                              {'type': 'max_file_size', 'parameters': {'max_file_size': 5}}]
+               and d['bypass_actors'] == [{'actor_id': 1, 'actor_type': 'OrganizationAdmin', 'bypass_mode': 'always'}],
+               'Dateigröße: über 5 MB und .h5p/.zip abgewiesen, vorbei nur Owner der Organisation', d)
         pruefe('ToDo/grundstufe-NOTIZEN.md' in nach['Schutz: grundstufe']['gesperrt']
                and 'Vorlagen/grundstufe/**/*' in nach['Schutz: grundstufe']['gesperrt']
                and nach['Schutz: Werkzeug in Arbeitsordnern']['gesperrt'] == [
@@ -171,7 +176,7 @@ def main():
                'Notizbuch und Vorlagen je Team gesperrt, die der Werkzeug-Verantwortlichen als Werkzeug',
                nach['Schutz: Werkzeug in Arbeitsordnern']['gesperrt'])
         pruefe(all({'.agents/handbuch/fragen.txt', 'Unterricht/Offen/**/*', 'Unterricht/**/Vorschau.html'} <= set(r['ausnahmen'])
-                   for r in soll if r['target'] == 'push'), 'Frei-Muster sind in jedem Push-Ruleset ausgenommen')
+                   for r in soll if 'file_path_restriction' in r['regeln']), 'Frei-Muster sind in jedem Pfad-Ruleset ausgenommen')
         pruefe('#Handbuch.html' not in nach['Schutz: Werkzeug']['gesperrt'] and {'.agents/**/*', '.claude/**/*', '.gemini/**/*'} <= set(nach['Schutz: Werkzeug']['gesperrt']),
                'Werkzeug gesperrt, das Handbuch nicht (automatische Teile, Bot)')
         g = nach['Schutz: grundstufe']
@@ -242,7 +247,7 @@ def main():
                 with open(antwort, 'w', encoding='utf-8') as f:
                     json.dump({'rulesets': rulesets, 'teams': nr}, f)
             r = subprocess.run([sys.executable, SCHUTZ_GITHUB] + list(args or ['--pruefen', '--repo', 'test/test']), cwd=repo,
-                               env=dict(env, BYCS_RULESETS_TEST=antwort), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                               env=dict(env, UNTERRICHT_RULESETS_TEST=antwort), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             return r.returncode, r.stdout.decode('utf-8', 'replace')
 
         def kopie():
@@ -258,9 +263,22 @@ def main():
         code, aus = schutz(anders)
         pruefe(code == 1 and 'Schutz: Werkzeug' in aus and '.claude/**/*' in aus, '--pruefen: gesperrter Pfad fehlt: Fehler', aus)
         anders = kopie()
+        groesse = next(r for r in anders if r['name'] == 'Schutz: Dateigröße')
+        groesse['rules'] = [{'type': 'file_extension_restriction', 'parameters': {'restricted_file_extensions': ['*.zip']}},
+                            {'type': 'max_file_size', 'parameters': {'max_file_size': 50}}]
+        code, aus = schutz(anders)
+        pruefe(code == 1 and 'Dateigröße' in aus and '50 MB' in aus and '.h5p' in aus,
+               '--pruefen: andere Größe oder fehlende Endung bei Dateigröße: Fehler', aus)
+        anders = kopie()
         anders[1]['bypass_actors'].append({'actor_id': 5, 'actor_type': 'RepositoryRole', 'bypass_mode': 'always'})
         code, aus = schutz(anders)
         pruefe(code == 1 and 'vorbei dürfen' in aus, '--pruefen: jemand darf zusätzlich vorbei: Fehler', aus)
+        anders = kopie()
+        for a in next(r for r in anders if r['name'] == 'Schutz: Dateigröße')['bypass_actors']:
+            a['bypass_mode'] = 'pull_request'
+        code, aus = schutz(anders)
+        pruefe(code == 1 and 'Dateigröße' in aus and 'pull_request' in aus,
+               '--pruefen: Owner nur noch bei Pull Requests vorbei: Fehler', aus)
         anders = kopie()
         anders[0]['enforcement'] = 'disabled'
         code, aus = schutz(anders)
@@ -308,12 +326,12 @@ def main():
         pruefe(code == 1 and 'kennt Git hier nicht' in aus, 'unbekannter Commit: Fehler', aus)
 
         print('Werkzeugschutz: Werkzeug ändern nur Werkzeug-Verantwortliche')
-        # Eine Teams-Datei statt GitHub (BYCS_TEAMS_TEST in pruefen.py), für den Lauf und mit BYCS_ICH für den Rechner
+        # Eine Teams-Datei statt GitHub (UNTERRICHT_TEAMS_TEST in pruefen.py), für den Lauf und mit UNTERRICHT_ICH für den Rechner
         teams = os.path.join(tmp, 'teams.txt')
         with open(teams, 'w', encoding='utf-8') as f:
             f.write('werkzeug-verantwortliche: chefin\nethik: ethikerin\npug: politiker, chefin, beides\n'
                     'grundstufe: metaller, beides\n')
-        env['BYCS_TEAMS_TEST'] = teams
+        env['UNTERRICHT_TEAMS_TEST'] = teams
         zurueck = os.path.join(tmp, 'zurueck.txt')   # pruefen.py --zurueckhalten schreibt hier hinein
 
         def zurueckgehalten():
@@ -321,7 +339,7 @@ def main():
                 return f.read().split()
 
         env['GITHUB_RUN_ATTEMPT'] = '2'   # GITHUB_TRIGGERING_ACTOR steht ab hier für "hat den Lauf wiederholt"
-        git('config', '--unset', 'bycs.werkzeug')
+        git('config', '--unset', 'unterricht.werkzeug')
 
         print('Lauf von Hand (Run workflow): nur Werkzeug-Verantwortliche')
         env['GITHUB_TRIGGERING_ACTOR'] = 'Autorin'
@@ -424,11 +442,11 @@ def main():
         env['GITHUB_RUN_ATTEMPT'] = '2'
         del env['GITHUB_TRIGGERING_ACTOR']
 
-        print('Jeder Push zählt für sich (BYCS_PUSHES)')
+        print('Jeder Push zählt für sich (UNTERRICHT_PUSHES)')
         ethik_push = kopf()
         schreibe('Ressourcen/Test-Schutz.txt', 'x')
         commit('Später etwas anderes [intern]')
-        env['BYCS_PUSHES'] = '%s:metaller' % ethik_push
+        env['UNTERRICHT_PUSHES'] = '%s:metaller' % ethik_push
         env['GITHUB_ACTOR'] = 'chefin'
         code, aus = pruefen('--seit', basis)
         pruefe(code == 1 and 'metaller (Unterricht/ALLE10/Eth' in aus and 'chefin' not in aus,
@@ -437,13 +455,13 @@ def main():
         code, aus = pruefen('--seit', basis)
         pruefe(code == 0, 'Werkzeug-Verantwortliche wiederholen den Lauf: besteht', aus)
         del env['GITHUB_TRIGGERING_ACTOR']
-        env['BYCS_PUSHES'] = '%s:ethikerin' % ethik_push
+        env['UNTERRICHT_PUSHES'] = '%s:ethikerin' % ethik_push
         env['GITHUB_ACTOR'] = 'metaller'
         code, aus = pruefen('--seit', basis)
         pruefe(code == 0, 'Ethik gepusht von ethikerin, danach anderes von metaller: besteht', aus)
         aendere_skill(9)
         commit('Skill von Werkzeug-Verantwortlichen [intern]')
-        env['BYCS_PUSHES'] = '%s:metaller %s:chefin' % (ethik_push, kopf())
+        env['UNTERRICHT_PUSHES'] = '%s:metaller %s:chefin' % (ethik_push, kopf())
         schreibe('Ressourcen/Test-Schutz.txt', 'y')
         commit('Noch etwas anderes [intern]')
         env['GITHUB_ACTOR'] = 'politiker'
@@ -458,7 +476,7 @@ def main():
         code, aus = pruefen('--seit', basis, '--zurueckhalten', zurueck)
         pruefe(code == 0 and zurueckgehalten() == [], 'Mitglied des Teams wiederholt den Lauf: nichts mehr zurückgehalten', aus)
         del env['GITHUB_TRIGGERING_ACTOR']
-        del env['BYCS_PUSHES']
+        del env['UNTERRICHT_PUSHES']
         env['GITHUB_ACTOR'] = 'metaller'
         git('reset', '-q', '--hard', basis)
         schreibe('Unterricht/MGF10/LF1/BW1/Test-Schutz/Fragen-Schutz.xml', xml)
@@ -479,89 +497,89 @@ def main():
         schreibe('Unterricht/ALLE10/Eth/BW7/Test-Schutz/Fragen-Schutz.xml', xml)
         commit('Ethik vom Team [intern]')
         env['GITHUB_ACTOR'] = 'ethikerin'
-        del env['BYCS_TEAMS_TEST']
+        del env['UNTERRICHT_TEAMS_TEST']
         code, aus = pruefen('--seit', basis)
         pruefe(code == 1 and 'nicht lesen' in aus and 'TEAM_APP_KEY' in aus, 'GitHub kann die Teams nicht lesen: Fehler, es wird nichts zugestellt', aus)
         git('reset', '-q', '--hard', basis)
 
         print('Abteilungsschutz am Rechner: GitHub fragen, sonst die Git-Geschichte')
-        env['BYCS_TEAMS_TEST'] = teams
+        env['UNTERRICHT_TEAMS_TEST'] = teams
         ethik = 'Unterricht/ALLE10/Eth/BW7/Test-Schutz/Fragen-Schutz.xml'
         schreibe(ethik, xml)
-        env['BYCS_ICH'] = 'ethikerin'
+        env['UNTERRICHT_ICH'] = 'ethikerin'
         code, aus = pruefen('--intern')
         pruefe(code == 0 and 'laut GitHub' not in aus, 'im zuständigen Team: besteht', aus)
-        env['BYCS_ICH'] = 'beides'
+        env['UNTERRICHT_ICH'] = 'beides'
         code, aus = pruefen('--intern')
         pruefe(code == 1 and 'Teams "ethik"' in aus and 'laut GitHub' in aus, 'fremdes Team: Fehler, Team genannt', aus)
-        env['BYCS_ICH'] = 'chefin'
+        env['UNTERRICHT_ICH'] = 'chefin'
         code, aus = pruefen('--intern')
         pruefe(code == 0 and 'laut GitHub' not in aus, 'Werkzeug-Verantwortliche laut GitHub: besteht', aus)
-        env['BYCS_ICH'] = '-'
+        env['UNTERRICHT_ICH'] = '-'
         code, aus = pruefen('--intern')
         pruefe(code == 0 and 'nicht erreichbar' in aus and 'Teams "ethik"' in aus,
                'GitHub nicht erreichbar, noch nichts im Bereich: nur Warnung', aus)
-        env['BYCS_ICH'] = 'niemand'   # Zugang ohne read:org (Cloud-Sitzung): GitHub liefert keine Teams
+        env['UNTERRICHT_ICH'] = 'niemand'   # Zugang ohne read:org (Cloud-Sitzung): GitHub liefert keine Teams
         code, aus = pruefen('--intern')
         pruefe(code == 0 and 'nicht erreichbar' in aus and 'Teams "ethik"' in aus and 'laut GitHub' not in aus,
                'GitHub liefert keine Teams (Zugang ohne read:org): wie nicht erreichbar, nur Warnung', aus)
         code, aus = pruefen('--rechte')
         pruefe(code == 0 and 'Teams: unbekannt' in aus and 'Teams: keine' not in aus,
                'GitHub liefert keine Teams: --rechte meldet Teams unbekannt', aus)
-        env['BYCS_ICH'] = '-'
+        env['UNTERRICHT_ICH'] = '-'
         commit('Ethik früher [intern]')
         schreibe(ethik, xml.replace('<quiz>', '<quiz><!-- später -->'))
         code, aus = pruefen('--intern')
         pruefe(code == 0 and 'nicht erreichbar' not in aus, 'GitHub nicht erreichbar, früher schon im Bereich: keine Warnung', aus)
         git('reset', '-q', '--hard', basis)
         schreibe(ethik, xml)
-        git('config', 'bycs.werkzeug', 'ja')
+        git('config', 'unterricht.werkzeug', 'ja')
         code, aus = pruefen('--intern')
         pruefe(code == 0 and 'laut GitHub' not in aus and 'nicht erreichbar' not in aus,
-               'GitHub nicht erreichbar, bycs.werkzeug ja: keine Prüfung', aus)
-        env['BYCS_ICH'] = 'metaller'
+               'GitHub nicht erreichbar, unterricht.werkzeug ja: keine Prüfung', aus)
+        env['UNTERRICHT_ICH'] = 'metaller'
         code, aus = pruefen('--intern')
-        pruefe(code == 1 and 'Teams "ethik"' in aus and 'bycs.werkzeug "ja"' in aus,
-               'bycs.werkzeug ja, laut GitHub aber nicht Werkzeug-Verantwortliche: GitHub geht vor, Fehler', aus)
-        git('config', '--unset', 'bycs.werkzeug')
-        env['BYCS_ICH'] = '-'
+        pruefe(code == 1 and 'Teams "ethik"' in aus and 'unterricht.werkzeug "ja"' in aus,
+               'unterricht.werkzeug ja, laut GitHub aber nicht Werkzeug-Verantwortliche: GitHub geht vor, Fehler', aus)
+        git('config', '--unset', 'unterricht.werkzeug')
+        env['UNTERRICHT_ICH'] = '-'
         os.remove(os.path.join(repo, ethik))
 
-        print('Werkzeug-Verantwortliche am Rechner: GitHub geht vor, sonst bycs.werkzeug')
+        print('Werkzeug-Verantwortliche am Rechner: GitHub geht vor, sonst unterricht.werkzeug')
         aendere_skill(8)
-        env['BYCS_ICH'] = 'chefin'
+        env['UNTERRICHT_ICH'] = 'chefin'
         code, aus = pruefen('--intern')
-        pruefe(code == 0, 'laut GitHub Werkzeug-Verantwortliche, ohne bycs.werkzeug: Skill ändern besteht', aus)
-        env['BYCS_ICH'] = 'ethikerin'
-        git('config', 'bycs.werkzeug', 'ja')
+        pruefe(code == 0, 'laut GitHub Werkzeug-Verantwortliche, ohne unterricht.werkzeug: Skill ändern besteht', aus)
+        env['UNTERRICHT_ICH'] = 'ethikerin'
+        git('config', 'unterricht.werkzeug', 'ja')
         code, aus = pruefen('--intern')
-        pruefe(code == 1 and 'ändern nur Werkzeug-Verantwortliche' in aus and 'bycs.werkzeug "ja"' in aus,
-               'bycs.werkzeug ja, laut GitHub nicht im Team: Skill ändern ist ein Fehler', aus)
-        git('config', '--unset', 'bycs.werkzeug')
-        env['BYCS_ICH'] = '-'
+        pruefe(code == 1 and 'ändern nur Werkzeug-Verantwortliche' in aus and 'unterricht.werkzeug "ja"' in aus,
+               'unterricht.werkzeug ja, laut GitHub nicht im Team: Skill ändern ist ein Fehler', aus)
+        git('config', '--unset', 'unterricht.werkzeug')
+        env['UNTERRICHT_ICH'] = '-'
         git('checkout', '--', '.agents/skills/baue-arbeitsblatt/SKILL.md')
 
         print('Auskunft --rechte: dieselbe Entscheidung wie die Prüfung')
-        env['BYCS_ICH'] = 'chefin'
+        env['UNTERRICHT_ICH'] = 'chefin'
         code, aus = pruefen('--rechte')
         pruefe(code == 0 and 'Werkzeug-Verantwortliche: ja (laut GitHub)' in aus and 'pug' in aus and 'Name: Test' in aus
                and 'Login: @chefin' in aus and '"Ersteller: Test, @chefin"' in aus,
                'laut GitHub im Team: ja, Teams und Name', aus)
-        env['BYCS_ICH'] = 'ethikerin'
-        git('config', 'bycs.werkzeug', 'ja')
+        env['UNTERRICHT_ICH'] = 'ethikerin'
+        git('config', 'unterricht.werkzeug', 'ja')
         code, aus = pruefen('--rechte')
         pruefe(code == 0 and 'Werkzeug-Verantwortliche: nein (laut GitHub)' in aus and 'WARNUNG' in aus,
-               'bycs.werkzeug ja, laut GitHub nicht im Team: nein, mit Warnung', aus)
-        env['BYCS_ICH'] = '-'
+               'unterricht.werkzeug ja, laut GitHub nicht im Team: nein, mit Warnung', aus)
+        env['UNTERRICHT_ICH'] = '-'
         code, aus = pruefen('--rechte')
         pruefe(code == 0 and 'Werkzeug-Verantwortliche: ja (GitHub nicht erreichbar' in aus and 'Teams: unbekannt' in aus,
-               'GitHub nicht erreichbar: bycs.werkzeug entscheidet', aus)
-        git('config', '--unset', 'bycs.werkzeug')
+               'GitHub nicht erreichbar: unterricht.werkzeug entscheidet', aus)
+        git('config', '--unset', 'unterricht.werkzeug')
         code, aus = pruefen('--rechte')
-        pruefe(code == 0 and 'Werkzeug-Verantwortliche: nein' in aus, 'ohne GitHub und ohne bycs.werkzeug: nein', aus)
+        pruefe(code == 0 and 'Werkzeug-Verantwortliche: nein' in aus, 'ohne GitHub und ohne unterricht.werkzeug: nein', aus)
 
         print('Notizschutz: Im gemeinsamen Notizbuch prüft die Prüfung, was sich geändert hat')
-        env['BYCS_TEAMS_TEST'] = teams
+        env['UNTERRICHT_TEAMS_TEST'] = teams
         notizen = 'ToDo/Alle-NOTIZEN.md'
         fremd = '- [ ] **Fremd (2026-11-01, Ersteller: Autor B):** Text.\n  - Unterpunkt.\n'
         eigen = '- [ ] **Eigen (2026-11-14, Ersteller: Autorin A, @autorin):** Text.\n'
@@ -721,11 +739,11 @@ def main():
         del env['GITHUB_TRIGGERING_ACTOR']
         git('reset', '-q', '--hard', basis)
         del env['GITHUB_ACTOR']
-        git('config', '--unset', 'bycs.werkzeug')
+        git('config', '--unset', 'unterricht.werkzeug')
         zettel(fremd.replace('Text.', 'Anderer Text.'))
         code, aus = pruefen('--intern')
         pruefe(code == 1 and 'Notizschutz' in aus and 'Fremde Einträge' in aus, 'am Rechner ohne Werkzeugrecht: fremden Eintrag ändern ist ein Fehler', aus)
-        env['BYCS_ICH'] = 'politiker'   # am Rechner mit Verbindung: der eigene Login kommt von GitHub
+        env['UNTERRICHT_ICH'] = 'politiker'   # am Rechner mit Verbindung: der eigene Login kommt von GitHub
         git('config', 'user.name', 'Politiker P')
         zettel(fremd + eigen + '- [ ] **Am Rechner (2026-11-14, Ersteller: Politiker P, @politiker):** Text.\n')
         code, aus = pruefen('--intern')
@@ -736,16 +754,16 @@ def main():
         zettel(fremd + eigen + '- [ ] **Am Rechner (2026-11-14, Ersteller: Politiker P):** Text.\n')
         code, aus = pruefen('--intern')
         pruefe(code == 1 and 'ohne GitHub-Login' in aus, 'am Rechner mit Verbindung: Login fehlt ist ein Fehler', aus)
-        env['BYCS_ICH'] = '-'
+        env['UNTERRICHT_ICH'] = '-'
         code, aus = pruefen('--intern')
         pruefe(code == 0, 'am Rechner ohne Verbindung: Name genügt vorerst (GitHub prüft den Login)', aus)
         git('config', 'user.name', 'Test')
         zettel(fremd.replace('Text.', 'Anderer Text.'))
-        git('config', 'bycs.werkzeug', 'ja')
+        git('config', 'unterricht.werkzeug', 'ja')
         code, aus = pruefen('--intern')
         pruefe(code == 0, 'am Rechner von Werkzeug-Verantwortlichen: besteht', aus)
         git('reset', '-q', '--hard', basis)
-        git('config', 'bycs.werkzeug', 'ja')
+        git('config', 'unterricht.werkzeug', 'ja')
 
         print('Neues Lernpaket')
         zahl = int(re.search(r'<b>(\d+)</b> Lernpakete', lies(DATEI)).group(1))
@@ -760,7 +778,7 @@ def main():
         pruefe('<b>%d</b> Lernpakete' % (zahl + 1) in s and 'Testpaket Zwei' in s, 'auch noch nicht committet: Paket unter "Alle Lernpakete", Zahl erhöht')
         pruefe('Testpaket Zwei V1.2:</b> Tippfehler in Aufgabe 3 korrigiert' in s, 'Änderungstext unter "Was ist neu"')
         commit('Paket' + CLAUDE)
-        z = os.path.join(repo, 'BYCS-SYNC', 'Pakete', 'ALLE10', 'Eth', 'ALLE10_Eth_BW7_Testpaket_scorm.zip')
+        z = os.path.join(repo, 'FREIGABE-SYNC', 'Pakete', 'ALLE10', 'Eth', 'ALLE10_Eth_BW7_Testpaket_scorm.zip')
         os.makedirs(os.path.dirname(z), exist_ok=True)
         with zipfile.ZipFile(z, 'w') as a:
             a.writestr('index.html', seite)
@@ -768,14 +786,14 @@ def main():
         code, aus = pruefen()
         pruefe(code == 1 and 'gehört nicht in Git' in aus, 'Paket trotzdem in Git: Fehler', aus)
         git('rm', '-q', '--cached', '--', os.path.relpath(z, repo))
-        schreibe('BYCS-SYNC/Kurse/Kurs-Probe.mbz', 'x')
-        git('add', '-f', '--', 'BYCS-SYNC/Kurse/Kurs-Probe.mbz')
+        schreibe('FREIGABE-SYNC/Kurse/Kurs-Probe.mbz', 'x')
+        git('add', '-f', '--', 'FREIGABE-SYNC/Kurse/Kurs-Probe.mbz')
         code, aus = pruefen()
         pruefe(code == 1 and 'Kurs-Probe.mbz' in aus, 'Kurssicherung in Git: Fehler', aus)
-        git('rm', '-q', '--cached', '--', 'BYCS-SYNC/Kurse/Kurs-Probe.mbz')
+        git('rm', '-q', '--cached', '--', 'FREIGABE-SYNC/Kurse/Kurs-Probe.mbz')
         code, aus = pruefen()
-        pruefe(code == 1 and 'liegt im Projektordner' in aus, 'Ordner BYCS-SYNC/ im Projektordner: Fehler (Pakete nur über GitHub)', aus)
-        shutil.rmtree(os.path.join(repo, 'BYCS-SYNC'))
+        pruefe(code == 1 and 'liegt im Projektordner' in aus, 'Ordner FREIGABE-SYNC/ im Projektordner: Fehler (Pakete nur über GitHub)', aus)
+        shutil.rmtree(os.path.join(repo, 'FREIGABE-SYNC'))
 
         basis = kopf()
         schreibe('Unterricht/ALLE10/Eth/BW7/Testpaket/index.html', seite.replace('</html>', '<p>neu</p></html>'))

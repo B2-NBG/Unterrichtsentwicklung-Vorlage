@@ -37,6 +37,6 @@ unausgefüllte Fassung für Papier (auch als PDF speicherbar)." Dazu offene Punk
   eine Minute, `zustellung.md`). Lernpakete und Kurssicherungen werden nie committet. Der Lehrkraft sagen: Schlägt der
   Lauf fehl, kommt eine Mail von GitHub, und es wird nichts zugestellt. Kontrolle bei Bedarf:
   `python .agents/gemeinsam/scripts/kette-pruefen.py --zugestellt`.
-- **GitHub weist den Push ab** („GH013: Repository rule violations“, „File path is restricted“): Der Push enthält Werkzeug oder Unterricht
-  eines fremden Teams und ist als Ganzes abgewiesen (`schutz.md`). Nie erzwingen, nie einen anderen Branch oder Weg suchen,
-  keine Rulesets ändern (meist: die gesperrte Änderung aus den Commits nehmen, Wunsch weitergeben). Anhalten, `git log origin/main..HEAD --stat` zeigen, die gesperrten Dateien nennen und fragen.
+- **GitHub weist den Push ab** („GH013: Repository rule violations“), als Ganzes (`schutz.md`): „File path is restricted“ heißt Werkzeug
+  oder Unterricht eines fremden Teams, „File size limit exceeded“ oder „File extension is restricted“ eine Datei über 5 MB bzw. `.h5p`/`.zip`
+  (aus den Commits nehmen, verkleinern oder weglassen). Nie erzwingen, nie einen anderen Branch oder Weg suchen, keine Rulesets ändern (meist: die gesperrte Änderung aus den Commits nehmen, Wunsch weitergeben). Anhalten, `git log origin/main..HEAD --stat` zeigen, die gesperrten Dateien nennen und fragen.

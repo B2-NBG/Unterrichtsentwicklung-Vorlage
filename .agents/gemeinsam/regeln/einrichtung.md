@@ -16,7 +16,7 @@ der Teamordner liegt, oder gibt die Anleitung aus (Link zum Ordner im Web, "…"
 Festplattenvollzugriff für VS Code, sonst "Operation not permitted"; die KI kann das Fenster öffnen:
 `open "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles"`). Die Anleitung der Lehrkraft ganz
 weitergeben, nach ihrem "fertig" erneut prüfen. Liegt der Ordner an einer ungewöhnlichen Stelle:
-`git config bycs.ziel "<Pfad zum Ordner BYCS-SYNC>"`. Nachzuholen ist nichts: GitHub stellt auch ohne Teamordner zu.
+`git config unterricht.ziel "<Pfad zum Ordner FREIGABE-SYNC>"`. Nachzuholen ist nichts: GitHub stellt auch ohne Teamordner zu.
 
 Im Teamordner wird nie gelöscht: Umbenannte oder entfernte Pakete, Kurse und Tests bleiben dort liegen, bis die
 Lehrkraft sie löscht.
@@ -30,10 +30,10 @@ neuen Pakets (Lauf nach 10 Minuten mit "Re-run jobs" wiederholen) oder der Flow 
 
 ## Linkseite (nur bei `power-automate`)
 Die Download-Links der Lernpakete holt `python .agents/gemeinsam/scripts/linkseite.py`. Die Adresse liest es aus der
-Umgebung `BYCS_LINKSEITE`, aus `git config bycs.linkseite` oder aus der Verknüpfung `# ByCS-Links` im Teamordner (sie
+Umgebung `UNTERRICHT_LINKSEITE`, aus `git config unterricht.linkseite` oder aus der Verknüpfung `# Paket-Links` im Teamordner (sie
 enthält einen Schlüssel: nie ins Repo, nie in den Chat). Die Linkseite verlangt ein Passwort: Auf GitHub steht es in
 der Adresse im Secret (`…&pw=…`). Am Rechner fragt `linkseite.py` beim ersten Mal in einem kleinen Fenster danach und
-merkt es in `.git/config` (`git config bycs.linkpasswort`), auch wenn die KI das Skript startet. Nie im Chat nach dem
+merkt es in `.git/config` (`git config unterricht.linkpasswort`), auch wenn die KI das Skript startet. Nie im Chat nach dem
 Passwort fragen und es nie ausgeben. Meldet es "ohne Link", liegt das Paket noch nicht im Teamordner oder OneDrive ist
 noch nicht fertig.
 

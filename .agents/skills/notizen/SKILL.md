@@ -18,7 +18,7 @@ Alle liegen direkt in `ToDo/`, sonst liegt dort nichts (keine Ordner, kein Mater
   eigenen Teams (nur in deren Notizbücher schreiben), die Zeile „Werkzeug-Verantwortliche“ sagt, ob alles erlaubt
   ist, die Zeile „Ersteller in Notizen“ steht so in jedem neuen Eintrag (eigener Name und GitHub-Login). Meldet sie
   „Login: unbekannt“ (GitHub nicht erreichbar), keinen neuen Eintrag schreiben, sondern sagen, dass es geht, sobald
-  GitHub erreichbar ist. `git config bycs.werkzeug` nie selbst lesen oder setzen.
+  GitHub erreichbar ist. `git config unterricht.werkzeug` nie selbst lesen oder setzen.
 - Der Schutz steckt nicht in diesem Skill, sondern in den Rulesets auf GitHub und in `pruefen.py` („Notizbücher“ und
   „Notizschutz“ in `schutz.md`). Dieser Skill schreibt nur so, dass die Prüfung besteht.
 - Notizbücher und `ToDo/` nie löschen.

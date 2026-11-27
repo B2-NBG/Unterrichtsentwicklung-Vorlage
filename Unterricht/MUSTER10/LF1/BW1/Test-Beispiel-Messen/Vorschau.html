@@ -11,7 +11,7 @@
     Vorschau.html nie von Hand ändern: Änderungen gehören in diese Vorlage, dann quiz-vorschau.py --alle.
   - Schülersicht: Fragen beantworten, "Prüfen" zeigt Rückmeldung und Punkte (wie ein Test mit sofortiger Rückmeldung).
   - Review-Sicht: alle Lösungen, Punkte, Rückmeldungen und Hinweise auf typische Fehler.
-  - Offline, keine externen Ressourcen. Aussehen angelehnt an Moodle 4 (ByCS Lernplattform).
+  - Offline, keine externen Ressourcen. Aussehen angelehnt an Moodle 4.
 -->
 <style>
 :root{
@@ -182,7 +182,7 @@ ul.warnliste{margin:8px 0 0;padding-left:20px}
 </style>
 </head>
 <body>
-<div class="navbar"><span class="brand">ByCS Lernplattform</span><span class="was">Quiz-Vorschau ohne Upload (Moodle-XML, nur für Lehrkräfte)</span></div>
+<div class="navbar"><span class="brand">Moodle</span><span class="was">Quiz-Vorschau ohne Upload (Moodle-XML, nur für Lehrkräfte)</span></div>
 <div class="wrap">
   <div id="fehler" hidden></div>
   <div id="start">
@@ -428,7 +428,7 @@ bnN3ZXI+PHRleHQ+MTAwMCDCtW08L3RleHQ+PC9hbnN3ZXI+CiAgICA8L3N1YnF1ZXN0aW9uPgogIDwv
     if (o.typ === 'matching' && o.subs.filter(function (s) { return htmlText(s.q).trim(); }).length < 3) w.push('Weniger als drei Zuordnungspaare.');
     if ((/einsteiger/i.test(o.kat) || /^E\d/.test(o.name)) && !htmlText(o.general).trim() && o.typ !== 'description') w.push('Einsteigerniveau ohne allgemeines Feedback (generalfeedback).');
     var sonder = (q.textContent.match(/[\u2018-\u201f\u2190-\u21ff\u2026\u2192\u21d2]/g) || []).filter(function (c, i, a) { return a.indexOf(c) === i; });
-    if (sonder.length) w.push('Sonderzeichen ' + sonder.join(' ') + ' gefunden: Die ByCS kann beim Import scheitern (gerade Anführungszeichen verwenden, keine Pfeile).');
+    if (sonder.length) w.push('Sonderzeichen ' + sonder.join(' ') + ' gefunden: Die Lernplattform kann beim Import scheitern (gerade Anführungszeichen verwenden, keine Pfeile).');
     if (!TYPNAME[o.typ]) w.push('Fragetyp "' + o.typ + '" kann die Vorschau nicht darstellen.');
   }
   function parseQuiz(text) {
@@ -668,7 +668,7 @@ bnN3ZXI+PHRleHQ+MTAwMCDCtW08L3RleHQ+PC9hbnN3ZXI+CiAgICA8L3N1YnF1ZXN0aW9uPgogIDwv
     return {
       valid: function () { return ta.value.trim() && ta.value.trim() !== (q.vorlage || '').trim() ? '' : LEER; },
       grade: function () {
-        return { score: null, fb: '<div class="feedback">' + (q.typ === 'aitext' ? 'In der ByCS gibt hier die KI eine Rückmeldung und einen Punktevorschlag. Das kann die Vorschau nicht.' : 'Diese Antwort bewertet die Lehrkraft nach der Abgabe von Hand.') + '</div>', right: '' };
+        return { score: null, fb: '<div class="feedback">' + (q.typ === 'aitext' ? 'In der Lernplattform gibt hier die KI eine Rückmeldung und einen Punktevorschlag. Das kann die Vorschau nicht.' : 'Diese Antwort bewertet die Lehrkraft nach der Abgabe von Hand.') + '</div>', right: '' };
       }
     };
   }
@@ -685,7 +685,7 @@ bnN3ZXI+PHRleHQ+MTAwMCDCtW08L3RleHQ+PC9hbnN3ZXI+CiAgICA8L3N1YnF1ZXN0aW9uPgogIDwv
     var f = $('.formulation', box), ctl = $('.im-controls', box);
     box._q = q; box._st = { geprueft: false, score: null, leer: true };
     if (!BAU[q.typ]) {
-      if (q.typ !== 'description') f.insertAdjacentHTML('beforeend', '<div class="hinweis">Fragetyp "' + esc(q.typ) + '" kann die Vorschau nicht darstellen. Er wird in der ByCS nur importiert, wenn das passende Plugin vorhanden ist.</div>');
+      if (q.typ !== 'description') f.insertAdjacentHTML('beforeend', '<div class="hinweis">Fragetyp "' + esc(q.typ) + '" kann die Vorschau nicht darstellen. Er wird in der Lernplattform nur importiert, wenn das passende Plugin vorhanden ist.</div>');
       return box;
     }
     box._ctl = BAU[q.typ](q, f, q.nr, box);

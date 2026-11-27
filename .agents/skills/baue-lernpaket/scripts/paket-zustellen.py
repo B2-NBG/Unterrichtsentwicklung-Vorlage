@@ -1,5 +1,5 @@
 """
-paket-zustellen.py - baut, was abgeleitet ist, und schickt alles, was in den Teamordner BYCS-SYNC gehört, an den Flow
+paket-zustellen.py - baut, was abgeleitet ist, und schickt alles, was in den Teamordner FREIGABE-SYNC gehört, an den Flow
 (Power Automate), der es dort ablegt. In Git liegen nur die Quellen:
   - Lernpakete: aus dem Themenordner gebaut (build-scorm.py --nur-packen)       -> Pakete/<Klasse>/<Fach>/…_scorm.zip
   - Kurse: aus Unterricht/<Klasse>[/<Fach>]/Kurs-….json gebaut (build-mbz.py)       -> Kurse/<Klasse>[/<Fach>]/Kurs-….mbz
@@ -16,7 +16,7 @@ Aufruf (im Projektordner, am Mac python3 statt python):
   --ohne <Datei>    zurückgehaltene Ordner und Dateien (aus pruefen.py --zurueckhalten) auslassen, dazu jeden Kurs,
                     der etwas davon mitliefert
   --alle      alle Lernpakete, Kurse, Test-Ordner und das Handbuch (z. B. nach einer Änderung an scorm-api.js)
-  --probe     legt alles unter <Bereich>/_Pilot/… ab statt am echten Ort (nichts in der ByCS wird berührt; Handbuch: Pakete/_Pilot/)
+  --probe     legt alles unter <Bereich>/_Pilot/… ab statt am echten Ort (nichts in der Lernplattform wird berührt; Handbuch: Pakete/_Pilot/)
   --trocken   nur bauen und zeigen, was geschickt würde
   --ausgabe <Ordner>   statt an den Flow in diesen Ordner schreiben (Zustellung "download" in schule.txt: der Workflow
                     bietet den Ordner danach als Download des Laufs an), Unterordner wie im Teamordner
@@ -27,7 +27,7 @@ sie lädt, ändert sich bauen.py, alle, deren gebaute Seite dadurch anders wird 
 Ein Kurs wird neu gebaut, wenn sich sein Kursplan geändert hat, eine Datei, die er ohne Link nennt (Banner, Test-.mbz,
 Dateien, mitgelieferte Lernpakete), oder das Bauskript. Lernpakete mit Link holt Moodle selbst: kein Neubau.
 Adresse und Schlüssel des Flows kommen aus der Umgebung (FLOW_URL, FLOW_SCHLUESSEL: GitHub-Secrets), die Linkseite aus
-BYCS_LINKSEITE; nie aus dem Repo und nie in die Ausgabe. Der Flow nimmt in Pakete/, Kurse/ und Tests/ (samt Unterordnern)
+UNTERRICHT_LINKSEITE; nie aus dem Repo und nie in die Ausgabe. Der Flow nimmt in Pakete/, Kurse/ und Tests/ (samt Unterordnern)
 nur .html, .mbz, .xml und _scorm.zip an, ganz oben nur das Handbuch, und ersetzt eine vorhandene Datei an Ort und Stelle
 (der Download-Link bleibt gleich). Der Flow löscht nie: Was im Repo gelöscht oder umbenannt wird, bleibt im Teamordner
 liegen, bis es dort jemand löscht.
@@ -108,7 +108,7 @@ def kurs_quellen(unterrichtsmaterial, kurs):
         d = (d or '').replace('\\', '/')
         if not d:
             continue
-        if d.startswith('BYCS-SYNC/Pakete/'):
+        if d.startswith('FREIGABE-SYNC/Pakete/'):
             q = unterrichtsmaterial.paket_quelle(d)
             if q and not mit_link:   # mitgeliefertes Paket: steckt im Kurs, Änderung braucht Neubau
                 quellen.add(q + '/')
@@ -157,17 +157,17 @@ def ohne_zurueckgehaltene(unterrichtsmaterial, themen, kurse, dateien, zurueck):
 
 
 def ziel(zip_pfad, probe=False):
-    """(pfad, datei) für den Flow aus dem Ort des Pakets: …/BYCS-SYNC/Pakete/<Klasse>/<Fach>/<Name>_scorm.zip."""
+    """(pfad, datei) für den Flow aus dem Ort des Pakets: …/FREIGABE-SYNC/Pakete/<Klasse>/<Fach>/<Name>_scorm.zip."""
     teile = os.path.abspath(zip_pfad).replace('\\', '/').split('/')
     klasse, fach, datei = teile[-3:]
-    if teile[-5:-3] != ['BYCS-SYNC', 'Pakete'] or not datei.endswith('_scorm.zip'):
-        raise ValueError('Kein Lernpaket unter BYCS-SYNC/Pakete/<Klasse>/<Fach>/: %s' % zip_pfad)
+    if teile[-5:-3] != ['FREIGABE-SYNC', 'Pakete'] or not datei.endswith('_scorm.zip'):
+        raise ValueError('Kein Lernpaket unter FREIGABE-SYNC/Pakete/<Klasse>/<Fach>/: %s' % zip_pfad)
     return '/'.join(['Pakete'] + ([PROBE] if probe else []) + [klasse, fach]), datei
 
 
 def ziel_kurs(unterrichtsmaterial, kurs, probe=False):
     """(pfad, datei) für den Flow aus dem Kursplan: Kurse/<Klasse>[/<Fach>]/Kurs-….mbz, wie der Ort unter Unterricht/."""
-    teile = unterrichtsmaterial.kursdatei(kurs).split('/')[1:]   # ohne BYCS-SYNC
+    teile = unterrichtsmaterial.kursdatei(kurs).split('/')[1:]   # ohne FREIGABE-SYNC
     if probe:
         teile.insert(1, PROBE)
     return '/'.join(teile[:-1]), teile[-1]
@@ -208,7 +208,7 @@ def einordnen(unterrichtsmaterial, wunsch):
     if w.lower() in ('handbuch', 'handbuch.html', HANDBUCH.lower()):
         return 'datei', HANDBUCH
     kurse = kursplaene(unterrichtsmaterial)
-    if w.lower() in ('kurse', 'bycs-sync/kurse', unterrichtsmaterial.ORDNER.lower() + '/kurse'):
+    if w.lower() in ('kurse', 'freigabe-sync/kurse', unterrichtsmaterial.ORDNER.lower() + '/kurse'):
         return 'kurse', ''
     for k in kurse:
         if w in (k, k.rsplit('/', 1)[-1], unterrichtsmaterial.kursname(k)):

@@ -37,7 +37,7 @@ def main():
     pruefe(pz.ziel_datei(t) == ('Tests/ALLE10/PuG/BW3/Test-Kuendigung', 'Fragen.xml'), 'Test-Ordner unter Tests/ mit gleichem Pfad')
     pruefe(pz.ziel_datei(t, probe=True)[0] == 'Tests/_Pilot/ALLE10/PuG/BW3/Test-Kuendigung', 'Test als Probe unter Tests/_Pilot')
     pruefe(pz.ziel_datei('Unterricht/ALLE10/PuG/BW3/Duale-Ausbildung/index.html') is None, 'eine Seite wird nicht als Datei geschickt (wird Paket)')
-    pruefe(pz.ziel_datei('BYCS-SYNC/Kurse/Kurs-X.mbz') is None, 'eine Kurssicherung kommt nie aus Git (wird gebaut)')
+    pruefe(pz.ziel_datei('FREIGABE-SYNC/Kurse/Kurs-X.mbz') is None, 'eine Kurssicherung kommt nie aus Git (wird gebaut)')
 
     print('Regeln des Flows')
     pruefe(pz.erlaubt('', '#Handbuch.html'), 'Handbuch ganz oben erlaubt')
@@ -97,7 +97,7 @@ def main():
         alt_root = m.ROOT
         m.ROOT = tmp
         os.makedirs(os.path.join(tmp, 'Unterricht', 'ALLE10', 'Eth'))
-        paket = 'BYCS-SYNC/Pakete/ALLE10/Eth/ALLE10_Eth_BW7_Testpaket_scorm.zip'
+        paket = 'FREIGABE-SYNC/Pakete/ALLE10/Eth/ALLE10_Eth_BW7_Testpaket_scorm.zip'
         plan = {'kurs': {'kurzname': 'Probe', 'banner': 'Ressourcen/Bilder/b.png'},
                 'abschnitte': [{'dateien': [{'typ': 'scorm', 'datei': paket, 'link': 'linkseite'}]}]}
         with open(os.path.join(tmp, 'Unterricht', 'ALLE10', 'Eth', 'Kurs-ALLE10-Eth.json'), 'w', encoding='utf-8') as f:

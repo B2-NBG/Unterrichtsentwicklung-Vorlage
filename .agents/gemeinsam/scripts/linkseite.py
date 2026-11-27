@@ -1,17 +1,17 @@
 """
-linkseite.py - holt die Download-Links der Lernpakete von der Linkseite "ByCS-Links" (Power Automate).
+linkseite.py - holt die Download-Links der Lernpakete von der Linkseite "Paket-Links" (Power Automate).
 
 Jedes Lernpaket im Teamordner bekommt von selbst einen geteilten Download-Link. Die Linkseite listet sie je Dateiname.
 Der Kursbau (build-mbz.py) fragt hier nach, niemand tippt oder kopiert Links. Kurse und Tests haben keinen Link:
-Sie werden direkt aus dem Teamordner in die ByCS hochgeladen.
+Sie werden direkt aus dem Teamordner in die Lernplattform hochgeladen.
 
 Die Adresse der Linkseite enthält einen Schlüssel. Sie steht nur an einer Stelle im Repo: im Handbuch (#Handbuch.html, Knopf
 "Linkseite öffnen", Entscheidung vom 12.11.2026, das Repo ist privat). Sonst nirgends eintragen und nie ausgeben. Die Skripte lesen sie aus
-  1. der Umgebung BYCS_LINKSEITE   (GitHub: Secret, der Workflow baut damit die Kurse)
-  2. git config bycs.linkseite   (nur wenn von Hand gesetzt)
-  3. der Verknüpfung "# ByCS-Links.url" im Teamordner BYCS-SYNC (liegt dort für alle Kolleg/innen)
+  1. der Umgebung UNTERRICHT_LINKSEITE   (GitHub: Secret, der Workflow baut damit die Kurse)
+  2. git config unterricht.linkseite   (nur wenn von Hand gesetzt)
+  3. der Verknüpfung "# Paket-Links.url" im Teamordner FREIGABE-SYNC (liegt dort für alle Kolleg/innen)
 Die Linkseite verlangt außerdem ein Passwort (seit 13.11.2026). Auf GitHub steht es in der Adresse im Secret (…&pw=…). Am Rechner
-fragt das Skript einmal in einem Fenster danach und merkt es in .git/config (git config bycs.linkpasswort), nie im Repo, nie im Chat.
+fragt das Skript einmal in einem Fenster danach und merkt es in .git/config (git config unterricht.linkpasswort), nie im Repo, nie im Chat.
 
 Aufruf im Projektordner (am Mac python3 statt python):
   python .agents/gemeinsam/scripts/linkseite.py             Abgleich: welches Paket hat einen Link, welches nicht
@@ -43,10 +43,10 @@ def _profil():   # Schulprofil (schule.txt) über den Pfad laden: dieses Modul l
 
 
 PROFIL = _profil()
-VERKNUEPFUNG = '# ByCS-Links.url'
+VERKNUEPFUNG = '# Paket-Links.url'
 # Teamordner (schule.txt): Team, Bibliothek und Ordner in OneDrive/SharePoint; Link: der Ordner im Web, dort "..." > "Synchronisieren"
 # Ohne Teamordner (Zustellung "download") bleiben die Angaben leer: Dann gibt es keinen Teamordner und keine Linkseite.
-TEAM, BIB, SYNC = (PROFIL.felder('Teamordner', []) + ['', '', 'BYCS-SYNC'][len(PROFIL.felder('Teamordner', [])):])[:3]
+TEAM, BIB, SYNC = (PROFIL.felder('Teamordner', []) + ['', '', 'FREIGABE-SYNC'][len(PROFIL.felder('Teamordner', [])):])[:3]
 LINK = PROFIL.wert('Teamordner-Link', '')
 ANLEITUNG = """Teamordner "%s - %s/%s" nicht gefunden. Zugestellt wird trotzdem alles (GitHub nach dem Push);
 ohne Teamordner fehlen auf diesem Rechner nur die Download-Links für den Kursbau und die Dateien zum Hochladen in die %s.
@@ -58,10 +58,10 @@ So richtest du ihn ein:
   2. Nur am Mac: Systemeinstellungen > Datenschutz & Sicherheit > Festplattenvollzugriff, dort Visual Studio Code einschalten,
      dann VS Code ganz beenden (Cmd+Q) und neu öffnen. Sonst meldet der Mac "Operation not permitted".
   3. der KI Bescheid geben ("fertig"). Liegt der Ordner an einer ungewöhnlichen Stelle:
-     git config bycs.ziel "<Pfad zum Ordner %s>"
-""" % (TEAM, BIB, SYNC, PROFIL.wert('Plattform-Kurz', 'ByCS'), PROFIL.wert('Schulkonto', ''), LINK, SYNC)
+     git config unterricht.ziel "<Pfad zum Ordner %s>"
+""" % (TEAM, BIB, SYNC, PROFIL.wert('Plattform-Kurz', 'Moodle'), PROFIL.wert('Schulkonto', ''), LINK, SYNC)
 BIBLIOTHEK = '%s - %s' % (TEAM, BIB)
-ORDNER = '%s - %s' % (TEAM, SYNC)           # so heißt der Ordner, wenn nur BYCS-SYNC synchronisiert wird
+ORDNER = '%s - %s' % (TEAM, SYNC)           # so heißt der Ordner, wenn nur FREIGABE-SYNC synchronisiert wird
 # Zwei Aufbauten der Linkseite: alt <tr>…value="Link"…12/31/2026 1:05 PM, neu (ab 12.11.2026) <tr data-p="Pakete/…">…
 # data-link="Link"…31.12.2026 mit Ordnerpfad in der Namensspalte. Beide werden gelesen.
 RX_ZEILE = re.compile(r'<tr\b[^>]*>(.*?)</tr>', re.S)
@@ -70,7 +70,7 @@ RX_LINK = re.compile(r'(?:value|data-link)="(https://[^"]+)"')
 RX_DATUM = re.compile(r'<td>(\d{1,2}/\d{1,2}/\d{4} \d{1,2}:\d{2} [AP]M|\d{1,2}\.\d{1,2}\.\d{4}(?: \d{1,2}:\d{2})?)</td>')   # Spalte "Geändert"
 DATUMSFORMATE = ('%m/%d/%Y %I:%M %p', '%d.%m.%Y %H:%M', '%d.%m.%Y')
 LOGIN = 'data-login'                             # daran ist die Anmeldeseite der Linkseite zu erkennen (statt der Tabelle)
-PASSWORT = 'bycs.linkpasswort'                   # git config, nur in .git/config dieses Rechners, nie im Repo
+PASSWORT = 'unterricht.linkpasswort'                   # git config, nur in .git/config dieses Rechners, nie im Repo
 DOPPELT = []                                   # Namen, die die Linkseite beim letzten Abruf mehrfach nannte
 
 
@@ -87,8 +87,8 @@ def _git_config(name):
 
 
 def teamordner():
-    """Pfad des Teamordners BYCS-SYNC auf diesem Rechner, '' wenn er nicht synchronisiert ist."""
-    z = _git_config('bycs.ziel')
+    """Pfad des Teamordners FREIGABE-SYNC auf diesem Rechner, '' wenn er nicht synchronisiert ist."""
+    z = _git_config('unterricht.ziel')
     if z:
         m = re.match(r'/([A-Za-z])/(.*)$', z) if os.name == 'nt' else None   # Git-Bash-Pfad /c/Users/...
         z = '%s:/%s' % (m.group(1), m.group(2)) if m else z
@@ -103,7 +103,7 @@ def teamordner():
 
 
 def adresse():
-    a = os.environ.get('BYCS_LINKSEITE', '').strip() or _git_config('bycs.linkseite')   # GitHub: Secret BYCS_LINKSEITE
+    a = os.environ.get('UNTERRICHT_LINKSEITE', '').strip() or _git_config('unterricht.linkseite')   # GitHub: Secret UNTERRICHT_LINKSEITE
     if a:
         return a
     t = teamordner()
@@ -180,7 +180,7 @@ def _fragen(falsch):
     Das Fenster erscheint auch, wenn die KI das Skript startet. So kommt das Passwort nie in den Chat."""
     if os.environ.get('GITHUB_ACTIONS') or os.environ.get('CI'):
         return None
-    text = ('Das Passwort war falsch. ' if falsch else '') + 'Passwort der Linkseite "ByCS-Links" (wird auf diesem Rechner gemerkt):'
+    text = ('Das Passwort war falsch. ' if falsch else '') + 'Passwort der Linkseite "Paket-Links" (wird auf diesem Rechner gemerkt):'
     try:
         import tkinter
         from tkinter import simpledialog
@@ -188,7 +188,7 @@ def _fragen(falsch):
         w.withdraw()
         w.attributes('-topmost', True)
         try:
-            return simpledialog.askstring('ByCS-Links', text, show='*', parent=w) or None
+            return simpledialog.askstring('Paket-Links', text, show='*', parent=w) or None
         finally:
             w.destroy()
     except Exception:                                # kein tkinter oder kein Bildschirm
@@ -203,18 +203,18 @@ def _fragen(falsch):
 
 
 def _anmelden(a):
-    """Die Linkseite verlangt ein Passwort: gemerktes nehmen (Umgebung BYCS_LINKPASSWORT, git config bycs.linkpasswort),
+    """Die Linkseite verlangt ein Passwort: gemerktes nehmen (Umgebung UNTERRICHT_LINKPASSWORT, git config unterricht.linkpasswort),
     sonst fragen und in .git/config dieses Rechners merken. Gibt den Text der Seite zurück."""
     if re.search(r'[?&]pw=', a):
         raise LinkFehler('Das Passwort in der gespeicherten Adresse der Linkseite stimmt nicht mehr '
-                         '(GitHub: Secret BYCS_LINKSEITE, am Rechner: git config bycs.linkseite).')
-    pw = os.environ.get('BYCS_LINKPASSWORT', '').strip() or _git_config(PASSWORT)
+                         '(GitHub: Secret UNTERRICHT_LINKSEITE, am Rechner: git config unterricht.linkseite).')
+    pw = os.environ.get('UNTERRICHT_LINKPASSWORT', '').strip() or _git_config(PASSWORT)
     falsch = False
     for _ in range(4):
         if pw:
             text = _abruf(_mit_passwort(a, pw))
             if LOGIN not in text:
-                if pw != _git_config(PASSWORT) and not os.environ.get('BYCS_LINKPASSWORT'):
+                if pw != _git_config(PASSWORT) and not os.environ.get('UNTERRICHT_LINKPASSWORT'):
                     subprocess.run(['git', 'config', '--local', PASSWORT, pw], cwd=ROOT)
                 return text
             falsch = True

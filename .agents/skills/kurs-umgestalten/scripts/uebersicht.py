@@ -1,10 +1,10 @@
 """
-uebersicht.py - zeigt die Gliederung einer ByCS-Kurssicherung (Reiter, Unterreiter, Unterabschnitte, Anzahl der Inhalte,
+uebersicht.py - zeigt die Gliederung einer Moodle-Kurssicherung (Reiter, Unterreiter, Unterabschnitte, Anzahl der Inhalte,
 Kursbeginn) und gleicht sie mit Kursplan und Blockplan ab. Mit --entwurf entsteht ein Kursplan-Entwurf für einen neuen Kurs.
 
 Aufruf im Projektordner:
-  python .agents/skills/kurs-umgestalten/scripts/uebersicht.py --sicherung <ByCS.mbz> [--plan <Kursplan>]
-  python .agents/skills/kurs-umgestalten/scripts/uebersicht.py --sicherung <ByCS.mbz> --entwurf Ressourcen/Kursumbau/Kursumbau-<Kurs>.json
+  python .agents/skills/kurs-umgestalten/scripts/uebersicht.py --sicherung <Sicherung.mbz> [--plan <Kursplan>]
+  python .agents/skills/kurs-umgestalten/scripts/uebersicht.py --sicherung <Sicherung.mbz> --entwurf Ressourcen/Kursumbau/Kursumbau-<Kurs>.json
 """
 from __future__ import annotations
 
@@ -25,7 +25,7 @@ def icon_von(name: str) -> str:
 
 
 def main():
-    p = argparse.ArgumentParser(description="Gliederung einer ByCS-Kurssicherung zeigen und mit dem Kursplan abgleichen.")
+    p = argparse.ArgumentParser(description="Gliederung einer Moodle-Kurssicherung zeigen und mit dem Kursplan abgleichen.")
     p.add_argument("--sicherung", required=True)
     p.add_argument("--plan", help="Kursplan zum Abgleichen")
     p.add_argument("--entwurf", help="Kursplan-Entwurf hierhin schreiben (nur wenn es die Datei noch nicht gibt)")

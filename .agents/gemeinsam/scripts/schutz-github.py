@@ -22,9 +22,12 @@ Rulesets:
                       eigenen Klassen die Fächer anderer Teams (Fachbereich vor Abteilung); vorbei: das Team und
                       werkzeug-verantwortliche.
   "Schutz: main"      Branch-Ruleset: kein Force-Push, kein Löschen, ohne Ausnahme.
+  "Schutz: Dateigröße" Push-Ruleset: Dateien über 5 MB (GROESSE_MB, wie pruefen.py) und .h5p/.zip abgewiesen, auf
+                      allen Branches; vorbei: nur Owner der Organisation. Hält auch eine alte Historie mit großen
+                      Dateien draußen (Bereinigung der Historie, Notizbuch der Werkzeug-Verantwortlichen).
   Owner der Organisation kommen an den Push-Rulesets vorbei. #Handbuch.html sperrt kein Ruleset (die automatischen
   Teile dürfen alle ändern, das von Hand Geschriebene prüft pruefen.py nach dem Push).
-Tests (handbuch.test.py): BYCS_RULESETS_TEST = JSON-Datei {"rulesets": [...], "teams": {Team: Nummer}} statt GitHub.
+Tests (handbuch.test.py): UNTERRICHT_RULESETS_TEST = JSON-Datei {"rulesets": [...], "teams": {Team: Nummer}} statt GitHub.
 Nur Python-Standardbibliothek (Windows, Mac, GitHub). Der Zugang wird nie ausgegeben oder gespeichert.
 """
 import argparse
@@ -42,6 +45,9 @@ PRAEFIX = 'Schutz: '
 WERKZEUG, MAIN = PRAEFIX + 'Werkzeug', PRAEFIX + 'main'
 # Werkzeug-Muster in einem Arbeitsordner (z. B. Unterricht/*/.gitkeep) und das Notizbuch der Werkzeug-Verantwortlichen
 WERKZEUG_INNEN = PRAEFIX + 'Werkzeug in Arbeitsordnern'
+GROESSE = PRAEFIX + 'Dateigröße'
+GROESSE_MB = 5                       # wie GROESSE_MAX in pruefen.py (dort in Ressourcen/ strenger: 1 MB)
+ENDUNGEN_VERBOTEN = ['*.h5p', '*.zip']  # Schreibweise von GitHub; wie dateigroessen() in pruefen.py; .mbz ist in Test-Ordnern erlaubt, bleibt dort
 HANDBUCH = '#Handbuch.html'   # nie sperren: automatische Teile für alle, der Bot committet es
 ADMIN = 'OrganizationAdmin'
 MAX_EINTRAEGE, MAX_ZEICHEN = 200, 200   # Grenzen von GitHub je Ruleset
@@ -115,7 +121,7 @@ def soll_rulesets(regeln):
                       'gesperrt': sorted({muster(m) for m in innen} | innen_github), 'ausnahmen': list(frei),
                       'vorbei': sorted({p.TEAM_WERKZEUG, ADMIN})})
     for team in sorted(set(regeln.klassen.values()) | set(regeln.faecher.values())):
-        if PRAEFIX + team in (WERKZEUG, WERKZEUG_INNEN, MAIN):
+        if PRAEFIX + team in (WERKZEUG, WERKZEUG_INNEN, MAIN, GROESSE):
             raise Fehler('Ein Team darf nicht "%s" heißen (Name des Rulesets ist vergeben).' % team)
         eigene = [k for k in sorted(klassen) if regeln.klassen[k] == team]
         gesperrt = ['Unterricht/%s/**/*' % klassen[k] for k in eigene]
@@ -127,6 +133,9 @@ def soll_rulesets(regeln):
         liste.append({'name': PRAEFIX + team, 'target': 'push', 'regeln': ['file_path_restriction'],
                       'gesperrt': sorted(set(gesperrt)), 'ausnahmen': sorted(set(frei + fremd)),
                       'vorbei': sorted({team, p.TEAM_WERKZEUG, ADMIN})})
+    liste.append({'name': GROESSE, 'target': 'push', 'regeln': ['file_extension_restriction', 'max_file_size'],
+                  'gesperrt': [], 'ausnahmen': [], 'endungen': list(ENDUNGEN_VERBOTEN), 'max_mb': GROESSE_MB,
+                  'vorbei': [ADMIN]})
     liste.append({'name': MAIN, 'target': 'branch', 'regeln': ['deletion', 'non_fast_forward'],
                   'gesperrt': [], 'ausnahmen': [], 'vorbei': []})
     for r in liste:
@@ -146,8 +155,15 @@ def fuer_github(r, team_nr):
                                {'actor_id': team_nr[wer], 'actor_type': 'Team', 'bypass_mode': 'always'}
                                for wer in r['vorbei']]}
     if r['target'] == 'push':
-        daten['rules'] = [{'type': 'file_path_restriction', 'parameters': {
-            'restricted_file_paths': r['gesperrt'], 'ignored_file_paths': r['ausnahmen']}}]
+        daten['rules'] = []
+        if 'file_path_restriction' in r['regeln']:
+            daten['rules'].append({'type': 'file_path_restriction', 'parameters': {
+                'restricted_file_paths': r['gesperrt'], 'ignored_file_paths': r['ausnahmen']}})
+        if 'file_extension_restriction' in r['regeln']:
+            daten['rules'].append({'type': 'file_extension_restriction', 'parameters': {
+                'restricted_file_extensions': r['endungen']}})
+        if 'max_file_size' in r['regeln']:
+            daten['rules'].append({'type': 'max_file_size', 'parameters': {'max_file_size': r['max_mb']}})
     else:
         daten['conditions'] = {'ref_name': {'include': ['~DEFAULT_BRANCH'], 'exclude': []}}
         daten['rules'] = [{'type': t} for t in r['regeln']]
@@ -157,23 +173,28 @@ def fuer_github(r, team_nr):
 def von_github(ist, team_name):
     """Ein Ruleset von GitHub in der Form von soll_rulesets, zum Vergleichen. vorbei ist None, wenn GitHub das Feld
     nicht liefert (nur Admins bekommen es). team_name: {Nummer: Teamname}."""
-    gesperrt, ausnahmen, typen = [], [], []
+    gesperrt, ausnahmen, typen, endungen, max_mb = [], [], [], [], None
     for regel in ist.get('rules') or []:
         typen.append(regel.get('type'))
+        par = regel.get('parameters') or {}
         if regel.get('type') == 'file_path_restriction':
-            par = regel.get('parameters') or {}
             gesperrt += par.get('restricted_file_paths') or []
             ausnahmen += par.get('ignored_file_paths') or []
+        elif regel.get('type') == 'file_extension_restriction':
+            endungen += par.get('restricted_file_extensions') or []
+        elif regel.get('type') == 'max_file_size':
+            max_mb = par.get('max_file_size')
     vorbei = None
     if isinstance(ist.get('bypass_actors'), list):
-        vorbei = sorted(ADMIN if a.get('actor_type') == ADMIN else
-                        team_name.get(a.get('actor_id'), '%s %s' % (a.get('actor_type'), a.get('actor_id')))
+        # bypass_mode für alle prüfen, auch für die Owner (sonst fiele "nur bei Pull Requests" nicht auf)
+        vorbei = sorted((ADMIN if a.get('actor_type') == ADMIN else
+                         team_name.get(a.get('actor_id'), '%s %s' % (a.get('actor_type'), a.get('actor_id'))))
                         if a.get('bypass_mode', 'always') == 'always' else
                         '%s %s (%s)' % (a.get('actor_type'), a.get('actor_id'), a.get('bypass_mode'))
                         for a in ist['bypass_actors'])
     zweige = ((ist.get('conditions') or {}).get('ref_name') or {})
     return {'name': ist.get('name'), 'target': ist.get('target'), 'regeln': sorted(typen), 'gesperrt': sorted(gesperrt),
-            'ausnahmen': sorted(ausnahmen), 'vorbei': vorbei, 'aktiv': ist.get('enforcement') == 'active',
+            'ausnahmen': sorted(ausnahmen), 'endungen': sorted(endungen), 'max_mb': max_mb, 'vorbei': vorbei, 'aktiv': ist.get('enforcement') == 'active',
             'zweige': (sorted(zweige.get('include') or []), sorted(zweige.get('exclude') or []))}
 
 
@@ -195,6 +216,11 @@ def vergleich(soll, ist_liste, team_name):
             if fehlt or zuviel:
                 ab.append('"%s", %s:%s%s' % (s['name'], text, ' fehlt ' + ', '.join(fehlt) if fehlt else '',
                                             ' zu viel ' + ', '.join(zuviel) if zuviel else ''))
+        if 'endungen' in s and sorted(s['endungen']) != i['endungen']:
+            ab.append('"%s": verbotene Endungen %s, es sollen sein: %s.' % (s['name'], ', '.join(i['endungen']) or 'keine',
+                                                                          ', '.join(sorted(s['endungen']))))
+        if 'max_mb' in s and s['max_mb'] != i['max_mb']:
+            ab.append('"%s": höchstens %s MB je Datei, es sollen sein: %s MB.' % (s['name'], i['max_mb'], s['max_mb']))
         if s['target'] == 'branch' and i['zweige'] != (['~DEFAULT_BRANCH'], []):
             ab.append('"%s" gilt nicht (nur) für den Hauptzweig.' % s['name'])
         if i['vorbei'] is None:
@@ -254,9 +280,9 @@ def zugang():
 
 
 def _test():
-    """Nur für handbuch.test.py: Inhalt der Datei BYCS_RULESETS_TEST statt GitHub. None ohne Test, False wenn die
+    """Nur für handbuch.test.py: Inhalt der Datei UNTERRICHT_RULESETS_TEST statt GitHub. None ohne Test, False wenn die
     Datei fehlt (wie "GitHub lässt nicht lesen")."""
-    pfad = os.environ.get('BYCS_RULESETS_TEST')
+    pfad = os.environ.get('UNTERRICHT_RULESETS_TEST')
     if not pfad:
         return None
     try:

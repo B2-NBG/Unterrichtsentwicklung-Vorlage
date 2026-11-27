@@ -1,11 +1,11 @@
 ---
 name: baue-kurs
-description: Baut aus fertigem Unterrichtsmaterial (Lernpakete, Tests, Dateien) eine Moodle-Kurssicherung (.mbz) mit Abschnitten je Blockwoche, die die Lehrkraft wiederherstellt. Verwenden bei "Erstelle einen Kurs", "Kurs für die ByCS", "mbz", "Moodle-Sicherung", "SCORM-Pakete in einen Kurs".
+description: Baut aus fertigem Unterrichtsmaterial (Lernpakete, Tests, Dateien) eine Moodle-Kurssicherung (.mbz) mit Abschnitten je Blockwoche, die die Lehrkraft wiederherstellt. Verwenden bei "Erstelle einen Kurs", "Kurs für die Lernplattform", "mbz", "Moodle-Sicherung", "SCORM-Pakete in einen Kurs".
 ---
 
 # Moodle-Kurs (.mbz) aus Unterrichtsmaterial bauen
 
-Du machst aus einem Ordner mit Unterrichtsmaterial eine Kurssicherung (`.mbz`), die die Lehrkraft in der Lernplattform als Kurs wiederherstellt. Blockwochen werden Abschnitte, Dateien, SCORM-Pakete und Tests werden Aktivitäten. Vorbild für Stil und Einstellungen sind die ByCS-Kurse "MGF10 Eth 26/27" und "Modul 3D-Druck BVJ/BIK" (Werte in `VORLAGE` im Skript).
+Du machst aus einem Ordner mit Unterrichtsmaterial eine Kurssicherung (`.mbz`), die die Lehrkraft in der Lernplattform als Kurs wiederherstellt. Blockwochen werden Abschnitte, Dateien, SCORM-Pakete und Tests werden Aktivitäten. Vorbild für Stil und Einstellungen sind die Moodle-Kurse "MGF10 Eth 26/27" und "Modul 3D-Druck BVJ/BIK" (Werte in `VORLAGE` im Skript).
 
 **Du schreibst das Moodle-Format nicht selbst.** `.agents/skills/baue-kurs/scripts/build-mbz.py` baut die Sicherung und prüft sie (nur Standardbibliothek). Die `.mbz` ist zum Hochladen gedacht, darum keine Webseite.
 
@@ -41,7 +41,7 @@ python .agents/skills/baue-kurs/scripts/build-mbz.py --plan "<Kursname>"
 - In einer Zeile sagen, welche Prüfungen bestanden sind.
 
 ## Schritt 4 – Abschluss
-- Pfad der lokal gebauten `.mbz` nennen. Den Kursplan nach `abschluss.md` prüfen und selbst committen und pushen (ein Kurs erreicht die Schülerinnen und Schüler erst nach der Wiederherstellung; sind auch Lernpakete geändert, doch fragen). Etwa eine Minute nach dem Push baut GitHub den Kurs neu und stellt ihn unter `BYCS-SYNC/Kurse/<Klasse>[/<Fach>]/` zu (Teamordner oder Download, `zustellung.md`; ersetzt die Sicherung gleichen Namens).
+- Pfad der lokal gebauten `.mbz` nennen. Den Kursplan nach `abschluss.md` prüfen und selbst committen und pushen (ein Kurs erreicht die Schülerinnen und Schüler erst nach der Wiederherstellung; sind auch Lernpakete geändert, doch fragen). Etwa eine Minute nach dem Push baut GitHub den Kurs neu und stellt ihn unter `FREIGABE-SYNC/Kurse/<Klasse>[/<Fach>]/` zu (Teamordner oder Download, `zustellung.md`; ersetzt die Sicherung gleichen Namens).
 - In der Lernplattform: die Datei aus dem Teamordner bzw. dem Download hochladen (Kurse haben keinen Download-Link) und **als neuen Kurs** wiederherstellen.
 - **Zuerst in einem Testkurs ausprobieren:** mit einem Testzugang jedes SCORM-Paket einmal öffnen, abgeben und unter „Berichte“ prüfen. Mit Test: als Lehrkraft die Vorschau starten (Safe Exam Browser, Fragen, Punkte), Kennwort und Zeitraum (Testöffnung) setzen.
 - Danach die Lehrkraft selbst: Einschreibung und Kurspasswort, Sichtbarkeit und Startdatum, Datumsbedingungen, Aufgaben mit Abgabe. Diese baut der Skill nicht.
@@ -51,7 +51,7 @@ Ist der Kurs in der Lernplattform gewachsen (Reiter, Unterabschnitte, eigene Akt
 **kurs-umgestalten** (Blockplan je Klasse, Farbschema, Kursbild, Kursbeginn passend zum Zielkurs).
 
 ## Grenzen (offen sagen)
-Lernpakete über Link und Tests sind in der ByCS erprobt (Ethikkurs, Modul 3D-Druck), mitgelieferte ZIPs ohne Link nicht. Die ByCS kann einzelne Inline-Stile entfernen. Schlägt die Wiederherstellung fehl: Fehlermeldung Wort für Wort anfordern, dann `umfang.md`.
+Lernpakete über Link und Tests sind in der Lernplattform erprobt (Ethikkurs, Modul 3D-Druck), mitgelieferte ZIPs ohne Link nicht. Die Lernplattform kann einzelne Inline-Stile entfernen. Schlägt die Wiederherstellung fehl: Fehlermeldung Wort für Wort anfordern, dann `umfang.md`.
 
 ## Datenschutz
 Nach AGENTS.md. Das Skript übernimmt keine Benutzerdaten, die Wiederherstellung in der Lernplattform macht die Lehrkraft selbst.

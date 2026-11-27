@@ -19,7 +19,7 @@ Notizbücher und eine Zustellung aller Pakete nach jedem Push.
   kostenlos GitHub Copilot Pro und für die Schule den Tarif GitHub Team (Bedingungen und aktuellen Stand dort prüfen;
   Antrag unter GitHub → Settings → Education benefits),
 - Python 3 (am Mac `python3`) und Edge oder Chrome für die Seitenprüfung,
-- eine Moodle-Lernplattform (z. B. die ByCS in Bayern).
+- eine Moodle-Lernplattform (eigene Instanz der Schule oder die Plattform eures Landes).
 
 ## Allein in fünf Schritten
 1. **Eigenes Repo anlegen:** oben auf „Use this template“ → „Create a new repository“, Sichtbarkeit **Private**.
@@ -50,7 +50,8 @@ Werkzeug-Verantwortliche richten einmal ein (Anleitung für die KI: `.agents/gem
   [GitHub Education](https://github.com/education/teachers) kostenlos.
 - **Teams lesen:** eine GitHub-App mit Leserecht auf die Mitglieder, ihre Daten als Secrets im Environment `zustellung`.
 - **Zustellung:** `download` (Pakete im Lauf auf GitHub) oder `power-automate` (ein Flow legt alle Pakete in einen
-  Teamordner in OneDrive/SharePoint, jedes Paket behält seinen Download-Link). Anleitung für den Flow:
+  Teamordner, jedes Paket behält seinen Download-Link). Der Teamordner kann jeder Ordner sein, der öffentliche
+  Freigabelinks erlaubt (z. B. in OneDrive, SharePoint oder Nextcloud). Anleitung für den Flow:
   `einrichtung-admin.md`.
 
 ## Lizenz und Beiträge

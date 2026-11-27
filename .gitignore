@@ -2,7 +2,7 @@ __pycache__/
 .DS_Store
 
 # Kurssicherungen aus der Lernplattform (groß, können Fragen und Lösungen enthalten): nur lokal
-Ressourcen/Kurssicherungen-ByCS/
+Ressourcen/Kurssicherungen-Moodle/
 
 # Arbeitsordner tmp/, nie versionieren (Bleibendes gehört nach Ressourcen/).
 # Nur die leere Platzhalterdatei tmp/.gitkeep liegt in Git, damit der Ordner nach dem Klonen da ist.

@@ -4,8 +4,8 @@ Sicherung mit Icons und Kopfband-Sätzen aus dem Kursplan. Die Lehrkraft wählt 
 Gestaltungscode. Die Seite funktioniert ohne Internet.
 
 Aufruf im Projektordner:
-  python .agents/skills/kurs-umgestalten/scripts/baukasten.py --plan <Kursplan> --sicherung <ByCS.mbz>
-Ergebnis: Ressourcen/Kurssicherungen-ByCS/Farbschema-Baukasten-<Kurzname>.html (nur lokal, enthält Namen aus dem Kurs).
+  python .agents/skills/kurs-umgestalten/scripts/baukasten.py --plan <Kursplan> --sicherung <Sicherung.mbz>
+Ergebnis: Ressourcen/Kurssicherungen-Moodle/Farbschema-Baukasten-<Kurzname>.html (nur lokal, enthält Namen aus dem Kurs).
 """
 from __future__ import annotations
 
@@ -87,8 +87,8 @@ def kursinfo(s: Sicherung, plan: dict) -> dict:
 def main():
     p = argparse.ArgumentParser(description="Farbschema-Baukasten für einen Kurs erzeugen.")
     p.add_argument("--plan", required=True, help="Kursplan (Name in Ressourcen/Kursumbau/ oder Pfad)")
-    p.add_argument("--sicherung", required=True, help="Sicherung aus der ByCS (.mbz)")
-    p.add_argument("--out", help="Ziel (.html), sonst in Ressourcen/Kurssicherungen-ByCS/")
+    p.add_argument("--sicherung", required=True, help="Sicherung aus der Lernplattform (.mbz)")
+    p.add_argument("--out", help="Ziel (.html), sonst in Ressourcen/Kurssicherungen-Moodle/")
     a = p.parse_args()
     plan = lese_plan(a.plan)
     ki = kursinfo(Sicherung(a.sicherung), plan)

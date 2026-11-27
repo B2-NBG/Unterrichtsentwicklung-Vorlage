@@ -1,14 +1,14 @@
 # Bauen und zustellen: Nach jedem Push auf main prüft GitHub die Änderungen, erneuert Handbuch und Test-Vorschau (und
 # committet sie), baut Lernpakete und Kurse aus ihren Quellen und schickt alles an den Flow (Power Automate), der es in
-# den Teamordner BYCS-SYNC legt. Ersetzt die früheren Git-Hooks: Kein Rechner kopiert oder erneuert selbst.
+# den Teamordner FREIGABE-SYNC legt. Ersetzt die früheren Git-Hooks: Kein Rechner kopiert oder erneuert selbst.
 # Ist die Prüfung rot, wird nichts zugestellt. Verglichen wird mit dem letzten grünen Lauf nach einem Push: Was ein
 # roter Lauf nicht zugestellt hat, holt der nächste grüne nach.
 # Von Hand: Actions > "Bauen und zustellen" > Run workflow (Themenordner, Test-Ordner, Kurs, Kurse, Handbuch oder "alle").
-# Schutz (wer was darf, Freigabe, Zurückhalten, Lauf von Hand): .agents/gemeinsam/regeln/schutz-admin.md. Der Workflow liefert dafür BYCS_PUSHES, TEAM_TOKEN und zurueckgehalten.txt.
+# Schutz (wer was darf, Freigabe, Zurückhalten, Lauf von Hand): .agents/gemeinsam/regeln/schutz-admin.md. Der Workflow liefert dafür UNTERRICHT_PUSHES, TEAM_TOKEN und zurueckgehalten.txt.
 # Vor dem Push sperrt GitHub selbst (Rulesets aus schutz.txt, auch diese Datei): Der Schritt "Rulesets passen zu
 # schutz.txt?" (schutz-github.py --pruefen, liest mit dem GITHUB_TOKEN) hält alles an, wenn sie fehlen oder abweichen.
 # Secrets liegen im Environment "zustellung", das nur main nutzen darf (ein Lauf von einem anderen Branch bekommt sie
-# nicht): FLOW_URL, FLOW_SCHLUESSEL (Flow), BYCS_LINKSEITE (Download-Links für den Kursbau), TEAM_APP_ID, TEAM_APP_KEY
+# nicht): FLOW_URL, FLOW_SCHLUESSEL (Flow), UNTERRICHT_LINKSEITE (Download-Links für den Kursbau), TEAM_APP_ID, TEAM_APP_KEY
 # (GitHub-App der Organisation, liest nur die Mitglieder der Teams: Werkzeugschutz und Abteilungsschutz in pruefen.py).
 # Einstellung: Settings > Actions > General > Workflow permissions: "Read and write" (für den Commit des Handbuchs).
 # Pushes mit dem GITHUB_TOKEN lösen keinen neuen Lauf aus: Der Commit des Handbuchs erzeugt keine Schleife.
@@ -24,7 +24,7 @@ on:
         required: true
         type: string
       probe:
-        description: 'Probe: unter Pakete/_Pilot/, Kurse/_Pilot/ oder Tests/_Pilot/ ablegen (nichts in der ByCS wird berührt)'
+        description: 'Probe: unter Pakete/_Pilot/, Kurse/_Pilot/ oder Tests/_Pilot/ ablegen (nichts in der Lernplattform wird berührt)'
         type: boolean
         default: false
 
@@ -118,7 +118,7 @@ jobs:
         if: github.event_name == 'push'
         env:
           TEAM_TOKEN: ${{ steps.teams.outputs.token }}
-          BYCS_PUSHES: ${{ steps.basis.outputs.pushes }}
+          UNTERRICHT_PUSHES: ${{ steps.basis.outputs.pushes }}
         run: python3 .agents/gemeinsam/scripts/pruefen.py --seit "${{ steps.basis.outputs.seit }}" --erneuern --zurueckhalten "$RUNNER_TEMP/zurueckgehalten.txt"
 
       - name: Erneuertes committen
@@ -126,7 +126,7 @@ jobs:
         env:
           SEIT: ${{ steps.basis.outputs.seit }}
           TEAM_TOKEN: ${{ steps.teams.outputs.token }}
-          BYCS_PUSHES: ${{ steps.basis.outputs.pushes }}
+          UNTERRICHT_PUSHES: ${{ steps.basis.outputs.pushes }}
         run: |
           # Auch ohne eine einzige Vorschau.html im Repo (git add bricht bei einem Muster ohne Treffer ab)
           vormerken() { git add -A -- '#Handbuch.html'; git ls-files -z -m -d -o --exclude-standard -- ':(glob)Unterricht/**/Vorschau.html' | xargs -0 -r git add -A --; }
@@ -152,7 +152,7 @@ jobs:
         env:
           FLOW_URL: ${{ secrets.FLOW_URL }}
           FLOW_SCHLUESSEL: ${{ secrets.FLOW_SCHLUESSEL }}
-          BYCS_LINKSEITE: ${{ secrets.BYCS_LINKSEITE }}
+          UNTERRICHT_LINKSEITE: ${{ secrets.UNTERRICHT_LINKSEITE }}
           WAS: ${{ inputs.was }}
           PROBE: ${{ inputs.probe }}
           SEIT: ${{ steps.basis.outputs.seit }}

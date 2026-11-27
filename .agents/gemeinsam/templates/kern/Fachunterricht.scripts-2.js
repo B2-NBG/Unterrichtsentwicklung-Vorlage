@@ -724,7 +724,7 @@
       al.querySelector('button').addEventListener('click', function () { $('#pdfBtn').click(); });
       document.body.appendChild(al);
     }
-    al.querySelector('p').innerHTML = '<b>Nicht gespeichert!</b> Die Verbindung zur ByCS ist unterbrochen (abgemeldet?). ' +
+    al.querySelector('p').innerHTML = '<b>Nicht gespeichert!</b> Die Verbindung zur Moodle ist unterbrochen (abgemeldet?). ' +
       (safe ? 'Deine Eingaben sind in diesem Browser gesichert: Lernpaket schließen, neu anmelden und auf diesem Rechner wieder öffnen.'
             : 'Speichere sofort als PDF und sag deiner Lehrkraft Bescheid.');
     al.hidden = false;

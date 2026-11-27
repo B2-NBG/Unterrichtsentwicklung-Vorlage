@@ -1,17 +1,17 @@
 """
-umgestalten.py - macht aus einer ByCS-Kurssicherung eine neue Fassung zum Wiederherstellen.
+umgestalten.py - macht aus einer Moodle-Kurssicherung eine neue Fassung zum Wiederherstellen.
 
 Schritte: Blockplan einsetzen (falls im Kursplan) -> Kursbild -> Gestaltung (Icons, Kopfband, Reiterfarben) ->
 Kursbeginn = Kursbeginn des Zielkurses (sonst verschiebt Moodle alle Termine) -> Namen mit Fassung V<n> ->
 Prüfung (build-mbz.py --pruefen, nur neue Fehler zählen) -> farbige Anleitung.
 
 Aufruf im Projektordner (am Mac python3):
-  python .agents/skills/kurs-umgestalten/scripts/umgestalten.py --plan <Kursplan> --sicherung <ByCS.mbz> --kursbeginn TT.MM.JJJJ
+  python .agents/skills/kurs-umgestalten/scripts/umgestalten.py --plan <Kursplan> --sicherung <Sicherung.mbz> --kursbeginn TT.MM.JJJJ
 
---kursbeginn: der Kursbeginn, der im Zielkurs der ByCS steht (Einstellungen, gesperrt). Pflicht.
---version: Fassungsnummer (sonst die nächste freie in Ressourcen/Kurssicherungen-ByCS/).
+--kursbeginn: der Kursbeginn, der im Zielkurs der Lernplattform steht (Einstellungen, gesperrt). Pflicht.
+--version: Fassungsnummer (sonst die nächste freie in Ressourcen/Kurssicherungen-Moodle/).
 --kursbild-behalten: Kursbild der Sicherung nicht ersetzen.
-Ergebnis in Ressourcen/Kurssicherungen-ByCS/ (nur lokal): <Kurzname>-V<n>.mbz und Anleitung-<Kurzname>-V<n>.html.
+Ergebnis in Ressourcen/Kurssicherungen-Moodle/ (nur lokal): <Kurzname>-V<n>.mbz und Anleitung-<Kurzname>-V<n>.html.
 """
 from __future__ import annotations
 
@@ -82,10 +82,10 @@ def anleitung(plan: dict, blockplan: dict | None, datei: str, beginn: dt.date, f
 
 
 def main():
-    p = argparse.ArgumentParser(description="ByCS-Kurssicherung umgestalten (Blockplan, Gestaltung, Kursbild, Kursbeginn).")
+    p = argparse.ArgumentParser(description="Moodle-Kurssicherung umgestalten (Blockplan, Gestaltung, Kursbild, Kursbeginn).")
     p.add_argument("--plan", required=True, help="Kursplan (Name in Ressourcen/Kursumbau/ oder Pfad)")
-    p.add_argument("--sicherung", required=True, help="Sicherung aus der ByCS (.mbz, ohne Nutzerdaten)")
-    p.add_argument("--kursbeginn", required=True, help="Kursbeginn des Zielkurses in der ByCS (TT.MM.JJJJ)")
+    p.add_argument("--sicherung", required=True, help="Sicherung aus der Lernplattform (.mbz, ohne Nutzerdaten)")
+    p.add_argument("--kursbeginn", required=True, help="Kursbeginn des Zielkurses in der Lernplattform (TT.MM.JJJJ)")
     p.add_argument("--version", type=int, help="Fassungsnummer (sonst die nächste freie)")
     p.add_argument("--kursbild-behalten", action="store_true", help="Kursbild der Sicherung behalten")
     a = p.parse_args()
@@ -116,7 +116,7 @@ def main():
 
     vorher, nachher = pruef_fehler(s.pfad), pruef_fehler(ziel)
     neu = [f for f in nachher if f not in vorher]
-    print(f"Prüfung: {len(nachher)} Meldung(en), davon {len(nachher) - len(neu)} schon in der ByCS-Sicherung" + (", keine neuen." if not neu else ":"))
+    print(f"Prüfung: {len(nachher)} Meldung(en), davon {len(nachher) - len(neu)} schon in der Moodle-Sicherung" + (", keine neuen." if not neu else ":"))
     for f in neu:
         print("  NEU", f)
 

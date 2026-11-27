@@ -20,13 +20,13 @@ wird. Rulesets, Zugang zu den Teams und Freigabe: `schutz-admin.md`.
   angehalten hat. Deshalb prüft er zuerst, wer ihn gestartet hat (`pruefen.py --von-hand`): Wer nicht im Team
   `werkzeug-verantwortliche` ist, bekommt einen roten Lauf, und nichts wird zugestellt.
 - Secrets (Settings → Environments → `zustellung`, nur `main` darf es nutzen; keine Repository-Secrets): `FLOW_URL`,
-  `FLOW_SCHLUESSEL` (Flow), `BYCS_LINKSEITE` (Adresse der Linkseite für den Kursbau), `TEAM_APP_ID`, `TEAM_APP_KEY`
+  `FLOW_SCHLUESSEL` (Flow), `UNTERRICHT_LINKSEITE` (Adresse der Linkseite für den Kursbau), `TEAM_APP_ID`, `TEAM_APP_KEY`
   (Teams lesen, `schutz-admin.md`). Nie ins Repo, nie in den Chat.
 - Einstellung: Settings → Actions → General → Workflow permissions: **Read and write** (für den Commit des Handbuchs).
 - Schulprofil (`schule.txt`): Der Schritt "Schulprofil" liest `Schutz` (in der Fassung des letzten grünen Laufs, im
   Zweifel an) und `Zustellung`. Bei `Schutz | aus` entfallen Zugang zu den Teams und Rulesets, bei
   `Zustellung | download` legt der Lauf die Pakete als Download ab (Actions → Lauf → Artifacts) statt an den Flow.
-- Der Flow (Power Automate, eigenes Dienstkonto, Schreibrecht auf den ganzen Ordner `BYCS-SYNC`) nimmt in `Pakete/`,
+- Der Flow (Power Automate, eigenes Dienstkonto, Schreibrecht auf den ganzen Ordner `FREIGABE-SYNC`) nimmt in `Pakete/`,
   `Kurse/` und `Tests/` samt Unterordnern nur `.html`, `.mbz`, `.xml` und `_scorm.zip` an, ganz oben nur das Handbuch.
   Er ersetzt eine vorhandene Datei an Ort und Stelle (der Download-Link bleibt) und legt fehlende Unterordner an.
 
@@ -41,7 +41,7 @@ Zwei Flows mit einem eigenen Dienstkonto, das nur auf den Teamordner (`schule.tx
 2. **Linkseite** (für Lernpakete mit Download-Link im Kurs): Jedes `_scorm.zip` unter `Pakete/` bekommt einen
    Freigabelink "Jeder mit dem Link". Ein zweiter HTTP-Flow (GET, mit Passwort) liefert eine HTML-Tabelle, je Paket eine
    Zeile `<tr data-p="Pakete/…">` mit `<td>Dateiname</td>`, dem Link in `data-link="https://…"` und dem Datum der
-   letzten Änderung (`linkseite.py`, `RX_ZEILE` usw.). Die Adresse mit `&pw=…` kommt als Secret `BYCS_LINKSEITE`
+   letzten Änderung (`linkseite.py`, `RX_ZEILE` usw.). Die Adresse mit `&pw=…` kommt als Secret `UNTERRICHT_LINKSEITE`
    ins Environment, am Rechner liest `linkseite.py` sie wie in `einrichtung.md` beschrieben.
 Probe: GitHub → Actions → "Bauen und zustellen" → Run workflow mit Haken "Probe" (legt nach `<Bereich>/_Pilot/`).
 

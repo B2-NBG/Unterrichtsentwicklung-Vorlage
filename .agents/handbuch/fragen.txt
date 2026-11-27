@@ -5,7 +5,7 @@
 # Neue Fragen von Kolleg/innen hier aufnehmen und den Abschnitt so ergänzen, dass er sie beantwortet.
 # Zeilen mit # werden ignoriert.
 
-Wie binde ich ein Lernpaket in meinen ByCS-Kurs ein? | einbinden
+Wie binde ich ein Lernpaket in meinen Moodle-Kurs ein? | einbinden
 Wo finde ich den Download-Link zu einem Lernpaket (Linkseite)? | einbinden
 Warum soll ich den Link eintragen und nicht die Datei hochladen? | einbinden
 Wie vermeide ich verschiedene Versionen eines Lernpakets in den Kursen? | einbinden
@@ -33,8 +33,8 @@ Wie kommt meine Korrektur zu den Schülerinnen und Schülern? | korrektur
 Wie erstelle ich aus einem PDF ein neues E-Learning? | erstellen
 Wie bekomme ich Sprachhilfen (Wortliste, Satzanfänge, Glossar) oder einfache Sprache für BVJ, BIK und BFS? | erstellen
 Wie heißt die Datei eines Lernpakets, und wo liegt sie? | einbinden
-Wie sehe ich einen ByCS-Test an, ohne ihn hochzuladen? | erstellen
-Wie bekomme ich einen fertigen Test in die ByCS? | erstellen
+Wie sehe ich einen Moodle-Test an, ohne ihn hochzuladen? | erstellen
+Wie bekomme ich einen fertigen Test in die Lernplattform? | erstellen
 Wo liegen die Tests im Teamordner? | erstellen
 Welche Skills gibt es, und was sage ich zur KI? | skills
 Darf ich Skills, Vorlagen oder Regeln selbst ändern, und kann ich mir einen eigenen Skill bauen? | eigene-skills

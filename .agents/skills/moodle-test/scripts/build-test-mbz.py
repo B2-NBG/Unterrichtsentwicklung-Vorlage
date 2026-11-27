@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Baut aus einer geprüften Moodle-XML-Quizdatei eine fertige Test-Aktivität (.mbz) für die ByCS.
+"""Baut aus einer geprüften Moodle-XML-Quizdatei eine fertige Test-Aktivität (.mbz) für die Lernplattform.
 
   python .agents/skills/moodle-test/scripts/build-test-mbz.py <Test-Thema>/Fragen-<Thema>.xml --thema "<Thema>" --zeit <Minuten>
          [--abschnitt <Nummer>] [--out <datei.mbz>] [--vorlage <Vorlage.mbz>] [--keine-anleitung]
@@ -12,7 +12,7 @@ Die Lehrkraft stellt die .mbz im Kurs per "Wiederherstellen" her: Es entsteht de
 mit allen Fragen in seiner eigenen Fragensammlung.
 
 Alle Einstellungen (Versuche, Bewertung, Überprüfungsoptionen, Kennwort, Safe Exam Browser, Fragen pro Seite,
-Notenstufen) stammen aus der Vorlage ../templates/Test-Vorlage.mbz, einer Aktivitätssicherung aus der ByCS.
+Notenstufen) stammen aus der Vorlage ../templates/Test-Vorlage.mbz, einer Aktivitätssicherung aus der Lernplattform.
 Ersetzt werden nur Name, Arbeitszeit, Fragen, Höchstpunktzahl und die Grenzen der Notenstufen (gleiche
 Prozentsätze wie in der Vorlage, bezogen auf die neue Höchstpunktzahl). Eine neue Vorlage: Datei austauschen.
 
@@ -241,7 +241,7 @@ def zerlege_cloze(quelltext: str, name: str):
 class Fragensammlung:
     def __init__(self, vorlage: Vorlage, ids: IdGen, jetzt: int, ctx: int, modul: int, name: str):
         self.v, self.ids, self.jetzt, self.ctx, self.modul = vorlage, ids, jetzt, ctx, modul
-        self.host = re.sub(r"^https?://", "", vorlage.wwwroot or "lernplattform.bycs.de").strip("/")
+        self.host = re.sub(r"^https?://", "", vorlage.wwwroot or "moodle.musterschule.example").strip("/")
         self.kats: list[dict] = []
         top = self.kategorie("top", None, sortorder=0)
         self.top = top
@@ -791,7 +791,8 @@ def schreibe_anleitung(ziel: Path, info: dict):
     rest = re.findall(r"\{\{[A-Z_]+\}\}", seite_html)
     if rest:
         raise Fehler(f"Anleitung: Platzhalter nicht gefüllt: {sorted(set(rest))}")
-    ziel.write_text(seite_html, encoding="utf-8", newline="\n")
+    with open(ziel, "w", encoding="utf-8", newline="\n") as f:   # write_text(newline=) gibt es erst ab Python 3.10 (Mac: 3.9)
+        f.write(seite_html)
 
 
 def standard_ziel(xml: Path) -> Path:

@@ -80,7 +80,15 @@ def main():
         with open(os.path.join(tmp, 'Ressourcen/gross.jpg'), 'wb') as f:
             f.write(b'0' * (m.GROESSE_MAX + 1))
         pruefe(len(m.dateigroessen(['Ressourcen/gross.jpg'])) == 1, 'Datei über 5 MB wird gemeldet')
-        for rel, anzahl in (('ToDo/x.h5p', 1), ('Ressourcen/x.zip', 1), ('Ressourcen/x.mbz', 1),
+        for rel in ('Ressourcen/mittel.jpg', 'Unterricht/A/B/C/T/bilder/mittel.jpg'):
+            os.makedirs(os.path.dirname(os.path.join(tmp, rel)), exist_ok=True)
+            with open(os.path.join(tmp, rel), 'wb') as f:
+                f.write(b'0' * (m.RESSOURCEN_MAX + 1))
+        pruefe(len(m.dateigroessen(['Ressourcen/mittel.jpg'])) == 1, 'Datei über 1 MB in Ressourcen/ wird gemeldet')
+        pruefe(m.dateigroessen(['Unterricht/A/B/C/T/bilder/mittel.jpg']) == [], 'Datei über 1 MB außerhalb von Ressourcen/ besteht')
+        for rel, anzahl in (('Ressourcen/Quellen/x.docx', 1), ('Ressourcen/x.pptx', 1), ('Ressourcen/x.stl', 1),
+                            ('Ressourcen/x.pdf', 0), ('ressourcen/x.docx', 1), ('Ressourcen/x.7z', 1), ('Ressourcen/x.xlsm', 1),
+                            ('Ressourcen/Quellen/Film/Drehbuch-Vorlage-Kurzfilm.docx', 0), ('ToDo/x.h5p', 1), ('Ressourcen/x.zip', 1), ('Ressourcen/x.mbz', 1),
                             ('Unterricht/A/B/C/Test-X/Test-X.mbz', 0), ('.agents/skills/moodle-test/templates/V.mbz', 0)):
             schreibe(tmp, rel, 'x')
             pruefe(len(m.dateigroessen([rel])) == anzahl, '%s: %d Fehler' % (rel, anzahl))

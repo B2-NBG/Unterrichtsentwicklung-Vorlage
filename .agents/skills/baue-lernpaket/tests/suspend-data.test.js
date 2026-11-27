@@ -374,9 +374,9 @@ function harnessMain(cfg) {
       check(noError(), 'kein roter Fehlerkasten');
     });
 
-    await test('9. ByCS speichert nicht mehr (abgemeldet): roter Hinweis, Sicherung im Browser, nach Neuanmeldung alles da', async check => {
+    await test('9. Moodle speichert nicht mehr (abgemeldet): roter Hinweis, Sicherung im Browser, nach Neuanmeldung alles da', async check => {
       reset(); await open('/new/v1.html'); fill(cfg.A.slice(0, 4)); await sleep(1100);
-      check(srvState() && srvState().k['a1-1'] === 'Passfeder', 'Ausgangsstand in der ByCS', srvState());
+      check(srvState() && srvState().k['a1-1'] === 'Passfeder', 'Ausgangsstand in der Lernplattform', srvState());
       check(!alarmOn() && baks().length === 0, 'solange das Speichern klappt: kein Hinweis, keine Sicherung', baks());
       LMS.fail = true;
       fill(cfg.A.map((v, i) => i < 4 ? undefined : v)); await sleep(1100);
@@ -386,17 +386,17 @@ function harnessMain(cfg) {
       check(baks().length === 1 && baks()[0] === BAK + '4711|/new/v1.html', 'eine Sicherung je Person und Seite', baks());
       const b = baks().length ? JSON.parse(localStorage.getItem(baks()[0])) : { sd: '{}' };
       check(JSON.parse(b.sd).s && JSON.parse(b.sd).s.k['a4-2'] === 'Formschluss mit Nut', 'Sicherung enthält die neuen Eingaben', b.sd.slice(0, 200));
-      check(!srvState().k['a4-2'], 'ByCS hat die neuen Eingaben nicht', srvState());
+      check(!srvState().k['a4-2'], 'Moodle hat die neuen Eingaben nicht', srvState());
       await close();
       check(baks().length === 1, 'nach dem Schließen: Sicherung bleibt');
       LMS.fail = false; await open('/new/v1.html');
       check(same(values(), cfg.A), 'neu angemeldet und geöffnet: alle Werte da', values());
       check(/Sicherung im Browser/.test(info().textContent) && !alarmOn(), 'Meldung "aus der Sicherung im Browser wiederhergestellt", kein roter Hinweis', info().textContent);
-      check(srvState() && same(srvState().k, state().k) && srvState().k['a4-2'] === 'Formschluss mit Nut', 'ByCS hat jetzt alle Eingaben', srvState());
+      check(srvState() && same(srvState().k, state().k) && srvState().k['a4-2'] === 'Formschluss mit Nut', 'Moodle hat jetzt alle Eingaben', srvState());
       check(baks().length === 0, 'Sicherung gelöscht', baks());
       const ids = Object.keys(LMS.server).filter(k => /^cmi\.interactions\.\d+\.id$/.test(k)).map(k => LMS.server[k]);
-      check(ids.length > 0 && new Set(ids).size === ids.length, 'Interaktionen in der ByCS, jede Aufgabe nur einmal', ids);
-      check(Object.keys(LMS.server).some(k => /\.learner_response$/.test(k) && LMS.server[k].indexOf('Formschluss mit Nut') > -1), 'Interaktion mit der neuen Antwort in der ByCS');
+      check(ids.length > 0 && new Set(ids).size === ids.length, 'Interaktionen in der Lernplattform, jede Aufgabe nur einmal', ids);
+      check(Object.keys(LMS.server).some(k => /\.learner_response$/.test(k) && LMS.server[k].indexOf('Formschluss mit Nut') > -1), 'Interaktion mit der neuen Antwort in der Lernplattform');
       check(noError(), 'kein roter Fehlerkasten');
     });
 
@@ -406,21 +406,21 @@ function harnessMain(cfg) {
       check(alarmOn() && baks().length === 1, 'Hinweis und Sicherung');
       LMS.fail = false; type(0, 'Keil2'); await sleep(1100);
       check(!alarmOn() && info().textContent === 'Fortschritt gespeichert' && info().className.indexOf('bad') < 0, 'Hinweis weg, "Fortschritt gespeichert"', info().textContent);
-      check(baks().length === 0 && srvState().k['a1-1'] === 'Keil2', 'Sicherung gelöscht, ByCS hat den neuen Stand', srvState());
+      check(baks().length === 0 && srvState().k['a1-1'] === 'Keil2', 'Sicherung gelöscht, Moodle hat den neuen Stand', srvState());
       LMS.fail = true; await close();
       check(baks().length === 0, 'Schließen ohne Änderung, Commit scheitert: keine Sicherung (nichts Ungespeichertes)', baks());
       LMS.fail = false; await open('/new/v1.html');
-      check(fields()[0].value === 'Keil2' && !/Sicherung/.test(info().textContent), 'neu geöffnet: Stand aus der ByCS', info().textContent);
+      check(fields()[0].value === 'Keil2' && !/Sicherung/.test(info().textContent), 'neu geöffnet: Stand aus der Lernplattform', info().textContent);
     });
 
-    await test('11. Veraltete Sicherung (inzwischen woanders gespeichert): Stand der ByCS gilt, Sicherung gelöscht', async check => {
+    await test('11. Veraltete Sicherung (inzwischen woanders gespeichert): Stand der Lernplattform gilt, Sicherung gelöscht', async check => {
       reset(); await open('/new/v1.html'); fill(cfg.A.slice(0, 2)); await sleep(1100);
       LMS.fail = true; type(0, 'alt'); await sleep(1100); await close();
       check(baks().length === 1, 'Sicherung vorhanden');
       const o = JSON.parse(LMS.server['cmi.suspend_data']); o.s.k['a1-1'] = 'anderer Rechner'; o.t = o.t + 5000;   /* anderer Rechner speichert */
       LMS.server['cmi.suspend_data'] = JSON.stringify(o);
       LMS.fail = false; await open('/new/v1.html');
-      check(fields()[0].value === 'anderer Rechner' && !/Sicherung/.test(info().textContent), 'Stand aus der ByCS', values());
+      check(fields()[0].value === 'anderer Rechner' && !/Sicherung/.test(info().textContent), 'Stand aus der Lernplattform', values());
       check(baks().length === 0, 'veraltete Sicherung gelöscht', baks());
     });
 
@@ -428,14 +428,14 @@ function harnessMain(cfg) {
       reset(); await open('/new/v1.html'); fill(cfg.A); await sleep(1100);
       LMS.fail = true; type(0, 'Zylinderstift'); await sleep(1100);
       doc().getElementById('subBtn').click(); doc().getElementById('subOk').click(); await sleep(100);
-      check(LMS.server['cmi.completion_status'] !== 'completed', 'ByCS hat die Abgabe nicht', LMS.server['cmi.completion_status']);
+      check(LMS.server['cmi.completion_status'] !== 'completed', 'Moodle hat die Abgabe nicht', LMS.server['cmi.completion_status']);
       check(alarmOn() && baks().length === 1, 'Hinweis und Sicherung');
       await close();
       LMS.fail = false; await open('/new/v1.html');
       check(doc().body.classList.contains('submitted') && same(values(), ['Zylinderstift'].concat(cfg.A.slice(1))), 'abgegebener Stand gesperrt sichtbar', values());
       check(Object.keys(LMS.server).some(k => /\.learner_response$/.test(k) && LMS.server[k].indexOf('Zylinderstift') > -1), 'Antwort aus der Zeit ohne Verbindung im Bericht (Interaktion)');
       check(LMS.server['cmi.completion_status'] === 'completed' && LMS.server['cmi.score.raw'] !== undefined && JSON.parse(LMS.server['cmi.suspend_data']).x === 1,
-        'ByCS: completed, Punkte, Abgabe-Vermerk', [LMS.server['cmi.completion_status'], LMS.server['cmi.score.raw']]);
+        'Moodle: completed, Punkte, Abgabe-Vermerk', [LMS.server['cmi.completion_status'], LMS.server['cmi.score.raw']]);
       check(baks().length === 0, 'Sicherung gelöscht', baks());
     });
 
@@ -550,7 +550,7 @@ function harnessMain(cfg) {
       check(g[LV[0]] && g[LV[0]].st === 'incomplete' && sc(LV[0]) === '10/40', 'Niveau nicht vollständig bearbeitet: incomplete, 10 von 40', g[LV[0]]);
     });
 
-    await test('17b. Ganze Punkte: Summe 100, Restpunkte an die letzten Aufgaben, Teilpunkte je Aufgabe gerundet, Seite = ByCS', async check => {
+    await test('17b. Ganze Punkte: Summe 100, Restpunkte an die letzten Aufgaben, Teilpunkte je Aufgabe gerundet, Seite = Moodle', async check => {
       const $ = s => doc().querySelector(s), T = () => [].slice.call(doc().querySelectorAll('main .task'));
       const pts = a => T().map(t => t.getAttribute(a));
       const goals = () => {
@@ -589,7 +589,7 @@ function harnessMain(cfg) {
       put(4, 'Formschluss mit Nut'); await sleep(1100); check(amp() === 'stern:Profilevel erreicht', '100 Punkte: Stern', amp());
       check(win().getComputedStyle($('#ampel'), '::before').content === '"★"', 'Stern wird als Zeichen ★ gezeichnet', win().getComputedStyle($('#ampel'), '::before').content);
       check(+win().getComputedStyle($('#ampel'), '::before').fontSize.replace('px', '') >= 24, 'Stern groß (mind. 24 px)', win().getComputedStyle($('#ampel'), '::before').fontSize);
-      check(LMS.data['cmi.score.raw'] === '100' && LMS.data['cmi.completion_status'] === 'incomplete', 'ByCS: vorläufig 100, noch incomplete', [LMS.data['cmi.score.raw'], LMS.data['cmi.completion_status']]);
+      check(LMS.data['cmi.score.raw'] === '100' && LMS.data['cmi.completion_status'] === 'incomplete', 'Moodle: vorläufig 100, noch incomplete', [LMS.data['cmi.score.raw'], LMS.data['cmi.completion_status']]);
       $('#subBtn').click(); $('#subOk').click(); await sleep(100);
       check(amp() === 'stern:Profilevel erreicht', 'nach der Abgabe weiter sichtbar', amp());
       await close();
@@ -619,7 +619,7 @@ function harnessMain(cfg) {
       await close(); LMS.pass = '0.7';
     });
 
-    await test('18. Fake-ByCS hat in keinem Test einen Wert abgelehnt (Ziele, Kennungen, Zahlenformat)', async check => {
+    await test('18. Fake-Moodle hat in keinem Test einen Wert abgelehnt (Ziele, Kennungen, Zahlenformat)', async check => {
       check(LMS.errors.length === 0, 'keine abgelehnten SetValue-Aufrufe', LMS.errors.slice(0, 10));
     });
 

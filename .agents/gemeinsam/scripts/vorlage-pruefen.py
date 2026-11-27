@@ -87,7 +87,7 @@ def pruefe(pfad):
     except sync.Fehler as e:
         fehler.append(str(e))
     if 'id="nameOut"' not in s:
-        fehler.append('Name-Zelle fehlt (<b id="nameOut">–</b>): Der Schülername kommt aus der ByCS')
+        fehler.append('Name-Zelle fehlt (<b id="nameOut">–</b>): Der Schülername kommt aus der Lernplattform')
     return fehler, hinweise
 
 

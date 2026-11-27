@@ -7,7 +7,7 @@ Arbeitet eine Lehrkraft allein (`Schutz | aus` im Schulprofil), gibt es keine Te
 `Vorlagen/Eigene/<Name>.html`, sonst gilt alles hier genauso.
 
 ## Layout-Vorlage (Normalfall): eigenes Aussehen, gemeinsamer Kern
-Bewertung, Abgabe, Punkte für die ByCS, PDF-Export, Leerdruck, Hell/Dunkel und Lösungssperre kommen aus
+Bewertung, Abgabe, Punkte für die Lernplattform, PDF-Export, Leerdruck, Hell/Dunkel und Lösungssperre kommen aus
 `Fachunterricht.html` und bleiben überall gleich. Das Team gestaltet Kopf, Seitenaufbau und Aussehen.
 
 1. `.agents/gemeinsam/templates/Fachunterricht.html` (oder `Allgemeinbildung.html`) nach

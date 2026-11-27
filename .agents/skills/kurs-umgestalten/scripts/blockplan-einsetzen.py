@@ -1,13 +1,13 @@
 """
-blockplan-einsetzen.py - setzt einen Blockplan in eine vorhandene ByCS-Kurssicherung (.mbz) ein.
+blockplan-einsetzen.py - setzt einen Blockplan in eine vorhandene Moodle-Kurssicherung (.mbz) ein.
 
 Jeder genannte Abschnitt (Reiter) ist danach für jede Klassengruppe ab Montag 0:01 ihrer n-ten Schulwoche sichtbar und
 bleibt offen; vorher ist er ganz verborgen (Lehrkräfte sehen immer alles). Genutzt werden die Klassengruppen, die die
-ByCS über die Klassen-Einschreibung anlegt (z. B. "K - MGF10a (6082)"). Alles andere in der Sicherung bleibt, wie es ist.
+Moodle über die Klassen-Einschreibung anlegt (z. B. "K - MGF10a (6082)"). Alles andere in der Sicherung bleibt, wie es ist.
 Reiternamen werden ohne Icon verglichen ("⚙️ Fertigungstechnik" = "Fertigungstechnik").
 
 Meist ruft umgestalten.py das mit auf. Allein (nur Blockplan, sonst nichts):
-  python .agents/skills/kurs-umgestalten/scripts/blockplan-einsetzen.py --sicherung <ByCS.mbz> --plan <Blockplan.json> --out <neu.mbz>
+  python .agents/skills/kurs-umgestalten/scripts/blockplan-einsetzen.py --sicherung <Sicherung.mbz> --plan <Blockplan.json> --out <neu.mbz>
 
 Blockplan (JSON): "bloecke" (je Block "klassen" und die Montage seiner "schulwochen"), "gruppenname" (Muster mit {klasse}),
 "abschnitte" (Reitername -> Nummer der Schulwoche), optional "gruppen_entfernen" (Gruppennamen).
@@ -109,8 +109,8 @@ def setze_blockplan(s: Sicherung, plan: dict) -> list[str]:
 
 
 def main():
-    p = argparse.ArgumentParser(description="Blockplan (Freigabe je Klasse nach Datum) in eine ByCS-Sicherung einsetzen.")
-    p.add_argument("--sicherung", required=True, help="ByCS-Kurssicherung (.mbz, ohne Nutzerdaten)")
+    p = argparse.ArgumentParser(description="Blockplan (Freigabe je Klasse nach Datum) in eine Moodle-Sicherung einsetzen.")
+    p.add_argument("--sicherung", required=True, help="Moodle-Kurssicherung (.mbz, ohne Nutzerdaten)")
     p.add_argument("--plan", required=True, help="Blockplan (.json)")
     p.add_argument("--out", required=True, help="neue Sicherung (.mbz)")
     a = p.parse_args()

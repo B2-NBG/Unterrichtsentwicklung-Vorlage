@@ -1,6 +1,6 @@
 # Ablage und Namen
 
-Gilt für alles in `Unterricht/`, `BYCS-SYNC/` (Gebautes, `zustellung.md`), `ToDo/` und `Ressourcen/`. Die Regel steht als Code in
+Gilt für alles in `Unterricht/`, `FREIGABE-SYNC/` (Gebautes, `zustellung.md`), `ToDo/` und `Ressourcen/`. Die Regel steht als Code in
 `.agents/gemeinsam/scripts/unterrichtsmaterial.py`, `pruefen.py` prüft sie vor jedem Commit und auf GitHub.
 
 ## Ordnerschema
@@ -33,7 +33,7 @@ Gilt für alles in `Unterricht/`, `BYCS-SYNC/` (Gebautes, `zustellung.md`), `ToD
 Niveaus". Kein `-Quiz`-Ordner, kein Lernpfad mit Niveaus. In der Lernplattform heißt der Test "Test - <Thema>".
 
 ## Gebautes
-Lernpakete und Kurssicherungen (Namen, Umbenennen) entstehen nur über GitHub unter `BYCS-SYNC/`: `zustellung.md`. Tests bleiben in
+Lernpakete und Kurssicherungen (Namen, Umbenennen) entstehen nur über GitHub unter `FREIGABE-SYNC/`: `zustellung.md`. Tests bleiben in
 `Unterricht/…/Test-<Thema>/`. `tmp/` ist der lokale Arbeitsordner (nicht in Git).
 
 ## Schreibweise von Ordner- und Dateinamen
@@ -49,10 +49,10 @@ groß und Umlaute; von Hand gilt (vor dem Speichern prüfen):
   name.__tmp__ Name`), sonst erkennt Git die Änderung nicht.
 
 ## Ressourcen
-`Ressourcen/Inhalt.md` ist der Wegweiser und nennt, was dort liegt und was nie (Schülerdaten, fertige Seiten, Pakete).
-Was später gebraucht werden könnte (Quell-PDFs, Zeichnungen, 3D-Modelle, Logos, Kursbanner, Standbilder), ohne Rückfrage
-dort nach Art und Thema ablegen (`Bilder/<Thema>/`) und in `Inhalt.md` eintragen. Fachquellen (Festlegungen,
-Tabellenbücher, Skripte anderer) und ihren Vorrang nennt die Fachregel (`faecher.md`).
+`Ressourcen/` ist ein **Baukasten, kein Archiv**: Bausteine (Bauskripte, SVG, verkleinerte Fotos, kurze PDF-Auszüge,
+Kursbanner) ohne Rückfrage nach Thema ablegen, **höchstens 1 MB je Datei**; **Originale der Lehrkraft** (Office-Dateien,
+ganze Skripte, Archive) **nicht aufheben**, nur `tmp/`. Vorher den Kopf von `Ressourcen/Inhalt.md` lesen (Einzelheiten,
+Eintrag jeder neuen Datei). Fachquellen und ihren Vorrang nennt die Fachregel (`faecher.md`).
 
 ## Dateiformate
 Interne Arbeitsdateien (Notizen, Festlegungen, Wegweiser, Regeln) sind `.md`, nie `.txt` (Datendateien für Skripte wie `faecher.txt` bleiben). Jeder

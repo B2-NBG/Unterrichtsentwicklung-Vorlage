@@ -11,8 +11,8 @@ Aus pruefen.py herausgelöst (24.11.2026), ohne das Verhalten zu ändern; die Te
      hier sind dafür die zweite Sicherung, Notizschutz und Handbuch (von Hand) kann nur diese Prüfung.
    - Regeln: SCHUTZ (schutz.txt) über Regeln und schutzregeln; auf GitHub aus dem letzten grünen Lauf.
    - Am Rechner (_am_rechner): wer man ist, fragt rechte (meine_teams: GitHub mit der gespeicherten Git-Anmeldung,
-     sonst git config bycs.werkzeug); ohne GitHub Hinweis aus teams_aus_geschichte.
-   - Auf GitHub (_auf_github): pushes_im_lauf (BYCS_PUSHES), freigeber (Re-run), mitglieder_von (TEAM_TOKEN der
+     sonst git config unterricht.werkzeug); ohne GitHub Hinweis aus teams_aus_geschichte.
+   - Auf GitHub (_auf_github): pushes_im_lauf (UNTERRICHT_PUSHES), freigeber (Re-run), mitglieder_von (TEAM_TOKEN der
      GitHub-App), --zurueckhalten (zurueck_pfad), --von-hand (von_hand).
    - Notizbücher in ToDo/ (notizbuch): Ein Team-Notizbuch ToDo/<Teamname>-NOTIZEN.md gehört dem Team (Regeln.team,
      geprüft wie der Unterricht eines Teams). Notizschutz gilt für das gemeinsame Notizbuch ALLE: todo_fehler und
@@ -21,7 +21,7 @@ Aus pruefen.py herausgelöst (24.11.2026), ohne das Verhalten zu ändern; die Te
    - Vorlagen der Teams (vorlagen_team): Vorlagen/<team>/ gehört dem Team (Regeln.team), Dateien direkt in
      Vorlagen/ sind Werkzeug.
      Geänderte Vorlagen prüft vorlage-pruefen.py (Schritt 1).
-   - Tests: handbuch.test.py ersetzt GitHub durch eine Teams-Datei (BYCS_TEAMS_TEST, am Rechner dazu BYCS_ICH).
+   - Tests: handbuch.test.py ersetzt GitHub durch eine Teams-Datei (UNTERRICHT_TEAMS_TEST, am Rechner dazu UNTERRICHT_ICH).
 Nur Python-Standardbibliothek (Windows, Mac, GitHub).
 """
 import fnmatch
@@ -248,9 +248,9 @@ def _github(pfad):
 
 
 def _test_teams():
-    """Nur für handbuch.test.py: {Team: {GitHub-Namen}} aus der Datei BYCS_TEAMS_TEST (Zeilen "team: name, name")
-    statt GitHub, für den Lauf (mitglieder_von) wie für den Rechner (meine_teams mit BYCS_ICH). None ohne Test."""
-    pfad = os.environ.get('BYCS_TEAMS_TEST')
+    """Nur für handbuch.test.py: {Team: {GitHub-Namen}} aus der Datei UNTERRICHT_TEAMS_TEST (Zeilen "team: name, name")
+    statt GitHub, für den Lauf (mitglieder_von) wie für den Rechner (meine_teams mit UNTERRICHT_ICH). None ohne Test."""
+    pfad = os.environ.get('UNTERRICHT_TEAMS_TEST')
     if not pfad:
         return None
     teams = {}
@@ -465,7 +465,7 @@ def _anmeldung():
 
 def mein_login():
     """Am Rechner: eigener GitHub-Login (klein, für "Ersteller: …, @login"). None, wenn GitHub nicht erreichbar ist."""
-    ich = os.environ.get('BYCS_ICH')   # nur für handbuch.test.py, "-" = nicht erreichbar
+    ich = os.environ.get('UNTERRICHT_ICH')   # nur für handbuch.test.py, "-" = nicht erreichbar
     if ich is not None:
         return None if ich.strip() in ('', '-') else ich.strip().lower()
     zugang = _anmeldung()
@@ -483,7 +483,7 @@ def meine_teams():
     Anmeldung darf keine Teams lesen). Nie eine leere Menge: Ein Zugang ohne read:org (Cloud-Sitzung, App-Token)
     bekommt von GitHub oft 200 mit leerer Liste statt 403, darum heißt "kein Team der Organisation" auch None
     (Teams unbekannt, verbindlich prüft GitHub nach dem Push)."""
-    ich = os.environ.get('BYCS_ICH')   # nur für handbuch.test.py: GitHub-Name aus BYCS_TEAMS_TEST, "-" = nicht erreichbar
+    ich = os.environ.get('UNTERRICHT_ICH')   # nur für handbuch.test.py: GitHub-Name aus UNTERRICHT_TEAMS_TEST, "-" = nicht erreichbar
     if ich is not None:
         test = _test_teams()
         if ich.strip() == '-' or test is None:
@@ -500,15 +500,15 @@ def meine_teams():
 
 
 def rechte():
-    """Am Rechner: (Werkzeug-Verantwortliche?, woher das stammt, eigene Teams oder None, bycs.werkzeug "ja"?).
-    GitHub geht vor (meine_teams). Nur wenn GitHub nicht erreichbar ist, entscheidet git config bycs.werkzeug."""
-    eingerichtet = git('config', '--get', 'bycs.werkzeug')[1].strip().lower() == 'ja'
+    """Am Rechner: (Werkzeug-Verantwortliche?, woher das stammt, eigene Teams oder None, unterricht.werkzeug "ja"?).
+    GitHub geht vor (meine_teams). Nur wenn GitHub nicht erreichbar ist, entscheidet git config unterricht.werkzeug."""
+    eingerichtet = git('config', '--get', 'unterricht.werkzeug')[1].strip().lower() == 'ja'
     if not schutz_an():   # eine Lehrkraft allein (schule.txt: "Schutz | aus"): Sie darf alles
         return True, 'Schutz aus laut schule.txt', set(), eingerichtet
     meine = meine_teams()
     if meine is not None:
         return TEAM_WERKZEUG in meine, 'laut GitHub', meine, eingerichtet
-    return eingerichtet, 'GitHub nicht erreichbar, laut git config bycs.werkzeug', None, eingerichtet
+    return eingerichtet, 'GitHub nicht erreichbar, laut git config unterricht.werkzeug', None, eingerichtet
 
 
 def rechte_zeigen():
@@ -524,7 +524,7 @@ def rechte_zeigen():
     if login:
         print('Ersteller in Notizen: "Ersteller: %s, @%s"' % (name or 'Vorname Nachname', login))
     if eingerichtet and not werkzeug:
-        print('WARNUNG: bycs.werkzeug steht auf "ja", laut GitHub bist du aber nicht im Team "%s".' % TEAM_WERKZEUG)
+        print('WARNUNG: unterricht.werkzeug steht auf "ja", laut GitHub bist du aber nicht im Team "%s".' % TEAM_WERKZEUG)
 
 
 def teams_aus_geschichte(regeln):
@@ -551,10 +551,10 @@ def _vorfahr(a, b):
 
 def pushes_im_lauf(seit):
     """GitHub: [(von, bis, Person, {Dateien})] je Push seit dem letzten grünen Lauf, älteste zuerst.
-    BYCS_PUSHES (Workflow): "<Commit>:<GitHub-Name> …" der früheren Läufe seit dem letzten grünen Lauf, älteste zuerst.
+    UNTERRICHT_PUSHES (Workflow): "<Commit>:<GitHub-Name> …" der früheren Läufe seit dem letzten grünen Lauf, älteste zuerst.
     Dazu kommt dieser Lauf (HEAD, GITHUB_ACTOR). Ein Push bekommt die Dateien zwischen dem vorigen Push und seinem
     Commit (auch Commits ohne eigenen Lauf, z. B. das Handbuch von GitHub). Leer, wenn nicht auf GitHub."""
-    liste = [(c, n.strip().lower()) for c, _, n in (x.partition(':') for x in os.environ.get('BYCS_PUSHES', '').split())
+    liste = [(c, n.strip().lower()) for c, _, n in (x.partition(':') for x in os.environ.get('UNTERRICHT_PUSHES', '').split())
              if c and n.strip()]
     kopf, ich = git('rev-parse', 'HEAD')[1].strip(), os.environ.get('GITHUB_ACTOR', '').strip().lower()
     if ich and (not liste or liste[-1][0] != kopf):
@@ -640,7 +640,7 @@ def _am_rechner(regeln, d, werkzeug):
     recht, _, meine, eingerichtet = rechte()   # meine None = GitHub nicht erreichbar
     if recht:
         return [], []
-    warnungen = ['Auf diesem Rechner steht bycs.werkzeug "ja", laut GitHub bist du aber nicht im Team "%s". '
+    warnungen = ['Auf diesem Rechner steht unterricht.werkzeug "ja", laut GitHub bist du aber nicht im Team "%s". '
                  'Werkzeug-, Notiz- und Abteilungsschutz gelten deshalb wie für alle.' % TEAM_WERKZEUG] if eingerichtet else []
     fehler = ['Werkzeug geändert (%s). Das Werkzeug (Skills, Vorlagen, Skripte, Regeln, Einstellungen, Handbuch und '
               'alles außerhalb der Arbeitsordner Unterricht/, ToDo/, Ressourcen/ und Vorlagen/<Teamname>/, auch neue Dateien und Ordner ganz '

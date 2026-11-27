@@ -2,10 +2,10 @@
 """Rundlauf-Test für build-test-mbz.py.
 
 Baut aus der Quiz-XML des Praxismoduls 3D-Druck eine Test-Sicherung und vergleicht sie inhaltlich mit
-templates/Test-Vorlage.mbz (die ByCS hat diesen Test aus genau diesen Fragen erzeugt): Fragetyp, Texte,
+templates/Test-Vorlage.mbz (die Lernplattform hat diesen Test aus genau diesen Fragen erzeugt): Fragetyp, Texte,
 Antworten, Punkte, Rückmeldungen, Optionen, Slots, Seiten, Notenstufen und alle Testeinstellungen.
 Ein Feld gilt als gleich, wenn es mit einer der Fassungen in der Vorlage übereinstimmt (Version 1 = Import,
-Version 2 = in der ByCS nachbearbeitet). IDs, Zeitstempel und <p>-Hüllen zählen nicht.
+Version 2 = in der Lernplattform nachbearbeitet). IDs, Zeitstempel und <p>-Hüllen zählen nicht.
 
   python .agents/skills/moodle-test/scripts/build-test-mbz.test.py
 """

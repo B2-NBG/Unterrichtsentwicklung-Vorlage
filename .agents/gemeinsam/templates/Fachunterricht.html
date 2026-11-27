@@ -11,7 +11,7 @@
   KI: Datei kopieren, diesen Kommentar löschen, <style> und <script> unverändert lassen, dann nach
   .agents/gemeinsam/regeln/seite.md füllen: <title>, Schriftfeld in <header> (Kurzkopf: <div class="tb kurz">; zusätzliche Zelle:
   <div class="wide"><small>Bezeichnung</small>Wert</div> NACH der Name-Zelle), <meta name="loesung-hash"> und alles in <main>.
-  Name-Zelle und <span class="ver"></span> bleiben unverändert (Name aus der ByCS, Version trägt build-scorm.py ein).
+  Name-Zelle und <span class="ver"></span> bleiben unverändert (Name aus der Lernplattform, Version trägt build-scorm.py ein).
   Eigenes CSS und JS nur nach seite.md, immer in zusätzlichen Blöcken NACH den Vorlagenblöcken.
   Elemente mit Live-Rückmeldung solcher Zusatzmodule bekommen die Klasse "no-pdf" (kommt nicht ins PDF).
   Das Ergebnis einer interaktiven Aufgabe kann in einem readonly-<input type="text"> innerhalb der Aufgabe stehen: Es zählt als "bearbeitet",
@@ -62,7 +62,7 @@
          AMPEL: rechts unten, bleibt beim Scrollen sichtbar (setzt das Script, kein HTML nötig): rot "Es ist noch viel zu tun" unter 40 %,
          gelb "Es ist nicht mehr weit" bis zur Bestehensgrenze, grün "Bestehensgrenze erreicht" ab der Bestehensgrenze (aus der Lernplattform,
          sonst 70 %), über 90 % ein Stern "Profilevel erreicht". Grundlage sind die bisher erreichten Punkte,
-         die Summe steht nicht da. Die ByCS bekommt die vorläufigen Punkte schon vor der Abgabe, "abgeschlossen/bestanden" erst mit der Abgabe.
+         die Summe steht nicht da. Die Lernplattform bekommt die vorläufigen Punkte schon vor der Abgabe, "abgeschlossen/bestanden" erst mit der Abgabe.
     <div class="merke"><b>Merke</b> ...</div>   gelber Infokasten        <div class="warn">...</div>   roter Warnkasten
     <div class="paper"><b>Auf Papier:</b> Du brauchst ... Melde dich bei deiner Lehrkraft und hol es dir ab.</div>
                                                 Hinweis bei Aufgaben, die auf Papier bearbeitet werden (direkt nach dem Aufgabentitel). Nicht im Druck, nicht im PDF.
@@ -1239,7 +1239,7 @@ function sha256(ascii){function rr(v,a){return(v>>>a)|(v<<(32-a))}var mw=Math.po
       al.querySelector('button').addEventListener('click', function () { $('#pdfBtn').click(); });
       document.body.appendChild(al);
     }
-    al.querySelector('p').innerHTML = '<b>Nicht gespeichert!</b> Die Verbindung zur ByCS ist unterbrochen (abgemeldet?). ' +
+    al.querySelector('p').innerHTML = '<b>Nicht gespeichert!</b> Die Verbindung zur Moodle ist unterbrochen (abgemeldet?). ' +
       (safe ? 'Deine Eingaben sind in diesem Browser gesichert: Lernpaket schließen, neu anmelden und auf diesem Rechner wieder öffnen.'
             : 'Speichere sofort als PDF und sag deiner Lehrkraft Bescheid.');
     al.hidden = false;

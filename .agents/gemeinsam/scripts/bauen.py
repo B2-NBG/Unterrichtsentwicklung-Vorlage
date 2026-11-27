@@ -542,7 +542,7 @@ def main(argv=None):
     except BauFehler as e:
         print('FEHLER: %s' % e)
         return 2
-    ziel_ordner = a.nach or os.path.join(tempfile.gettempdir(), 'bycs-gebaut', os.path.basename(os.path.dirname(quelle)))
+    ziel_ordner = a.nach or os.path.join(tempfile.gettempdir(), 'pakete-gebaut', os.path.basename(os.path.dirname(quelle)))
     os.makedirs(ziel_ordner, exist_ok=True)
     ziel = os.path.join(ziel_ordner, os.path.basename(quelle))
     with open(ziel, 'wb') as f:

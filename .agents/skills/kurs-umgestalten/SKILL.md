@@ -12,12 +12,12 @@ Abschnittsflächen, Kursbild, Kursbeginn und Name. Neue Kurse aus `Unterricht/` 
 Skripte in `.agents/skills/kurs-umgestalten/scripts/` (nur Standardbibliothek, am Mac `python3`). Kursbild und
 Baukasten brauchen Chrome oder Edge.
 
-**Ablage:** Sicherungen, Baukasten und Anleitungen nur lokal in `Ressourcen/Kurssicherungen-ByCS/` (`.gitignore`, sie
+**Ablage:** Sicherungen, Baukasten und Anleitungen nur lokal in `Ressourcen/Kurssicherungen-Moodle/` (`.gitignore`, sie
 enthalten Fragen und Lösungen). In Git: der Kursplan `Ressourcen/Kursumbau/Kursumbau-<Kurs>.json` und der Blockplan
 `Ressourcen/Blockplaene/Blockplan-<Klasse>-<Schuljahr>.json` (Vorbild für beide: MGF10).
 
 ## Schritt 1 – Sicherung und Überblick
-1. Die Lehrkraft sichert den Kurs in der Lernplattform **ohne Nutzerdaten** und legt die `.mbz` nach `Ressourcen/Kurssicherungen-ByCS/`.
+1. Die Lehrkraft sichert den Kurs in der Lernplattform **ohne Nutzerdaten** und legt die `.mbz` nach `Ressourcen/Kurssicherungen-Moodle/`.
 2. `uebersicht.py --sicherung <mbz> [--plan <Kursplan>]` zeigt Kursbeginn, Reiter, Unterabschnitte, Inhalte und was im
    Kursplan oder Blockplan fehlt.
 
@@ -38,7 +38,7 @@ Lehrkraft wählt Farben und Stil und gibt den **Gestaltungscode**. Ihn unter `ge
 Kursbild „Foto-Banner“ (`bf`) braucht `kursbild.banner` Titel, Stufe, Untertitel und ein Foto aus `Ressourcen/Bilder/`.
 
 ## Schritt 4 – Kursbeginn erfragen (Pflicht, nie raten)
-Lehrkräfte können den Kursbeginn in der Lernplattform meist **nicht ändern** (Schloss-Symbol, so in der ByCS). Moodle verschiebt beim Wiederherstellen
+Lehrkräfte können den Kursbeginn in der Lernplattform meist **nicht ändern** (Schloss-Symbol, so in der Lernplattform). Moodle verschiebt beim Wiederherstellen
 alle Termine um den Abstand zwischen dem Kursbeginn der Sicherung und dem des Zielkurses. Darum fragen: „Welcher
 Kursbeginn steht im Zielkurs unter Einstellungen?“ Bei einem neuen Kurs: erst anlegen lassen, dann ablesen.
 

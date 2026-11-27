@@ -10,11 +10,11 @@
       "PowerShell",
       "Bash(powershell:*)",
       "Bash(pwsh:*)",
-      "Bash(git config bycs.werkzeug:*)",
-      "Bash(git config --local bycs.werkzeug:*)",
-      "Bash(git config --global bycs.werkzeug:*)",
-      "Bash(git config --add bycs.werkzeug:*)",
-      "Bash(git config --replace-all bycs.werkzeug:*)",
+      "Bash(git config unterricht.werkzeug:*)",
+      "Bash(git config --local unterricht.werkzeug:*)",
+      "Bash(git config --global unterricht.werkzeug:*)",
+      "Bash(git config --add unterricht.werkzeug:*)",
+      "Bash(git config --replace-all unterricht.werkzeug:*)",
       "Edit(./.git/config)"
     ]
   }
